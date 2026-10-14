@@ -1,0 +1,134 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="https://learn.microsoft.com/en-us/dotnet/core/tools/"><title>Microsoft Learn .NET command-line interface.</title>
+<style>
+@page { size:A4; margin:18mm 15mm; @bottom-center { content:"Microsoft documentation print copy | " counter(page); font:9pt Arial; color:#64748b; } }
+body { font:10.5pt/1.5 Arial,sans-serif; color:#172b43; margin:0; }
+h1 { font-size:24pt; color:#124968; } h2 { font-size:16pt; color:#165e76; } h3 { font-size:12pt; }
+h1,h2,h3 { break-after:avoid; } p { orphans:3; widows:3; }
+pre { background:#edf4f7; padding:10px; border-left:3px solid #0e8c88; white-space:pre-wrap; overflow-wrap:anywhere; font:8.5pt/1.35 Consolas,monospace; }
+code { font-family:Consolas,monospace; overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; font-size:9pt; }
+td,th { border:1px solid #ccdbe5; padding:5px; } tr { break-inside:avoid; }
+img,svg { max-width:100%; height:auto; } a { color:#087b87; overflow-wrap:anywhere; }
+.provenance { border-top:4px solid #0e8c88; padding:10px 0; font-size:9pt; }
+.note,.TIP,.NOTE,.IMPORTANT,.WARNING { background:#eff5f7; padding:8px; }
+button,.display-none-print { display:none; } details { display:block; }
+
+</style></head><body>
+<div class="provenance"><strong>Print copy of official Microsoft Learn documentation</strong>
+<p>Source: <a href="https://learn.microsoft.com/en-us/dotnet/core/tools/">https://learn.microsoft.com/en-us/dotnet/core/tools/</a><br>Exported: 2026-10-14. Source metadata date: 2026-09-29T00:00:00Z.</p>
+<p>Microsoft and documentation contributors. Article wording and code for the requested version are retained; web navigation is removed and print formatting is added. This locally generated PDF is not a Microsoft-published PDF book or a complete product manual. Source-page attribution and notices apply.</p>
+<p>Documentation license and terms: <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a>; .NET documentation: <a href="https://github.com/dotnet/docs/blob/main/LICENSE">CC BY 4.0 license</a>. Check the source for specific attribution or exceptions.</p>
+</div>
+<h1 id="net-cli-overview">.NET CLI overview</h1>
+<p><strong>This article applies to:</strong> ✔️ .NET Core 3.1 SDK and later versions</p>
+<p>The .NET command-line interface (CLI) is a cross-platform toolchain for developing, building, running, and publishing .NET applications.</p>
+<p>The .NET CLI is included with the <a href="../sdk" data-linktype="relative-path">.NET SDK</a>. For more information about how to install the .NET SDK, see <a href="../install/windows" data-linktype="relative-path">Install .NET</a>. After installing the SDK, you can run CLI commands by opening a terminal and entering the commands at the terminal prompt.</p>
+<h2 id="command-structure">Command structure</h2>
+<p>CLI command structure consists of <a href="#driver" data-linktype="self-bookmark">the driver ("dotnet")</a>, <a href="#command" data-linktype="self-bookmark">the command</a>, and possibly command <a href="#arguments" data-linktype="self-bookmark">arguments</a> and <a href="#options" data-linktype="self-bookmark">options</a>. You see this pattern in most CLI operations, such as creating a new console app, and running it from the command line. The following commands show when the console app was run from a directory named <em>my_app</em>:</p>
+<pre><code class="lang-dotnetcli">dotnet new console
+dotnet build --output ./build_output
+dotnet ./build_output/my_app.dll
+</code></pre>
+<h3 id="driver">Driver</h3>
+<p>The driver is named <a href="dotnet" data-linktype="relative-path">dotnet</a> and has two responsibilities, either running a <a href="../deploying/" data-linktype="relative-path">framework-dependent app</a> or executing a command.</p>
+<p>To run a framework-dependent app, specify the path to the app's .dll file after the driver without specifying a command, for example, <code>dotnet /path/to/my_app.dll</code>. When executing the command from the folder where the app's DLL resides, just execute <code>dotnet my_app.dll</code>. For more information, see the <a href="dotnet" data-linktype="relative-path">dotnet command</a>.</p>
+<p>When you supply a command to the driver, <code>dotnet.exe</code> starts the CLI command execution process. For example:</p>
+<pre><code class="lang-dotnetcli">dotnet build
+</code></pre>
+<p>First, the driver determines the version of the SDK to use. If there's no <a href="global-json" data-linktype="relative-path">global.json</a> file, the latest version of the SDK available is used. After the SDK version is determined, it executes the command.</p>
+<h3 id="command">Command</h3>
+<p>The command performs an action. For example, <code>dotnet build</code> builds code. <code>dotnet publish</code> publishes code. See the <a href="#cli-commands" data-linktype="self-bookmark">CLI commands</a> section for a list of commands.</p>
+<h3 id="arguments">Arguments</h3>
+<p>The arguments you pass on the command line are the arguments to the command invoked or to options specified with the command. For example, when you execute <code>dotnet publish my_app.csproj</code>, the <code>my_app.csproj</code> argument indicates the project to publish and is passed to the <code>publish</code> command.</p>
+<h3 id="options">Options</h3>
+<p>The options you pass on the command line are the options to the command invoked. For example, when you execute <code>dotnet publish --output /build_output</code>, the <code>--output</code> option and its value provided by the <code>/build_output</code> argument are passed to the <code>publish</code> command.</p>
+<h2 id="cli-commands">CLI commands</h2>
+<p>The following commands are installed by default:</p>
+<h3 id="basic-commands">Basic commands</h3>
+<ul>
+<li><a href="dotnet-new" data-linktype="relative-path"><code>new</code></a></li>
+<li><a href="dotnet-restore" data-linktype="relative-path"><code>restore</code></a></li>
+<li><a href="dotnet-build" data-linktype="relative-path"><code>build</code></a></li>
+<li><a href="dotnet-publish" data-linktype="relative-path"><code>publish</code></a></li>
+<li><a href="dotnet-run" data-linktype="relative-path"><code>run</code></a></li>
+<li><a href="dotnet-test" data-linktype="relative-path"><code>test</code></a></li>
+<li><a href="dotnet-vstest" data-linktype="relative-path"><code>vstest</code></a></li>
+<li><a href="dotnet-pack" data-linktype="relative-path"><code>pack</code></a></li>
+<li><a href="dotnet-clean" data-linktype="relative-path"><code>clean</code></a></li>
+<li><a href="dotnet-sln" data-linktype="relative-path"><code>sln</code></a></li>
+<li><a href="dotnet-help" data-linktype="relative-path"><code>help</code></a></li>
+<li><a href="dotnet-store" data-linktype="relative-path"><code>store</code></a></li>
+<li><a href="dotnet-watch" data-linktype="relative-path"><code>watch</code></a></li>
+<li><a href="dotnet-format" data-linktype="relative-path"><code>format</code></a> (Available since .NET 6 SDK)</li>
+</ul>
+<h3 id="project-modification-commands">Project modification commands</h3>
+<ul>
+<li><a href="dotnet-package-add" data-linktype="relative-path"><code>package add</code></a></li>
+<li><a href="dotnet-package-download" data-linktype="relative-path"><code>package download</code></a></li>
+<li><a href="dotnet-package-list" data-linktype="relative-path"><code>package list</code></a></li>
+<li><a href="dotnet-package-remove" data-linktype="relative-path"><code>package remove</code></a></li>
+<li><a href="dotnet-package-search" data-linktype="relative-path"><code>package search</code></a></li>
+<li><a href="dotnet-package-update" data-linktype="relative-path"><code>package update</code></a></li>
+<li><a href="dotnet-project-convert" data-linktype="relative-path"><code>project convert</code></a> (Available since .NET 10 SDK)</li>
+<li><a href="dotnet-reference-add" data-linktype="relative-path"><code>reference add</code></a></li>
+<li><a href="dotnet-reference-list" data-linktype="relative-path"><code>reference list</code></a></li>
+<li><a href="dotnet-reference-remove" data-linktype="relative-path"><code>reference remove</code></a></li>
+</ul>
+<h3 id="nuget-commands">NuGet commands</h3>
+<ul>
+<li><a href="dotnet-nuget-delete" data-linktype="relative-path"><code>nuget delete</code></a></li>
+<li><a href="dotnet-nuget-locals" data-linktype="relative-path"><code>nuget locals</code></a></li>
+<li><a href="dotnet-nuget-push" data-linktype="relative-path"><code>nuget push</code></a></li>
+<li><a href="dotnet-nuget-add-source" data-linktype="relative-path"><code>nuget add source</code></a> (Available since .NET Core 3.1.200 SDK)</li>
+<li><a href="dotnet-nuget-disable-source" data-linktype="relative-path"><code>nuget disable source</code></a> (Available since .NET Core 3.1.200 SDK)</li>
+<li><a href="dotnet-nuget-enable-source" data-linktype="relative-path"><code>nuget enable source</code></a> (Available since .NET Core 3.1.200 SDK)</li>
+<li><a href="dotnet-nuget-list-source" data-linktype="relative-path"><code>nuget list source</code></a> (Available since .NET Core 3.1.200 SDK)</li>
+<li><a href="dotnet-nuget-remove-source" data-linktype="relative-path"><code>nuget remove source</code></a> (Available since .NET Core 3.1.200 SDK)</li>
+<li><a href="dotnet-nuget-update-source" data-linktype="relative-path"><code>nuget update source</code></a> (Available since .NET Core 3.1.200 SDK)</li>
+<li><a href="dotnet-nuget-verify" data-linktype="relative-path"><code>nuget verify</code></a> (Available since .NET 5 SDK)</li>
+<li><a href="dotnet-nuget-trust" data-linktype="relative-path"><code>nuget trust</code></a> (Available since .NET 5 SDK)</li>
+<li><a href="dotnet-nuget-sign" data-linktype="relative-path"><code>nuget sign</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-nuget-why" data-linktype="relative-path"><code>nuget why</code></a> (Available since .NET 8.0.4xx SDK)</li>
+</ul>
+<h3 id="workload-management-commands">Workload management commands</h3>
+<ul>
+<li><a href="dotnet-workload" data-linktype="relative-path"><code>workload</code></a> (Available since .NET 7 SDK)</li>
+<li><a href="dotnet-workload-clean" data-linktype="relative-path"><code>workload clean</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-workload-config" data-linktype="relative-path"><code>workload config</code></a> (Available since .NET 8.0.400 SDK)</li>
+<li><a href="dotnet-workload-install" data-linktype="relative-path"><code>workload install</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-workload-history" data-linktype="relative-path"><code>workload history</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-workload-list" data-linktype="relative-path"><code>workload list</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-workload-update" data-linktype="relative-path"><code>workload update</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-workload-restore" data-linktype="relative-path"><code>workload restore</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-workload-repair" data-linktype="relative-path"><code>workload repair</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-workload-uninstall" data-linktype="relative-path"><code>workload uninstall</code></a> (Available since .NET 6 SDK)</li>
+<li><a href="dotnet-workload-search" data-linktype="relative-path"><code>workload search</code></a> (Available since .NET 6 SDK)</li>
+</ul>
+<h3 id="advanced-commands">Advanced commands</h3>
+<ul>
+<li><a href="dotnet-sdk-check" data-linktype="relative-path"><code>sdk check</code></a></li>
+<li><a href="dotnet-msbuild" data-linktype="relative-path"><code>msbuild</code></a></li>
+<li><a href="dotnet-build-server" data-linktype="relative-path"><code>build-server</code></a></li>
+<li><a href="dotnet-dev-certs" data-linktype="relative-path"><code>dev-certs</code></a></li>
+<li><a href="dotnet-install-script" data-linktype="relative-path"><code>dotnet install script</code></a></li>
+</ul>
+<h3 id="tool-management-commands">Tool management commands</h3>
+<ul>
+<li><a href="dotnet-tool-install" data-linktype="relative-path"><code>tool install</code></a></li>
+<li><a href="dotnet-tool-list" data-linktype="relative-path"><code>tool list</code></a></li>
+<li><a href="dotnet-tool-update" data-linktype="relative-path"><code>tool update</code></a></li>
+<li><a href="global-tools#install-a-local-tool" data-linktype="relative-path"><code>tool restore</code></a></li>
+<li><a href="global-tools#invoke-a-local-tool" data-linktype="relative-path"><code>tool run</code></a></li>
+<li><a href="dotnet-tool-uninstall" data-linktype="relative-path"><code>tool uninstall</code></a></li>
+<li><a href="dotnet-tool-search" data-linktype="relative-path"><code>tool search</code></a></li>
+</ul>
+<p>Tools are console applications that are installed from NuGet packages and are invoked from the command prompt. You can write tools yourself or install tools written by third parties. Tools are also known as global tools, tool-path tools, and local tools. For more information, see <a href="global-tools" data-linktype="relative-path">.NET tools overview</a>.</p>
+<h2 id="manage-sdk-installations-with-dotnetup">Manage SDK installations with dotnetup</h2>
+<p>Use <a href="dotnetup/" data-linktype="relative-path">dotnetup</a> to manage user-level .NET SDK and runtime installations, configure access to those installations, and track version requirements.</p>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="https://github.com/dotnet/sdk/" data-linktype="external">dotnet/sdk GitHub repository</a></li>
+<li><a href="../install/windows" data-linktype="relative-path">.NET installation guide</a></li>
+</ul>
+
+
+</body></html>

@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview"><title>Microsoft Learn .NET 10 overview.</title>
+<style>
+@page { size:A4; margin:18mm 15mm; @bottom-center { content:"Microsoft documentation print copy | " counter(page); font:9pt Arial; color:#64748b; } }
+body { font:10.5pt/1.5 Arial,sans-serif; color:#172b43; margin:0; }
+h1 { font-size:24pt; color:#124968; } h2 { font-size:16pt; color:#165e76; } h3 { font-size:12pt; }
+h1,h2,h3 { break-after:avoid; } p { orphans:3; widows:3; }
+pre { background:#edf4f7; padding:10px; border-left:3px solid #0e8c88; white-space:pre-wrap; overflow-wrap:anywhere; font:8.5pt/1.35 Consolas,monospace; }
+code { font-family:Consolas,monospace; overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; font-size:9pt; }
+td,th { border:1px solid #ccdbe5; padding:5px; } tr { break-inside:avoid; }
+img,svg { max-width:100%; height:auto; } a { color:#087b87; overflow-wrap:anywhere; }
+.provenance { border-top:4px solid #0e8c88; padding:10px 0; font-size:9pt; }
+.note,.TIP,.NOTE,.IMPORTANT,.WARNING { background:#eff5f7; padding:8px; }
+button,.display-none-print { display:none; } details { display:block; }
+
+</style></head><body>
+<div class="provenance"><strong>Print copy of official Microsoft Learn documentation</strong>
+<p>Source: <a href="https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview">https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview</a><br>Exported: 2026-10-14. Source metadata date: 2025-11-07T00:00:00Z.</p>
+<p>Microsoft and documentation contributors. Article wording and code for the requested version are retained; web navigation is removed and print formatting is added. This locally generated PDF is not a Microsoft-published PDF book or a complete product manual. Source-page attribution and notices apply.</p>
+<p>Documentation license and terms: <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a>; .NET documentation: <a href="https://github.com/dotnet/docs/blob/main/LICENSE">CC BY 4.0 license</a>. Check the source for specific attribution or exceptions.</p>
+</div>
+<h1 id="whats-new-in-net-10">What's new in .NET 10</h1>
+<p>Learn about the new features in .NET 10 and find links to further documentation.</p>
+<p>.NET 10, the successor to <a href="../dotnet-9/overview" data-linktype="relative-path">.NET 9</a>, is <a href="https://dotnet.microsoft.com/platform/support/policy/dotnet-core" data-linktype="external">supported for three years</a> as a long-term support (LTS) release. You can <a href="https://get.dot.net/10" data-linktype="external">download .NET 10 here</a>.</p>
+<p>Your feedback is important and appreciated. If you have questions or comments, use the discussion on <a href="https://github.com/dotnet/core/discussions/categories/news" data-linktype="external">GitHub</a>.</p>
+<h2 id="net-runtime">.NET runtime</h2>
+<p>The .NET 10 runtime introduces improvements in JIT inlining, method devirtualization, and stack allocations. It also includes AVX10.2 support, NativeAOT enhancements, improved code generation for struct arguments, and enhanced loop inversion for better optimization.</p>
+<p>For more information, see <a href="runtime" data-linktype="relative-path">What's new in the .NET 10 runtime</a>.</p>
+<h2 id="net-libraries">.NET libraries</h2>
+<p>The .NET 10 libraries introduce new APIs in cryptography, globalization, numerics, serialization, collections, and diagnostics, and when working with ZIP files. New JSON serialization options include disallowing duplicate properties, strict serialization settings, and <code>PipeReader</code> support for improved efficiency. Post-quantum cryptography support has been expanded with Windows Cryptography API: Next Generation (CNG) support, enhanced ML-DSA with simplified APIs and HashML-DSA support, plus Composite ML-DSA. Additional cryptography enhancements include AES KeyWrap with Padding support. New networking capabilities include <code>WebSocketStream</code> for simplified <code>WebSocket</code> usage and TLS 1.3 support for macOS clients. Process management gains Windows process group support for better signal isolation.</p>
+<p>For more information, see <a href="libraries" data-linktype="relative-path">What's new in the .NET 10 libraries</a>.</p>
+<h2 id="net-sdk">.NET SDK</h2>
+<p>The .NET 10 SDK includes support for <a href="../../testing/microsoft-testing-platform-intro" data-linktype="relative-path">Microsoft.Testing.Platform (MTP)</a> in <code>dotnet test</code>, standardizes CLI command order, and updates the CLI to generate native tab-completion scripts for popular shells. For containers, console apps can natively create container images, and a new property lets you explicitly set the format of container images. The SDK also supports platform-specific .NET tools with enhanced compatibility via the <code>any</code> RuntimeIdentifier, one-shot tool execution with <code>dotnet tool exec</code>, the new <code>dnx</code> tool execution script, CLI introspection with <code>--cli-schema</code>, and enhanced file-based apps with publish support and native AOT.</p>
+<p>For more information, see <a href="sdk" data-linktype="relative-path">What's new in the SDK for .NET 10</a>.</p>
+<h2 id="aspire">Aspire</h2>
+<p>For information about what's new in Aspire, see <a href="https://aspire.dev/whats-new/aspire-13-1/" data-linktype="external">What's new in Aspire 13.1</a>.</p>
+<h2 id="aspnet-core">ASP.NET Core</h2>
+<p>The ASP.NET Core 10.0 release introduces several new features and enhancements, including Blazor improvements, OpenAPI enhancements, and minimal API updates. Features include Blazor WebAssembly preloading, automatic memory pool eviction, enhanced form validation, improved diagnostics, and passkey support for Identity.</p>
+<p>For details, see <a href="/en-us/aspnet/core/release-notes/aspnetcore-10.0" data-linktype="absolute-path">What's new in ASP.NET Core for .NET 10</a>.</p>
+<h2 id="c-14">C# 14</h2>
+<p>C# 14 introduces several new features and enhancements to improve developer productivity and code quality. Key updates include:</p>
+<ul>
+<li>Field-backed properties provide a smoother path from auto-implemented properties to writing custom <code>get</code> and <code>set</code> accessors. You can access the compiler-generated backing field using the <code>field</code> contextual keyword.</li>
+<li>The <code>nameof</code> expression now supports unbound generic types, such as <code>List&lt;&gt;</code>, where it returns the name of the type without requiring a type argument.</li>
+<li>First-class support for implicit conversions of <code>Span&lt;T&gt;</code> and <code>ReadOnlySpan&lt;T&gt;</code>.</li>
+<li>Parameter modifiers like <code>ref</code>, <code>in</code>, or <code>out</code> are allowed in lambda expressions without specifying parameter types.</li>
+<li>Support for partial instance constructors and partial events, complementing partial methods and properties introduced in C# 13.</li>
+<li>New <code>extension</code> blocks add support for static extension methods, and static and instance extension properties.</li>
+<li>Null-conditional assignment using the <code>?.</code> operator.</li>
+<li>User-defined compound assignment operators like <code>+=</code> and <code>-=</code>.</li>
+<li>User-defined increment (<code>++</code>) and decrement (<code>--</code>) operators.</li>
+</ul>
+<p>For more information, see <a href="../../../csharp/whats-new/csharp-14" data-linktype="relative-path">What's new in C# 14</a>.</p>
+<h2 id="f">F#</h2>
+<p>The F# updates in .NET 10 include several new features and improvements across the language, standard library, and compiler service. Key updates include:</p>
+<ul>
+<li><p><strong>F# Language</strong>:</p>
+<p>New language features require enabling the <code>&lt;LangVersion&gt;preview&lt;/LangVersion&gt;</code> project property in <code>.fsproj</code> files. These features become the default with the .NET 10 release.</p>
+</li>
+<li><p><strong>FSharp.Core Standard Library</strong>:</p>
+<p>Changes to the <code>FSharp.Core</code> standard library are applied automatically to projects compiled with the new SDK unless a lower <code>FSharp.Core</code> version is explicitly pinned.</p>
+</li>
+<li><p><strong>FSharp.Compiler.Service</strong>:</p>
+<p>General improvements and bug fixes in the compiler implementation.</p>
+</li>
+</ul>
+<p>For more information, see <a href="../../../fsharp/whats-new/fsharp-10" data-linktype="relative-path">What's new in F# 10</a> or the <a href="https://fsharp.github.io/fsharp-compiler-docs/release-notes/About.html" data-linktype="external">F# release notes</a>.</p>
+<h2 id="visual-basic">Visual Basic</h2>
+<p>The Visual Basic updates in .NET 10 include the following enhancements to the compiler:</p>
+<ul>
+<li>The compiler now interprets and enforces the <code>unmanaged</code> generic constraint, which enables better compatibility with runtime APIs.</li>
+<li>The compiler respects the <a href="/en-us/dotnet/api/system.runtime.compilerservices.overloadresolutionpriorityattribute" class="no-loc" data-linktype="absolute-path">OverloadResolutionPriorityAttribute</a>. This enhancement ensures faster, Span-based overloads are preferred and helps to resolve overload ambiguities.</li>
+</ul>
+<p>These updates ensure that Visual Basic can consume updated features in C# and the runtime. For more information, see <a href="../../../visual-basic/whats-new/" data-linktype="relative-path">What's new in Visual Basic</a>.</p>
+<h2 id="net-maui">.NET MAUI</h2>
+<p>The .NET MAUI updates in .NET 10 include several new features and quality improvements for .NET MAUI, .NET for Android, and .NET for iOS, Mac Catalyst, macOS, and tvOS. Features include MediaPicker enhancements for selecting multiple files and image compression, WebView request interception, and support for Android API levels 35 and 36.</p>
+<p>For details, see <a href="/en-us/dotnet/maui/whats-new/dotnet-10" data-linktype="absolute-path">What's new in .NET MAUI in .NET 10</a>.</p>
+<h2 id="ef-core">EF Core</h2>
+<p>The EF Core 10 release introduces several new features and improvements, including LINQ enhancements, performance optimizations, improved support for Azure Cosmos DB, and named query filters that allow multiple filters per entity type with selective disabling.</p>
+<p>For details, see <a href="/en-us/ef/core/what-is-new/ef-core-10.0/whatsnew" data-linktype="absolute-path">What's new in EF Core for .NET 10</a>.</p>
+<h2 id="windows-forms">Windows Forms</h2>
+<p>Changes in Windows Forms for .NET 10 include clipboard-related updates, ported <code>UITypeEditors</code> from .NET Framework, and quality enhancements.</p>
+<p>For details, see <a href="/en-us/dotnet/desktop/winforms/whats-new/net100" data-linktype="absolute-path">What's new in Windows Forms for .NET 10</a>.</p>
+<h2 id="wpf">WPF</h2>
+<p>The WPF updates in .NET 10 include several performance improvements, Fluent style changes, bug fixes, and more.</p>
+<p>For details, see <a href="/en-us/dotnet/desktop/wpf/whats-new/net100" data-linktype="absolute-path">What's new in WPF in .NET 10</a>.</p>
+
+
+</body></html>

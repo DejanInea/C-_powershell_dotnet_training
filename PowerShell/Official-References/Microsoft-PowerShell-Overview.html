@@ -1,0 +1,99 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6"><title>Current Microsoft Learn PowerShell overview, view 7.6.</title>
+<style>
+@page { size:A4; margin:18mm 15mm; @bottom-center { content:"Microsoft documentation print copy | " counter(page); font:9pt Arial; color:#64748b; } }
+body { font:10.5pt/1.5 Arial,sans-serif; color:#172b43; margin:0; }
+h1 { font-size:24pt; color:#124968; } h2 { font-size:16pt; color:#165e76; } h3 { font-size:12pt; }
+h1,h2,h3 { break-after:avoid; } p { orphans:3; widows:3; }
+pre { background:#edf4f7; padding:10px; border-left:3px solid #0e8c88; white-space:pre-wrap; overflow-wrap:anywhere; font:8.5pt/1.35 Consolas,monospace; }
+code { font-family:Consolas,monospace; overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; font-size:9pt; }
+td,th { border:1px solid #ccdbe5; padding:5px; } tr { break-inside:avoid; }
+img,svg { max-width:100%; height:auto; } a { color:#087b87; overflow-wrap:anywhere; }
+.provenance { border-top:4px solid #0e8c88; padding:10px 0; font-size:9pt; }
+.note,.TIP,.NOTE,.IMPORTANT,.WARNING { background:#eff5f7; padding:8px; }
+button,.display-none-print { display:none; } details { display:block; }
+[data-moniker]:not([data-moniker~="powershell-7.6"]) { display:none !important; }
+</style></head><body>
+<div class="provenance"><strong>Print copy of official Microsoft Learn documentation</strong>
+<p>Source: <a href="https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6">https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6</a><br>Exported: 2026-10-14. Source metadata date: 2026-08-12T00:00:00Z.</p>
+<p>Microsoft and documentation contributors. Article wording and code for the requested version are retained; web navigation is removed and print formatting is added. This locally generated PDF is not a Microsoft-published PDF book or a complete product manual. Source-page attribution and notices apply.</p>
+<p>Documentation license and terms: <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a>; .NET documentation: <a href="https://github.com/dotnet/docs/blob/main/LICENSE">CC BY 4.0 license</a>. Check the source for specific attribution or exceptions.</p>
+</div>
+<h1 id="what-is-powershell">What is PowerShell?</h1>
+<p>PowerShell is a cross-platform task automation solution made up of a command-line shell, a scripting
+language, and a configuration management framework. PowerShell runs on Windows, Linux, and macOS.</p>
+<h2 id="command-line-shell">Command-line Shell</h2>
+<p>PowerShell is a modern command shell that includes the best features of other popular shells. Unlike
+most shells that only accept and return text, PowerShell accepts and returns .NET objects. The shell
+includes the following features:</p>
+<ul>
+<li>Robust command-line <a href="/en-us/powershell/module/microsoft.powershell.core/about/about_history" data-linktype="absolute-path">history</a></li>
+<li>Tab completion and command prediction (See <a href="/en-us/powershell/module/psreadline/about/about_psreadline" data-linktype="absolute-path">about_PSReadLine</a>)</li>
+<li>Supports command and parameter <a href="/en-us/powershell/module/microsoft.powershell.core/about/about_aliases" data-linktype="absolute-path">aliases</a></li>
+<li><a href="/en-us/powershell/module/microsoft.powershell.core/about/about_pipelines" data-linktype="absolute-path">Pipeline</a> for chaining commands</li>
+<li>In-console <a href="/en-us/powershell/module/microsoft.powershell.core/get-help" data-linktype="absolute-path">help</a> system, similar to Unix <code>man</code> pages</li>
+</ul>
+<h2 id="scripting-language">Scripting language</h2>
+<p>As a scripting language, PowerShell is commonly used for automating the management of systems. It's
+also used to build, test, and deploy solutions, often in CI/CD environments. PowerShell is built on
+the .NET Common Language Runtime (CLR). All inputs and outputs are .NET objects. No need to parse
+text output to extract information from output. The PowerShell scripting language includes the
+following features:</p>
+<ul>
+<li>Extensible through <a href="/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced" data-linktype="absolute-path">functions</a>, <a href="/en-us/powershell/module/microsoft.powershell.core/about/about_classes" data-linktype="absolute-path">classes</a>, <a href="/en-us/powershell/module/microsoft.powershell.core/about/about_scripts" data-linktype="absolute-path">scripts</a>, and <a href="/en-us/powershell/module/microsoft.powershell.core/about/about_modules" data-linktype="absolute-path">modules</a></li>
+<li>Extensible <a href="/en-us/powershell/module/microsoft.powershell.core/about/about_format.ps1xml" data-linktype="absolute-path">formatting system</a> for easy output</li>
+<li>Extensible <a href="/en-us/powershell/module/microsoft.powershell.core/about/about_types.ps1xml" data-linktype="absolute-path">type system</a> for creating dynamic types</li>
+<li>Built-in support for common data formats like <a href="/en-us/powershell/module/microsoft.powershell.utility/convertfrom-csv" data-linktype="absolute-path">CSV</a>, <a href="/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json" data-linktype="absolute-path">JSON</a>, and <a href="/en-us/powershell/module/microsoft.powershell.utility/convertto-xml" data-linktype="absolute-path">XML</a></li>
+</ul>
+<h2 id="automation-platform">Automation platform</h2>
+<p>The extensible nature of PowerShell provides an ecosystem of PowerShell modules to deploy and manage
+almost any technology you work with. For example:</p>
+<p>Microsoft modules</p>
+<ul>
+<li><a href="/en-us/powershell/azure" data-linktype="absolute-path">Azure</a></li>
+<li><a href="/en-us/powershell/windows/get-started" data-linktype="absolute-path">Windows</a></li>
+<li><a href="/en-us/powershell/exchange/exchange-management-shell" data-linktype="absolute-path">Exchange</a></li>
+<li><a href="/en-us/sql/powershell/sql-server-powershell" data-linktype="absolute-path">SQL</a></li>
+</ul>
+<p>Third-party modules</p>
+<ul>
+<li><a href="https://aws.amazon.com/powershell/" data-linktype="external">AWS</a></li>
+<li><a href="https://developer.broadcom.com/powercli" data-linktype="external">VMware</a></li>
+<li><a href="https://docs.oracle.com/iaas/Content/API/SDKDocs/powershell.htm" data-linktype="external">Oracle Cloud</a></li>
+</ul>
+<h3 id="configuration-management">Configuration management</h3>
+<p>PowerShell Desired State Configuration (<a href="/en-us/powershell/scripting/dsc/overview/dscforengineers" data-linktype="absolute-path">DSC</a>) is a management framework in PowerShell that
+enables you to manage your enterprise infrastructure with configuration as code. With DSC, you can:</p>
+<ul>
+<li>Create declarative <a href="/en-us/powershell/scripting/dsc/configurations/configurations" data-linktype="absolute-path">configurations</a> and custom scripts for repeatable deployments</li>
+<li>Enforce configuration settings and report on configuration drift</li>
+<li>Deploy configuration using <a href="/en-us/powershell/scripting/dsc/pull-server/enactingconfigurations" data-linktype="absolute-path">push or pull</a> models</li>
+</ul>
+<h2 id="monad-manifesto">Monad Manifesto</h2>
+<p>Jeffrey Snover, the inventor of PowerShell, wrote the Monad Manifesto to explain his vision for
+PowerShell and how it would change the way we manage systems. Use the following link to download a
+copy of the <a href="https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/assets/MonadManifesto.pdf" data-linktype="external">Monad Manifesto</a>.</p>
+<p>This PDF file is a version of the original Monad Manifesto, which articulated the long-term vision and
+started the development effort that became PowerShell. PowerShell has delivered on many of the
+elements described in this document.</p>
+<h2 id="next-steps">Next steps</h2>
+<h3 id="getting-started">Getting started</h3>
+<p>Are you new to PowerShell and don't know where to start? Take a look at these resources.</p>
+<ul>
+<li><a href="/en-us/powershell/scripting/install/installing-powershell" data-linktype="absolute-path">Install PowerShell</a></li>
+<li><a href="discover-powershell?view=powershell-7.6" data-linktype="relative-path">Discover PowerShell</a></li>
+<li><a href="/en-us/powershell/scripting/learn/ps101/00-introduction" data-linktype="absolute-path">PowerShell 101</a></li>
+<li><a href="/en-us/shows/browse?terms=powershell" data-linktype="absolute-path">Microsoft Virtual Academy videos</a></li>
+<li><a href="/en-us/training/browse/?terms=PowerShell" data-linktype="absolute-path">PowerShell Learn modules</a></li>
+</ul>
+<h3 id="powershell-in-action">PowerShell in action</h3>
+<p>Take a look at how PowerShell is being used in different scenarios and on different platforms.</p>
+<ul>
+<li><a href="/en-us/powershell/scripting/learn/remoting/ssh-remoting-in-powershell-core" data-linktype="absolute-path">PowerShell remoting over SSH</a></li>
+<li><a href="/en-us/powershell/azure/get-started-azureps" data-linktype="absolute-path">Getting started with Azure PowerShell</a></li>
+<li><a href="/en-us/azure/devops/pipelines/release/dsc-cicd" data-linktype="absolute-path">Building a CI/CD pipeline with DSC</a></li>
+<li><a href="/en-us/powershell/exchange/exchange-management-shell" data-linktype="absolute-path">Managing Microsoft Exchange</a></li>
+</ul>
+<!-- link references -->
+
+
+</body></html>

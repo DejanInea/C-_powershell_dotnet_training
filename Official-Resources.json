@@ -1,0 +1,182 @@
+[
+  {
+    "Topic": "CSharp",
+    "FileName": "ECMA-334-CSharp-7th-Edition.pdf",
+    "Kind": "Publisher PDF",
+    "Description": "C# language standard, 7th edition (December 2023), covering C# 7. Not a C# 14 specification.",
+    "Url": "https://ecma-international.org/wp-content/uploads/ECMA-334_7th_edition_december_2023.pdf",
+    "PublisherPage": "https://ecma-international.org/publications-and-standards/standards/ecma-334/",
+    "Lessons": "All lessons; advanced reference"
+  },
+  {
+    "Topic": "CSharp",
+    "FileName": "Microsoft-CSharp-Overview.pdf",
+    "Kind": "Documentation export",
+    "Description": "Current Microsoft Learn C# overview.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/overview",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/overview",
+    "Lessons": "01-08"
+  },
+  {
+    "Topic": "CSharp",
+    "FileName": "Microsoft-CSharp14-Features.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn C# 14 feature overview.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14",
+    "Lessons": "12"
+  },
+  {
+    "Topic": "CSharp",
+    "FileName": "Microsoft-LINQ.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn introduction to LINQ queries.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/introduction-to-linq-queries",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/introduction-to-linq-queries",
+    "Lessons": "09"
+  },
+  {
+    "Topic": "CSharp",
+    "FileName": "Microsoft-Async-Await.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn asynchronous programming guidance.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/",
+    "Lessons": "11"
+  },
+  {
+    "Topic": "PowerShell",
+    "FileName": "Microsoft-Monad-Manifesto.pdf",
+    "Kind": "Publisher PDF",
+    "Description": "Jeffrey Snover's original 2002 PowerShell design paper. Historical background, not a current command reference.",
+    "Url": "https://raw.githubusercontent.com/MicrosoftDocs/PowerShell-Docs/main/assets/MonadManifesto.pdf",
+    "PublisherPage": "https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6",
+    "Lessons": "Background; 01 and 04"
+  },
+  {
+    "Topic": "PowerShell",
+    "FileName": "Microsoft-PowerShell-Overview.pdf",
+    "Kind": "Documentation export",
+    "Description": "Current Microsoft Learn PowerShell overview, view 7.6.",
+    "Url": "https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6",
+    "PublisherPage": "https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6",
+    "Lessons": "01"
+  },
+  {
+    "Topic": "PowerShell",
+    "FileName": "Microsoft-PowerShell-Pipelines.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn object pipeline reference, view 7.6.",
+    "Url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pipelines?view=powershell-7.6",
+    "PublisherPage": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pipelines?view=powershell-7.6",
+    "Lessons": "04-05"
+  },
+  {
+    "Topic": "PowerShell",
+    "FileName": "Microsoft-PowerShell-Advanced-Functions.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn advanced functions reference, view 7.6.",
+    "Url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced?view=powershell-7.6",
+    "PublisherPage": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced?view=powershell-7.6",
+    "Lessons": "06"
+  },
+  {
+    "Topic": "PowerShell",
+    "FileName": "Microsoft-PowerShell-Modules.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn module reference, view 7.6.",
+    "Url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7.6",
+    "PublisherPage": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7.6",
+    "Lessons": "09"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "ECMA-335-CLI-6th-Edition.pdf",
+    "Kind": "Publisher PDF",
+    "Description": "Common Language Infrastructure standard, 6th edition (June 2012). Runtime concepts and library profiles; not the .NET 10 API reference.",
+    "Url": "https://ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf",
+    "PublisherPage": "https://ecma-international.org/publications-and-standards/standards/ecma-335/",
+    "Lessons": "01-02; advanced reference"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-ASPNetCore-Architecture-Ebook.pdf",
+    "Kind": "Publisher PDF",
+    "Description": "Microsoft's published ASP.NET Core/Azure architecture ebook. Earlier-generation guidance; consult current ASP.NET Core 10 documentation for API details.",
+    "Url": "https://raw.githubusercontent.com/dotnet-architecture/eBooks/main/current/architecting-modern-web-apps-azure/Architecting-Modern-Web-Applications-with-ASP.NET-Core-and-Azure.pdf",
+    "PublisherPage": "https://dotnet.microsoft.com/en-us/learn/dotnet/architecture-guides",
+    "Lessons": "After 10; architecture"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-DotNet10-Overview.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn .NET 10 overview.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview",
+    "Lessons": "01 and 10"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-DotNet-CLI.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn .NET command-line interface.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/core/tools/",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/core/tools/",
+    "Lessons": "01-02 and 09"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-SystemTextJson.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn System.Text.Json overview.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview",
+    "Lessons": "03 and 10; CSharp 10-12"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-Dependency-Injection.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn dependency injection overview.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection/overview",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection/overview",
+    "Lessons": "04"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-Configuration.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn configuration in .NET.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration",
+    "Lessons": "03-04"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-Logging.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn logging in .NET.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/core/extensions/logging",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/core/extensions/logging",
+    "Lessons": "04-10"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-HttpClient.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn HttpClient guidelines.",
+    "Url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines",
+    "PublisherPage": "https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines",
+    "Lessons": "07"
+  },
+  {
+    "Topic": "DotNet10",
+    "FileName": "Microsoft-ASPNetCore10-MinimalAPI.pdf",
+    "Kind": "Documentation export",
+    "Description": "Microsoft Learn minimal API tutorial explicitly pinned to ASP.NET Core 10.",
+    "Url": "https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-10.0",
+    "PublisherPage": "https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-10.0",
+    "Lessons": "05-06 and 10"
+  }
+]

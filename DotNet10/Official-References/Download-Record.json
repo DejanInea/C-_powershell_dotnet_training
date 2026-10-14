@@ -1,0 +1,112 @@
+[
+    {
+        "File":  "DotNet10/Official-References/ECMA-335-CLI-6th-Edition.pdf",
+        "Kind":  "Publisher PDF",
+        "Source":  "https://ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf",
+        "PublisherPage":  "https://ecma-international.org/publications-and-standards/standards/ecma-335/",
+        "SourceMetadataDate":  null,
+        "RetrievedAtUtc":  "2026-10-14T12:33:18.5728956Z",
+        "Bytes":  4982145,
+        "Sha256":  "8C1DECF6D482F020776A12DD601537E024D5D5F30DF130A3EA3BBF3C51ADB1D6",
+        "SourceHtmlSha256":  null
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-ASPNetCore-Architecture-Ebook.pdf",
+        "Kind":  "Publisher PDF",
+        "Source":  "https://raw.githubusercontent.com/dotnet-architecture/eBooks/main/current/architecting-modern-web-apps-azure/Architecting-Modern-Web-Applications-with-ASP.NET-Core-and-Azure.pdf",
+        "PublisherPage":  "https://dotnet.microsoft.com/en-us/learn/dotnet/architecture-guides",
+        "SourceMetadataDate":  null,
+        "RetrievedAtUtc":  "2026-10-14T12:33:19.1574444Z",
+        "Bytes":  3173556,
+        "Sha256":  "488F9C7D8040A6EE71865417525922FDF172473BB6000AB02749B5C2144795C4",
+        "SourceHtmlSha256":  null
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-DotNet10-Overview.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview",
+        "SourceMetadataDate":  "2025-11-07T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:20.3812332Z",
+        "Bytes":  124520,
+        "Sha256":  "126CD10992493F102A445C741346C0F993BA04EA5C9234BBD336CA19CAED85B3",
+        "SourceHtmlSha256":  "FE35ACD9F51569006A98D75BB0D7ED398B318C249AA769835372D0A7CD9DD942"
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-DotNet-CLI.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/core/tools/",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/core/tools/",
+        "SourceMetadataDate":  "2026-09-29T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:21.7040535Z",
+        "Bytes":  188139,
+        "Sha256":  "8EACD2E0F88C4A1073641D47F1540EE6FB55126C3DD63E002034660611DD8A17",
+        "SourceHtmlSha256":  "D156C37C1E3228C6BBB5743DA92D6FAB4FD38551F8C93BBAB6D97FEDED8F2649"
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-SystemTextJson.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview",
+        "SourceMetadataDate":  "2025-01-19T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:22.9080036Z",
+        "Bytes":  112296,
+        "Sha256":  "3B6EE027A114556E55D132AB816FFFF7DD6D75ACFF66267534FDC7997FC5353A",
+        "SourceHtmlSha256":  "CDFA8D530C4B9681B15A73BFADFD643BE03EBDB1D0491C0035E687AC31DF7212"
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-Dependency-Injection.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection/overview",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection/overview",
+        "SourceMetadataDate":  "2026-01-26T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:24.3271556Z",
+        "Bytes":  207018,
+        "Sha256":  "05BD59CD7AC51ADDA1F787A24A07AF5DE4BE48E2F43CCA31B5DEE00D42B61A7A",
+        "SourceHtmlSha256":  "CE0C8F08B33A316558C0818096361C5E25993C95D9FD5E2069A38051D261C176"
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-Configuration.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration",
+        "SourceMetadataDate":  "2026-08-27T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:26.2452649Z",
+        "Bytes":  291699,
+        "Sha256":  "E9F8395284B5FFA9081C0A400D5D6D0C82F11C24B5B3994DAA680A114317EB83",
+        "SourceHtmlSha256":  "7369C9FBE96A79AF1946F4E0353F0A1E3A5AEF88E3910FD9744C68C7E4D1622A"
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-Logging.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/core/extensions/logging",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/core/extensions/logging",
+        "SourceMetadataDate":  "2025-10-21T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:27.7723420Z",
+        "Bytes":  397258,
+        "Sha256":  "4C3F50091B007208CCFEA8A0C6F84DE29092AA3F59ACD8DDFA39420087B06DB1",
+        "SourceHtmlSha256":  "45E612740C2DA6ECB1C8E803042BE5BEB801AC07B515DE4B0422F091C737BCF7"
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-HttpClient.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines",
+        "SourceMetadataDate":  "2025-10-22T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:29.1215333Z",
+        "Bytes":  135594,
+        "Sha256":  "8B50B5AE6678FC5D43A560488021F346011CFA23428A05869DA052F36DF62D5F",
+        "SourceHtmlSha256":  "DA102BC32A3BDE1FD9CB0D778B19D707750DC969857B51655D4D55C7B2C6EBA2"
+    },
+    {
+        "File":  "DotNet10/Official-References/Microsoft-ASPNetCore10-MinimalAPI.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-10.0",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-10.0",
+        "SourceMetadataDate":  "2026-06-28T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:30.8423880Z",
+        "Bytes":  807157,
+        "Sha256":  "01705C4A4CC17BD8714DEE3F30DCEE773255BFD1210115DD5700AD59DC8DA69B",
+        "SourceHtmlSha256":  "33AB60F22A41D37B930F580D922C7A1ACFC427DB24B85468EFF619C3C3E837F2"
+    }
+]

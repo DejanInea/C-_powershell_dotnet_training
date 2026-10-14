@@ -1,0 +1,567 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration"><title>Microsoft Learn configuration in .NET.</title>
+<style>
+@page { size:A4; margin:18mm 15mm; @bottom-center { content:"Microsoft documentation print copy | " counter(page); font:9pt Arial; color:#64748b; } }
+body { font:10.5pt/1.5 Arial,sans-serif; color:#172b43; margin:0; }
+h1 { font-size:24pt; color:#124968; } h2 { font-size:16pt; color:#165e76; } h3 { font-size:12pt; }
+h1,h2,h3 { break-after:avoid; } p { orphans:3; widows:3; }
+pre { background:#edf4f7; padding:10px; border-left:3px solid #0e8c88; white-space:pre-wrap; overflow-wrap:anywhere; font:8.5pt/1.35 Consolas,monospace; }
+code { font-family:Consolas,monospace; overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; font-size:9pt; }
+td,th { border:1px solid #ccdbe5; padding:5px; } tr { break-inside:avoid; }
+img,svg { max-width:100%; height:auto; } a { color:#087b87; overflow-wrap:anywhere; }
+.provenance { border-top:4px solid #0e8c88; padding:10px 0; font-size:9pt; }
+.note,.TIP,.NOTE,.IMPORTANT,.WARNING { background:#eff5f7; padding:8px; }
+button,.display-none-print { display:none; } details { display:block; }
+
+</style></head><body>
+<div class="provenance"><strong>Print copy of official Microsoft Learn documentation</strong>
+<p>Source: <a href="https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration">https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration</a><br>Exported: 2026-10-14. Source metadata date: 2026-08-27T00:00:00Z.</p>
+<p>Microsoft and documentation contributors. Article wording and code for the requested version are retained; web navigation is removed and print formatting is added. This locally generated PDF is not a Microsoft-published PDF book or a complete product manual. Source-page attribution and notices apply.</p>
+<p>Documentation license and terms: <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a>; .NET documentation: <a href="https://github.com/dotnet/docs/blob/main/LICENSE">CC BY 4.0 license</a>. Check the source for specific attribution or exceptions.</p>
+</div>
+<h1 id="configuration-in-net">Configuration in .NET</h1>
+<p>Configuration in .NET is performed using one or more <a href="#configuration-providers" data-linktype="self-bookmark">configuration providers</a>. Configuration providers read configuration data from key-value pairs using various configuration sources:</p>
+<ul>
+<li>Settings files, such as <em>appsettings.json</em></li>
+<li>Environment variables</li>
+<li><a href="/en-us/azure/key-vault/general/overview" data-linktype="absolute-path">Azure Key Vault</a></li>
+<li><a href="/en-us/azure/azure-app-configuration/overview" data-linktype="absolute-path">Azure App Configuration</a></li>
+<li>Command-line arguments</li>
+<li>Custom providers (installed or created)</li>
+<li>Directory files</li>
+<li>In-memory .NET objects</li>
+<li>Third-party providers</li>
+</ul>
+<div class="NOTE">
+<p>Note</p>
+<p>For information about configuring the .NET runtime itself, see <a href="../runtime-config/" data-linktype="relative-path">.NET Runtime configuration settings</a>.</p>
+</div>
+<h2 id="concepts-and-abstractions">Concepts and abstractions</h2>
+<p>Given one or more configuration sources, the <a href="/en-us/dotnet/api/microsoft.extensions.configuration.iconfiguration" class="no-loc" data-linktype="absolute-path">IConfiguration</a> type provides a unified view of the configuration data. Configuration is read-only, and the configuration pattern isn't designed to be programmatically writable. The <code>IConfiguration</code> interface is a single representation of all the configuration sources, as shown in the following diagram:</p>
+<p><span class="mx-imgBorder">
+<a href="media/configuration-sources.svg#lightbox" data-linktype="relative-path">
+<img src="media/configuration-sources.svg" alt="The `IConfiguration` interface is a single representation of all the configuration sources." data-linktype="relative-path">
+</a>
+</span>
+</p>
+<h2 id="configure-console-apps">Configure console apps</h2>
+<p>.NET console apps created using the <a href="../tools/dotnet-new" data-linktype="relative-path">dotnet new</a> command template or Visual Studio by default <em>don't</em> expose configuration capabilities. To add configuration in a new .NET console application, <a href="../tools/dotnet-package-add" data-linktype="relative-path">add a package reference</a> to <a href="https://www.nuget.org/packages/Microsoft.Extensions.Configuration" data-linktype="external">📦 Microsoft.Extensions.Configuration</a>. This package is the foundation for configuration in .NET apps. It provides the <a href="/en-us/dotnet/api/microsoft.extensions.configuration.configurationbuilder" class="no-loc" data-linktype="absolute-path">ConfigurationBuilder</a> and related types.</p>
+<pre><code class="lang-csharp">using Microsoft.Extensions.Configuration;
+
+var configuration = new ConfigurationBuilder()
+    .AddInMemoryCollection(new Dictionary&lt;string, string?&gt;()
+    {
+        ["SomeKey"] = "SomeValue"
+    })
+    .Build();
+
+Console.WriteLine(configuration["SomeKey"]);
+
+// Outputs:
+//   SomeValue
+</code></pre>
+<p>The preceding code:</p>
+<ul>
+<li>Creates a new <a href="/en-us/dotnet/api/microsoft.extensions.configuration.configurationbuilder" class="no-loc" data-linktype="absolute-path">ConfigurationBuilder</a> instance.</li>
+<li>Adds an in-memory collection of key-value pairs to the configuration builder.</li>
+<li>Calls the <a href="/en-us/dotnet/api/microsoft.extensions.configuration.configurationbuilder.build#microsoft-extensions-configuration-configurationbuilder-build" class="no-loc" data-linktype="absolute-path">Build()</a> method to create an <a href="/en-us/dotnet/api/microsoft.extensions.configuration.iconfiguration" class="no-loc" data-linktype="absolute-path">IConfiguration</a> instance.</li>
+<li>Writes the value of the <code>SomeKey</code> key to the console.</li>
+</ul>
+<p>While this example uses an in-memory configuration, there are many configuration providers available, exposing functionality for file-based, environment variables, command-line arguments, and other configuration sources. For more information, see <a href="configuration-providers" data-linktype="relative-path">Configuration providers in .NET</a>.</p>
+<h2 id="alternative-hosting-approach">Alternative hosting approach</h2>
+<p>Commonly, your apps will do more than just read configuration. They'll likely use dependency injection, logging, and other services. The <a href="generic-host" data-linktype="relative-path">.NET Generic Host</a> approach is recommended for apps that use these services. Instead, consider <a href="../tools/dotnet-package-add" data-linktype="relative-path">adding a package reference</a> to <a href="https://www.nuget.org/packages/Microsoft.Extensions.Hosting" data-linktype="external">📦 Microsoft.Extensions.Hosting</a>. Modify the <em>Program.cs</em> file to match the following code:</p>
+<pre><code class="lang-csharp" highlight-lines="3">using Microsoft.Extensions.Hosting;
+
+using IHost host = Host.CreateApplicationBuilder(args).Build();
+
+// Application code should start here.
+
+await host.RunAsync();
+</code></pre>
+<p>The <a href="/en-us/dotnet/api/microsoft.extensions.hosting.host.createapplicationbuilder#microsoft-extensions-hosting-host-createapplicationbuilder(system-string())" class="no-loc" data-linktype="absolute-path">Host.CreateApplicationBuilder(String[])</a> method provides default configuration for the app in the following order, from highest to lowest priority:</p>
+<ol>
+<li>Command-line arguments using the <a href="configuration-providers#command-line-configuration-provider" data-linktype="relative-path">Command-line configuration provider</a>.</li>
+<li>Environment variables using the <a href="configuration-providers#environment-variable-configuration-provider" data-linktype="relative-path">Environment Variables configuration provider</a>.</li>
+<li><a href="/en-us/aspnet/core/security/app-secrets" data-linktype="absolute-path">App secrets</a> when the app runs in the <code>Development</code> environment.</li>
+<li><em>appsettings.</em><code>Environment</code><em>.json</em> using the <a href="configuration-providers#file-configuration-provider" data-linktype="relative-path">JSON configuration provider</a>. For example, <em>appsettings</em>.<em><strong>Production</strong></em>.<em>json</em> and <em>appsettings</em>.<em><strong>Development</strong></em>.<em>json</em>.</li>
+<li><em>appsettings.json</em> using the <a href="configuration-providers#file-configuration-provider" data-linktype="relative-path">JSON configuration provider</a>.</li>
+<li><a href="/en-us/dotnet/api/microsoft.extensions.configuration.chainedconfigurationsource" data-linktype="absolute-path">ChainedConfigurationProvider</a> : Adds an existing <code>IConfiguration</code> as a source.</li>
+</ol>
+<p>Adding a configuration provider overrides previous configuration values. For example, the <a href="configuration-providers#command-line-configuration-provider" data-linktype="relative-path">Command-line configuration provider</a> overrides all values from other providers because it's added last. If <code>SomeKey</code> is set in both <em>appsettings.json</em> and the environment, the environment value is used because it was added after <em>appsettings.json</em>.</p>
+<h2 id="binding">Binding</h2>
+<p>One of the key advantages of using the .NET configuration abstractions is the ability to <em>bind</em> configuration values to instances of .NET objects. For example, the JSON configuration provider can be used to map <em>appsettings.json</em> files to .NET objects and is used with <a href="dependency-injection/overview" data-linktype="relative-path">dependency injection</a>. This enables the <a href="options" data-linktype="relative-path">options pattern</a>, which uses classes to provide strongly typed access to groups of related settings. The default binder is reflection-based, but there's a <a href="configuration-generator" data-linktype="relative-path">source generator alternative</a> that's easy to enable.</p>
+<p>.NET configuration provides various abstractions. Consider the following interfaces:</p>
+<ul>
+<li><a href="/en-us/dotnet/api/microsoft.extensions.configuration.iconfiguration" class="no-loc" data-linktype="absolute-path">IConfiguration</a>: Represents a set of key/value application configuration properties.</li>
+<li><a href="/en-us/dotnet/api/microsoft.extensions.configuration.iconfigurationroot" class="no-loc" data-linktype="absolute-path">IConfigurationRoot</a>: Represents the root of an <code>IConfiguration</code> hierarchy.</li>
+<li><a href="/en-us/dotnet/api/microsoft.extensions.configuration.iconfigurationsection" class="no-loc" data-linktype="absolute-path">IConfigurationSection</a>: Represents a section of application configuration values.</li>
+</ul>
+<p>These abstractions are agnostic to their underlying configuration provider (<a href="/en-us/dotnet/api/microsoft.extensions.configuration.iconfigurationprovider" class="no-loc" data-linktype="absolute-path">IConfigurationProvider</a>). In other words, you can use an <code>IConfiguration</code> instance to access any configuration value from multiple providers.</p>
+<p>The binder processes configuration values in several ways:</p>
+<ul>
+<li>It uses a single configuration value directly for a <code>string</code> or <code>object</code> target, or converts it to a common .NET type, such as a numeric type, an enumeration, or a nullable type. The binder converts a Base64-encoded string to a byte array.</li>
+<li>It binds hierarchical configuration to an object's properties or constructor parameters.</li>
+<li>It binds child configuration sections to arrays, collections, sets, and dictionaries.</li>
+<li>It uses the matching configuration section directly when the target type is <a href="/en-us/dotnet/api/microsoft.extensions.configuration.iconfigurationsection" class="no-loc" data-linktype="absolute-path">IConfigurationSection</a>.</li>
+<li>It converts a single configuration value to a custom type. The default binder uses a <a href="/en-us/dotnet/api/system.componentmodel.typeconverter" class="no-loc" data-linktype="absolute-path">TypeConverter</a> when the custom type defines one. The source-generated binder doesn't support this conversion.</li>
+</ul>
+<div class="NOTE">
+<p>Note</p>
+<p>The binder has a few limitations:</p>
+<ul>
+<li>Properties are ignored if they have private setters or their type can't be converted.</li>
+<li>Properties without corresponding configuration keys are ignored.</li>
+</ul>
+</div>
+<h3 id="binding-hierarchies">Binding hierarchies</h3>
+<p>Configuration values can contain hierarchical data. Hierarchical objects are represented with the use of the <code>:</code> delimiter in the configuration keys. To access a configuration value, use the <code>:</code> character to delimit a hierarchy. For example, consider the following configuration values:</p>
+<pre><code class="lang-json">{
+  "Parent": {
+    "FavoriteNumber": 7,
+    "Child": {
+      "Name": "Example",
+      "GrandChild": {
+        "Age": 3
+      }
+    }
+  }
+}
+</code></pre>
+<p>The following table represents example keys and their corresponding values for the preceding example JSON:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"Parent:FavoriteNumber"</code></td>
+<td><code>7</code></td>
+</tr>
+<tr>
+<td><code>"Parent:Child:Name"</code></td>
+<td><code>"Example"</code></td>
+</tr>
+<tr>
+<td><code>"Parent:Child:GrandChild:Age"</code></td>
+<td><code>3</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="advanced-binding-scenarios">Advanced binding scenarios</h3>
+<p>The configuration binder has specific behaviors and limitations when working with certain types. This section includes the following subsections:</p>
+<ul>
+<li><a href="#bind-to-dictionaries" data-linktype="self-bookmark">Bind to dictionaries</a></li>
+<li><a href="#dictionary-keys-with-colons" data-linktype="self-bookmark">Dictionary keys with colons</a></li>
+<li><a href="#bind-to-ireadonly-types" data-linktype="self-bookmark">Bind to IReadOnly* types</a></li>
+<li><a href="#exclude-properties-from-binding" data-linktype="self-bookmark">Exclude properties from binding</a></li>
+<li><a href="#bind-with-parameterized-constructors" data-linktype="self-bookmark">Bind with parameterized constructors</a></li>
+</ul>
+<h4 id="bind-to-dictionaries">Bind to dictionaries</h4>
+<p>When you bind configuration to a <a href="/en-us/dotnet/api/system.collections.generic.dictionary-2" class="no-loc" data-linktype="absolute-path">Dictionary&lt;TKey,TValue&gt;</a> where the value is a mutable collection type (like arrays or lists), repeated binds to the same key extend the collection values instead of replacing them.</p>
+<p>The following example demonstrates this behavior:</p>
+<pre><code class="lang-csharp">IConfiguration config = new ConfigurationBuilder()
+    .AddInMemoryCollection()
+    .Build();
+
+config["Queue:0"] = "Value1";
+var dict = new Dictionary&lt;string, string[]&gt;() { { "Queue", new[] { "InitialValue" } } };
+
+Console.WriteLine("=== Dictionary Binding with Collection Values ===");
+Console.WriteLine($"Initially: {string.Join(", ", dict["Queue"])}");
+
+// In .NET 7+, binding extends the collection instead of replacing it.
+config.Bind(dict);
+Console.WriteLine($"After Bind: {string.Join(", ", dict["Queue"])}");
+
+config["Queue:1"] = "Value2";
+config.Bind(dict);
+Console.WriteLine($"After 2nd Bind: {string.Join(", ", dict["Queue"])}");
+</code></pre>
+<p>For more information, see <a href="../compatibility/extensions/7.0/config-bind-dictionary" data-linktype="relative-path">Binding config to dictionary extends values</a>.</p>
+<h4 id="dictionary-keys-with-colons">Dictionary keys with colons</h4>
+<p>The colon (<code>:</code>) character is reserved as a hierarchy delimiter in configuration keys. This means you can't use colons in dictionary keys when binding configuration. If your keys contain colons (such as URLs or other formatted identifiers), the configuration system interprets them as hierarchy paths rather than literal characters. Consider the following workarounds:</p>
+<ul>
+<li>Use alternative delimiter characters (such as double underscores <code>__</code>) in your configuration keys and transform them programmatically if needed.</li>
+<li>Manually deserialize the configuration as raw JSON using <a href="/en-us/dotnet/api/system.text.json" class="no-loc" data-linktype="absolute-path">System.Text.Json</a> or a similar library, which supports colons in keys.</li>
+<li>Create a custom mapping layer that translates safe keys to your desired keys with colons.</li>
+</ul>
+<h4 id="bind-to-ireadonly-types">Bind to IReadOnly* types</h4>
+<p>The configuration binder doesn't support binding directly to <code>IReadOnlyList&lt;T&gt;</code>, <code>IReadOnlyDictionary&lt;TKey, TValue&gt;</code>, or other read-only collection interfaces. These interfaces lack the mechanisms the binder needs to populate the collections.</p>
+<p>To work with read-only collections, use mutable types for the properties that the binder populates, then expose them as read-only interfaces for consumers:</p>
+<pre><code class="lang-csharp">Console.WriteLine("=== IReadOnly* Types (NOT Directly Supported) ===");
+
+var readonlyConfig = new ConfigurationBuilder()
+    .AddInMemoryCollection(new Dictionary&lt;string, string?&gt;
+    {
+        ["Settings:Values:0"] = "Item1",
+        ["Settings:Values:1"] = "Item2",
+        ["Settings:Values:2"] = "Item3",
+    })
+    .Build();
+
+// This class uses List&lt;string&gt; for binding, exposes as IReadOnlyList&lt;string&gt;.
+var settings = new SettingsWithReadOnly();
+readonlyConfig.GetSection("Settings").Bind(settings);
+
+Console.WriteLine("Values bound to mutable List, exposed as IReadOnlyList:");
+foreach (var value in settings.ValuesReadOnly)
+{
+    Console.WriteLine($"  {value}");
+}
+</code></pre>
+<p>The configuration class implementation:</p>
+<pre><code class="lang-csharp">class SettingsWithReadOnly
+{
+    // Use mutable type for binding
+    public List&lt;string&gt; Values { get; set; } = [];
+
+    // Expose as read-only for consumers
+    public IReadOnlyList&lt;string&gt; ValuesReadOnly =&gt; Values;
+}
+</code></pre>
+<p>This approach allows the binder to populate the mutable <code>List&lt;string&gt;</code> while presenting an immutable interface to consumers through <code>IReadOnlyList&lt;string&gt;</code>.</p>
+<h4 id="exclude-properties-from-binding">Exclude properties from binding</h4>
+<p>If you don't want the configuration binder to populate a property, apply <a href="/en-us/dotnet/api/microsoft.extensions.configuration.configurationignoreattribute" class="no-loc" data-linktype="absolute-path">ConfigurationIgnoreAttribute</a> to it (available starting in .NET 11).</p>
+<pre><code class="lang-csharp">using Microsoft.Extensions.Configuration;
+
+public sealed class AppOptions
+{
+    public string Endpoint { get; set; } = "";
+
+    [ConfigurationIgnore]
+    public string RuntimeValue { get; set; } = "calculated";
+}
+</code></pre>
+<p>If configuration contains values for both <code>Endpoint</code> and <code>RuntimeValue</code>, the binder updates <code>Endpoint</code> and leaves <code>RuntimeValue</code> at its existing value.</p>
+<h4 id="bind-with-parameterized-constructors">Bind with parameterized constructors</h4>
+<p>Starting with .NET 7, the configuration binder supports binding to types with a single public parameterized constructor. This enables immutable types and records to be populated directly from configuration:</p>
+<pre><code class="lang-csharp">Console.WriteLine("=== Parameterized Constructor Binding ===");
+
+var ctorConfig = new ConfigurationBuilder()
+    .AddInMemoryCollection(new Dictionary&lt;string, string?&gt;
+    {
+        ["AppSettings:Name"] = "MyApp",
+        ["AppSettings:MaxConnections"] = "100",
+        ["AppSettings:Timeout"] = "30"
+    })
+    .Build();
+
+// Binding to a type with a single parameterized constructor
+var appSettings = ctorConfig.GetSection("AppSettings").Get&lt;AppSettings&gt;();
+if (appSettings != null)
+{
+    Console.WriteLine($"Name: {appSettings.Name}");
+    Console.WriteLine($"MaxConnections: {appSettings.MaxConnections}");
+    Console.WriteLine($"Timeout: {appSettings.Timeout}");
+}
+</code></pre>
+<p>The immutable settings class:</p>
+<pre><code class="lang-csharp">// Immutable type with single parameterized constructor.
+class AppSettings
+{
+    public string Name { get; }
+    public int MaxConnections { get; }
+    public int Timeout { get; }
+
+    public AppSettings(string name, int maxConnections, int timeout)
+    {
+        Name = name;
+        MaxConnections = maxConnections;
+        Timeout = timeout;
+    }
+}
+</code></pre>
+<div class="IMPORTANT">
+<p>Important</p>
+<p>The binder only supports types with a single public parameterized constructor. If a type has multiple public parameterized constructors, the binder cannot determine which one to use and binding will fail. Use either a single parameterized constructor or a parameterless constructor with property setters.</p>
+</div>
+<h2 id="basic-example">Basic example</h2>
+<p>To access configuration values in their basic form, without the assistance of the <em>generic host</em> approach, use the <a href="/en-us/dotnet/api/microsoft.extensions.configuration.configurationbuilder" class="no-loc" data-linktype="absolute-path">ConfigurationBuilder</a> type directly.</p>
+<div class="TIP">
+<p>Tip</p>
+<p>The <a href="/en-us/dotnet/api/system.configuration.configurationbuilder" class="no-loc" data-linktype="absolute-path">System.Configuration.ConfigurationBuilder</a> type is different to the <a href="/en-us/dotnet/api/microsoft.extensions.configuration.configurationbuilder" class="no-loc" data-linktype="absolute-path">Microsoft.Extensions.Configuration.ConfigurationBuilder</a> type. All of this content is specific to the <code>Microsoft.Extensions.*</code> NuGet packages and namespaces.</p>
+</div>
+<p>Consider the following C# project:</p>
+<pre><code class="lang-xml" highlight-lines="17-19">&lt;Project Sdk="Microsoft.NET.Sdk"&gt;
+
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;ImplicitUsings&gt;true&lt;/ImplicitUsings&gt;
+  &lt;/PropertyGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;Content Include="appsettings.json"&gt;
+      &lt;CopyToOutputDirectory&gt;Always&lt;/CopyToOutputDirectory&gt;
+    &lt;/Content&gt;
+  &lt;/ItemGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.12" /&gt;
+    &lt;PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.12" /&gt;
+    &lt;PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.12" /&gt;
+  &lt;/ItemGroup&gt;
+
+&lt;/Project&gt;
+</code></pre>
+<p>The preceding project file references several configuration NuGet packages:</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Binder" data-linktype="external">Microsoft.Extensions.Configuration.Binder</a>: Functionality to bind an object to data in configuration providers for <code>Microsoft.Extensions.Configuration</code>.</li>
+<li><a href="https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Json" data-linktype="external">Microsoft.Extensions.Configuration.Json</a>: JSON configuration provider implementation for <code>Microsoft.Extensions.Configuration</code>.</li>
+<li><a href="https://www.nuget.org/packages/Microsoft.Extensions.Configuration.EnvironmentVariables" data-linktype="external">Microsoft.Extensions.Configuration.EnvironmentVariables</a>: Environment variables configuration provider implementation for <code>Microsoft.Extensions.Configuration</code>.</li>
+</ul>
+<p>Consider an example <em>appsettings.json</em> file:</p>
+<pre><code class="lang-json">{
+    "Settings": {
+        "KeyOne": 1,
+        "KeyTwo": true,
+        "KeyThree": {
+            "Message": "Oh, that's nice...",
+            "SupportedVersions": {
+                "v1": "1.0.0",
+                "v3": "3.0.7"
+            }
+        },
+        "IPAddressRange": [
+            "46.36.198.121",
+            "46.36.198.122",
+            "46.36.198.123",
+            "46.36.198.124",
+            "46.36.198.125"
+        ]
+    }
+}
+</code></pre>
+<p>Now, given this JSON file, here's an example consumption pattern using the configuration builder directly:</p>
+<pre><code class="lang-csharp" highlight-lines="4-7,10">using Microsoft.Extensions.Configuration;
+
+// Build a config object, using env vars and JSON providers.
+IConfigurationRoot config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .Build();
+
+// Get values from the config given their key and their target type.
+Settings? settings = config.GetRequiredSection("Settings").Get&lt;Settings&gt;();
+
+// Write the values to the console.
+Console.WriteLine($"KeyOne = {settings?.KeyOne}");
+Console.WriteLine($"KeyTwo = {settings?.KeyTwo}");
+Console.WriteLine($"KeyThree:Message = {settings?.KeyThree?.Message}");
+
+// Application code which might rely on the config could start here.
+
+// This will output the following:
+//   KeyOne = 1
+//   KeyTwo = True
+//   KeyThree:Message = Oh, that's nice...
+</code></pre>
+<p>The preceding C# code:</p>
+<ul>
+<li>Instantiates a <a href="/en-us/dotnet/api/microsoft.extensions.configuration.configurationbuilder" class="no-loc" data-linktype="absolute-path">ConfigurationBuilder</a>.</li>
+<li>Adds the <code>"appsettings.json"</code> file to be recognized by the JSON configuration provider.</li>
+<li>Adds environment variables as being recognized by the Environment Variable configuration provider.</li>
+<li>Gets the required <code>"Settings"</code> section and the corresponding <code>Settings</code> instance by using the <code>config</code> instance.</li>
+</ul>
+<p>The <code>Settings</code> object is shaped as follows:</p>
+<pre><code class="lang-csharp">public sealed class Settings
+{
+    public required int KeyOne { get; set; }
+    public required bool KeyTwo { get; set; }
+    public required NestedSettings KeyThree { get; set; } = null!;
+}
+</code></pre>
+<pre><code class="lang-csharp">public sealed class NestedSettings
+{
+    public required string Message { get; set; } = null!;
+}
+</code></pre>
+<h2 id="basic-example-with-hosting">Basic example with hosting</h2>
+<p>To access the <code>IConfiguration</code> value, you can rely again on the <a href="https://www.nuget.org/packages/Microsoft.Extensions.Hosting" data-linktype="external"><code>Microsoft.Extensions.Hosting</code></a> NuGet package. Create a new console application, and paste the following project file contents into it:</p>
+<pre><code class="lang-xml" highlight-lines="4,11-13,17">&lt;Project Sdk="Microsoft.NET.Sdk"&gt;
+
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;ImplicitUsings&gt;true&lt;/ImplicitUsings&gt;
+  &lt;/PropertyGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;Content Include="appsettings.json"&gt;
+      &lt;CopyToOutputDirectory&gt;Always&lt;/CopyToOutputDirectory&gt;
+    &lt;/Content&gt;
+  &lt;/ItemGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.12" /&gt;
+    &lt;PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" /&gt;
+  &lt;/ItemGroup&gt;
+
+&lt;/Project&gt;
+</code></pre>
+<p>The preceding project file defines that:</p>
+<ul>
+<li>The application is an executable.</li>
+<li>An <em>appsettings.json</em> file is to be copied to the output directory when the project is compiled.</li>
+<li>The <code>Microsoft.Extensions.Hosting</code> NuGet package reference is added.</li>
+</ul>
+<p>Add the <em>appsettings.json</em> file at the root of the project with the following contents:</p>
+<pre><code class="lang-json">{
+    "KeyOne": 1,
+    "KeyTwo": true,
+    "KeyThree": {
+        "Message": "Thanks for checking this out!"
+    }
+}
+</code></pre>
+<p>Replace the contents of the <em>Program.cs</em> file with the following C# code:</p>
+<pre><code class="lang-csharp" highlight-lines="5,8,11-13,16-18">using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+using IHost host = Host.CreateApplicationBuilder(args).Build();
+
+// Ask the service provider for the configuration abstraction.
+IConfiguration config = host.Services.GetRequiredService&lt;IConfiguration&gt;();
+
+// Get values from the config given their key and their target type.
+int keyOneValue = config.GetValue&lt;int&gt;("KeyOne");
+bool keyTwoValue = config.GetValue&lt;bool&gt;("KeyTwo");
+string? keyThreeNestedValue = config.GetValue&lt;string&gt;("KeyThree:Message");
+
+// Write the values to the console.
+Console.WriteLine($"KeyOne = {keyOneValue}");
+Console.WriteLine($"KeyTwo = {keyTwoValue}");
+Console.WriteLine($"KeyThree:Message = {keyThreeNestedValue}");
+
+// Application code which might rely on the config could start here.
+
+await host.RunAsync();
+
+// This will output the following:
+//   KeyOne = 1
+//   KeyTwo = True
+//   KeyThree:Message = Thanks for checking this out!
+</code></pre>
+<p>When you run this application, the <code>Host.CreateApplicationBuilder</code> defines the behavior to discover the JSON configuration and expose it through the <code>IConfiguration</code> instance. From the <code>host</code> instance, you can ask the service provider for the <code>IConfiguration</code> instance and then ask it for values.</p>
+<div class="TIP">
+<p>Tip</p>
+<p>Using the raw <code>IConfiguration</code> instance in this way, while convenient, doesn't scale very well. When applications grow in complexity, and their corresponding configurations become more complex, we recommend that you use the <a href="options" data-linktype="relative-path"><em>options pattern</em></a> as an alternative.</p>
+</div>
+<h2 id="basic-example-with-hosting-and-using-the-indexer-api">Basic example with hosting and using the indexer API</h2>
+<p>Consider the same <em>appsettings.json</em> file contents from the previous example:</p>
+<pre><code class="lang-json">{
+    "SupportedVersions": {
+        "v1": "1.0.0",
+        "v3": "3.0.7"
+    },
+    "IPAddressRange": [
+        "46.36.198.123",
+        "46.36.198.124",
+        "46.36.198.125"
+    ]
+}
+</code></pre>
+<p>Replace the contents of the <em>Program.cs</em> file with the following C# code:</p>
+<pre><code class="lang-csharp" highlight-lines="11-15,17-22">using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+using IHost host = Host.CreateApplicationBuilder(args).Build();
+
+// Ask the service provider for the configuration abstraction.
+IConfiguration config = host.Services.GetRequiredService&lt;IConfiguration&gt;();
+
+// Get values from the config given their key and their target type.
+string? ipOne = config["IPAddressRange:0"];
+string? ipTwo = config["IPAddressRange:1"];
+string? ipThree = config["IPAddressRange:2"];
+string? versionOne = config["SupportedVersions:v1"];
+string? versionThree = config["SupportedVersions:v3"];
+
+// Write the values to the console.
+Console.WriteLine($"IPAddressRange:0 = {ipOne}");
+Console.WriteLine($"IPAddressRange:1 = {ipTwo}");
+Console.WriteLine($"IPAddressRange:2 = {ipThree}");
+Console.WriteLine($"SupportedVersions:v1 = {versionOne}");
+Console.WriteLine($"SupportedVersions:v3 = {versionThree}");
+
+// Application code which might rely on the config could start here.
+
+await host.RunAsync();
+
+// This will output the following:
+//     IPAddressRange:0 = 46.36.198.123
+//     IPAddressRange:1 = 46.36.198.124
+//     IPAddressRange:2 = 46.36.198.125
+//     SupportedVersions:v1 = 1.0.0
+//     SupportedVersions:v3 = 3.0.7
+</code></pre>
+<p>The values are accessed using the indexer API where each key is a string, and the value is a string. Configuration supports properties, objects, arrays, and dictionaries.</p>
+<h2 id="configuration-providers">Configuration providers</h2>
+<p>The following table shows the configuration providers available to .NET Core apps.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration provider</th>
+<th>Provides configuration from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/en-us/azure/azure-app-configuration/quickstart-aspnet-core-app" data-linktype="absolute-path">Azure App Configuration</a></td>
+<td>Azure App Configuration</td>
+</tr>
+<tr>
+<td><a href="/en-us/azure/key-vault/general/tutorial-net-virtual-machine" data-linktype="absolute-path">Azure Key Vault</a></td>
+<td>Azure Key Vault</td>
+</tr>
+<tr>
+<td><a href="configuration-providers#command-line-configuration-provider" data-linktype="relative-path">Command-line</a></td>
+<td>Command-line parameters</td>
+</tr>
+<tr>
+<td><a href="custom-configuration-provider" data-linktype="relative-path">Custom</a></td>
+<td>Custom source</td>
+</tr>
+<tr>
+<td><a href="configuration-providers#environment-variable-configuration-provider" data-linktype="relative-path">Environment variables</a></td>
+<td>Environment variables</td>
+</tr>
+<tr>
+<td><a href="configuration-providers#file-configuration-provider" data-linktype="relative-path">File</a></td>
+<td>JSON, XML, and INI files</td>
+</tr>
+<tr>
+<td><a href="configuration-providers#key-per-file-configuration-provider" data-linktype="relative-path">Key-per-file</a></td>
+<td>Directory files</td>
+</tr>
+<tr>
+<td><a href="configuration-providers#memory-configuration-provider" data-linktype="relative-path">Memory</a></td>
+<td>In-memory collections</td>
+</tr>
+<tr>
+<td><a href="/en-us/aspnet/core/security/app-secrets" data-linktype="absolute-path">App secrets (secret manager)</a></td>
+<td>File in the user profile directory</td>
+</tr>
+</tbody>
+</table>
+<div class="TIP">
+<p>Tip</p>
+<p>The order in which configuration providers are added matters. When multiple configuration providers are used and more than one provider specifies the same key, the last one added is used.</p>
+</div>
+<p>For more information on various configuration providers, see <a href="configuration-providers" data-linktype="relative-path">Configuration providers in .NET</a>.</p>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="configuration-providers" data-linktype="relative-path">Configuration providers in .NET</a></li>
+<li><a href="custom-configuration-provider" data-linktype="relative-path">Implement a custom configuration provider</a></li>
+<li>Configuration bugs should be created in the <a href="https://github.com/dotnet/runtime/issues" data-linktype="external">github.com/dotnet/runtime</a> repo</li>
+<li><a href="/en-us/aspnet/core/fundamentals/configuration" data-linktype="absolute-path">Configuration in ASP.NET Core</a></li>
+</ul>
+
+
+</body></html>

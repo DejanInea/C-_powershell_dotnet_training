@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+**/output/
+.tools/
+.artifacts/
+*.user
+verification.log
+pdf-render.log

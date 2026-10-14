@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview"><title>Microsoft Learn System.Text.Json overview.</title>
+<style>
+@page { size:A4; margin:18mm 15mm; @bottom-center { content:"Microsoft documentation print copy | " counter(page); font:9pt Arial; color:#64748b; } }
+body { font:10.5pt/1.5 Arial,sans-serif; color:#172b43; margin:0; }
+h1 { font-size:24pt; color:#124968; } h2 { font-size:16pt; color:#165e76; } h3 { font-size:12pt; }
+h1,h2,h3 { break-after:avoid; } p { orphans:3; widows:3; }
+pre { background:#edf4f7; padding:10px; border-left:3px solid #0e8c88; white-space:pre-wrap; overflow-wrap:anywhere; font:8.5pt/1.35 Consolas,monospace; }
+code { font-family:Consolas,monospace; overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; font-size:9pt; }
+td,th { border:1px solid #ccdbe5; padding:5px; } tr { break-inside:avoid; }
+img,svg { max-width:100%; height:auto; } a { color:#087b87; overflow-wrap:anywhere; }
+.provenance { border-top:4px solid #0e8c88; padding:10px 0; font-size:9pt; }
+.note,.TIP,.NOTE,.IMPORTANT,.WARNING { background:#eff5f7; padding:8px; }
+button,.display-none-print { display:none; } details { display:block; }
+
+</style></head><body>
+<div class="provenance"><strong>Print copy of official Microsoft Learn documentation</strong>
+<p>Source: <a href="https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview">https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview</a><br>Exported: 2026-10-14. Source metadata date: 2025-01-19T00:00:00Z.</p>
+<p>Microsoft and documentation contributors. Article wording and code for the requested version are retained; web navigation is removed and print formatting is added. This locally generated PDF is not a Microsoft-published PDF book or a complete product manual. Source-page attribution and notices apply.</p>
+<p>Documentation license and terms: <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a>; .NET documentation: <a href="https://github.com/dotnet/docs/blob/main/LICENSE">CC BY 4.0 license</a>. Check the source for specific attribution or exceptions.</p>
+</div>
+<h1 id="json-serialization-and-deserialization-in-net---overview">JSON serialization and deserialization in .NET - overview</h1>
+
+					<p>The <a href="/en-us/dotnet/api/system.text.json" class="no-loc" data-linktype="absolute-path">System.Text.Json</a> namespace provides functionality for serializing to and deserializing from (or marshalling and unmarshalling) JavaScript Object Notation (JSON). <em>Serialization</em> is the process of converting the state of an object, that is, the values of its properties, into a form that can be stored or transmitted. The serialized form doesn't include any information about an object's associated methods. <em>Deserialization</em> reconstructs an object from the serialized form.</p>
+<p>The <code>System.Text.Json</code> library design emphasizes high performance and low memory allocation over an extensive feature set. Built-in UTF-8 support optimizes the process of reading and writing JSON text encoded as UTF-8, which is the most prevalent encoding for data on the web and files on disk.</p>
+<p>The library also provides classes for working with an in-memory <a href="use-dom#json-dom-choices" data-linktype="relative-path">document object model (DOM)</a>. This feature enables random access to the elements in a JSON file or string.</p>
+<p>For Visual Basic, there are some limitations on what parts of the library you can use. For more information, see <a href="visual-basic-support" data-linktype="relative-path">Visual Basic support</a>.</p>
+<h2 id="how-to-get-the-library">How to get the library</h2>
+<p>The library is built-in as part of the shared framework for .NET Core 3.0 and later versions. The <a href="source-generation-modes#metadata-based-mode" data-linktype="relative-path">source generation feature</a> is built-in as part of the shared framework for .NET 6 and later versions.</p>
+<p>For framework versions earlier than .NET Core 3.0, install the <a href="https://www.nuget.org/packages/System.Text.Json" data-linktype="external">System.Text.Json</a> NuGet package. The package supports:</p>
+<ul>
+<li>.NET Standard 2.0 and later</li>
+<li>.NET Framework 4.6.2 and later</li>
+<li>.NET 8 and later</li>
+</ul>
+<h2 id="namespaces-and-apis">Namespaces and APIs</h2>
+<ul>
+<li>The <a href="/en-us/dotnet/api/system.text.json" class="no-loc" data-linktype="absolute-path">System.Text.Json</a> namespace contains all the entry points and the main types.</li>
+<li>The <a href="/en-us/dotnet/api/system.text.json.serialization" class="no-loc" data-linktype="absolute-path">System.Text.Json.Serialization</a> namespace contains attributes and APIs for advanced scenarios and customization specific to serialization and deserialization.</li>
+<li>The <a href="/en-us/dotnet/api/system.net.http.json" class="no-loc" data-linktype="absolute-path">System.Net.Http.Json</a> namespace contains extension methods for <a href="httpclient-extensions" data-linktype="relative-path">serializing and deserializing JSON payloads from the network</a>.</li>
+</ul>
+<div class="IMPORTANT">
+<p>Important</p>
+<p><code>System.Text.Json</code> doesn't support the following serialization APIs that you might have used previously:</p>
+<ul>
+<li>Attributes from the <a href="/en-us/dotnet/api/system.runtime.serialization" class="no-loc" data-linktype="absolute-path">System.Runtime.Serialization</a> namespace.</li>
+<li>The <a href="/en-us/dotnet/api/system.serializableattribute" class="no-loc" data-linktype="absolute-path">System.SerializableAttribute</a> attribute and the <a href="/en-us/dotnet/api/system.runtime.serialization.iserializable" class="no-loc" data-linktype="absolute-path">ISerializable</a> interface. These types are used only for <a href="/en-us/previous-versions/dotnet/fundamentals/serialization/binary/binary-serialization" data-linktype="absolute-path">Binary and XML serialization</a>.</li>
+</ul>
+</div>
+<h2 id="reflection-vs-source-generation">Reflection vs. source generation</h2>
+<p>By default, <code>System.Text.Json</code> gathers the metadata it needs to access properties of objects for serialization and deserialization <em>at runtime</em> using <a href="../../../csharp/advanced-topics/reflection-and-attributes/" data-linktype="relative-path">reflection</a>. As an alternative, <code>System.Text.Json</code> can use the C# <a href="../../../csharp/roslyn-sdk/#source-generators" data-linktype="relative-path">source generation</a> feature to improve performance, reduce private memory usage, and facilitate <a href="../../../core/deploying/trimming/trim-self-contained" data-linktype="relative-path">assembly trimming</a>, which reduces app size.</p>
+<p>For more information, see <a href="reflection-vs-source-generation" data-linktype="relative-path">Reflection versus source generation</a>.</p>
+<h2 id="security-information">Security information</h2>
+<p>For information about security threats that were considered when designing <a href="/en-us/dotnet/api/system.text.json.jsonserializer" class="no-loc" data-linktype="absolute-path">JsonSerializer</a>, and how they can be mitigated, see <a href="https://github.com/dotnet/runtime/blob/main/src/libraries/System.Text.Json/docs/ThreatModel.md" data-linktype="external"><code>System.Text.Json</code> Threat Model</a>.</p>
+<h2 id="thread-safety">Thread safety</h2>
+<p>The <code>System.Text.Json</code> serializer was designed with thread safety in mind. Practically, this means that once locked, <a href="/en-us/dotnet/api/system.text.json.jsonserializeroptions" class="no-loc" data-linktype="absolute-path">JsonSerializerOptions</a> instances can be safely shared across multiple threads. <a href="/en-us/dotnet/api/system.text.json.jsondocument" class="no-loc" data-linktype="absolute-path">JsonDocument</a> provides an immutable, and in .NET 8 and later versions, thread-safe, DOM representation for JSON values.</p>
+<h2 id="additional-resources">Additional resources</h2>
+<ul>
+<li><a href="how-to" data-linktype="relative-path">How to use the library</a></li>
+</ul>
+
+				
+
+</body></html>

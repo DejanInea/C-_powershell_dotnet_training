@@ -1,0 +1,159 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14"><title>Microsoft Learn C# 14 feature overview.</title>
+<style>
+@page { size:A4; margin:18mm 15mm; @bottom-center { content:"Microsoft documentation print copy | " counter(page); font:9pt Arial; color:#64748b; } }
+body { font:10.5pt/1.5 Arial,sans-serif; color:#172b43; margin:0; }
+h1 { font-size:24pt; color:#124968; } h2 { font-size:16pt; color:#165e76; } h3 { font-size:12pt; }
+h1,h2,h3 { break-after:avoid; } p { orphans:3; widows:3; }
+pre { background:#edf4f7; padding:10px; border-left:3px solid #0e8c88; white-space:pre-wrap; overflow-wrap:anywhere; font:8.5pt/1.35 Consolas,monospace; }
+code { font-family:Consolas,monospace; overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; font-size:9pt; }
+td,th { border:1px solid #ccdbe5; padding:5px; } tr { break-inside:avoid; }
+img,svg { max-width:100%; height:auto; } a { color:#087b87; overflow-wrap:anywhere; }
+.provenance { border-top:4px solid #0e8c88; padding:10px 0; font-size:9pt; }
+.note,.TIP,.NOTE,.IMPORTANT,.WARNING { background:#eff5f7; padding:8px; }
+button,.display-none-print { display:none; } details { display:block; }
+
+</style></head><body>
+<div class="provenance"><strong>Print copy of official Microsoft Learn documentation</strong>
+<p>Source: <a href="https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14">https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14</a><br>Exported: 2026-10-14. Source metadata date: 2025-11-18T00:00:00Z.</p>
+<p>Microsoft and documentation contributors. Article wording and code for the requested version are retained; web navigation is removed and print formatting is added. This locally generated PDF is not a Microsoft-published PDF book or a complete product manual. Source-page attribution and notices apply.</p>
+<p>Documentation license and terms: <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a>; .NET documentation: <a href="https://github.com/dotnet/docs/blob/main/LICENSE">CC BY 4.0 license</a>. Check the source for specific attribution or exceptions.</p>
+</div>
+<h1 id="whats-new-in-c-14">What's new in C# 14</h1>
+<p>C# 14 includes the following new features. You can try these features using the latest <a href="https://visualstudio.microsoft.com/" data-linktype="external">Visual Studio 2026</a> version or the <a href="https://dotnet.microsoft.com/download/dotnet" data-linktype="external">.NET 10 SDK</a>:</p>
+<ul>
+<li><a href="#extension-members" data-linktype="self-bookmark">Extension members</a></li>
+<li><a href="#null-conditional-assignment" data-linktype="self-bookmark">Null-conditional assignment</a></li>
+<li><a href="#unbound-generic-types-and-nameof" data-linktype="self-bookmark"><code>nameof</code> supports unbound generic types</a></li>
+<li><a href="#implicit-span-conversions" data-linktype="self-bookmark">More implicit conversions for <code>Span&lt;T&gt;</code> and <code>ReadOnlySpan&lt;T&gt;</code></a></li>
+<li><a href="#simple-lambda-parameters-with-modifiers" data-linktype="self-bookmark">Modifiers on simple lambda parameters</a></li>
+<li><a href="#the-field-keyword" data-linktype="self-bookmark"><code>field</code> backed properties</a></li>
+<li><a href="#more-partial-members" data-linktype="self-bookmark"><code>partial</code> events and constructors</a></li>
+<li><a href="#user-defined-compound-assignment" data-linktype="self-bookmark">user-defined compound assignment operators</a></li>
+<li><a href="../language-reference/preprocessor-directives#file-based-apps" data-linktype="relative-path">new preprocessor directives for File-based apps</a></li>
+</ul>
+<p>C# 14 is the latest C# release. C# 14 is supported on <strong>.NET 10</strong>. For more information, see <a href="../language-reference/configure-language-version" data-linktype="relative-path">C# language versioning</a>.</p>
+<p>You can download the latest .NET 10 SDK from the <a href="https://dotnet.microsoft.com/download" data-linktype="external">.NET downloads page</a>. You can also download <a href="https://visualstudio.microsoft.com/vs/" data-linktype="external">Visual Studio 2026</a>, which includes the .NET 10 SDK.</p>
+<!--  Saving this text for "What's new in C# 15" when I create it.
+New features are added to the "What's new in C#" page when they're available in public preview releases. The [working set](https://github.com/dotnet/roslyn/blob/main/docs/Language%20Feature%20Status.md#working-set) section of the [roslyn feature status page](https://github.com/dotnet/roslyn/blob/main/docs/Language%20Feature%20Status.md) tracks when upcoming features are merged into the main branch.
+-->
+<p>You can find any breaking changes introduced in C# 14 in our article on <a href="breaking-changes/compiler%20breaking%20changes%20-%20dotnet%2010" data-linktype="relative-path">breaking changes</a>.</p>
+<div class="NOTE">
+<p>Note</p>
+<p>We're interested in your feedback on these features. If you find issues with any of these new features, create a <a href="https://github.com/dotnet/roslyn/issues/new/choose" data-linktype="external">new issue</a> in the <a href="https://github.com/dotnet/roslyn" data-linktype="external">dotnet/roslyn</a> repository.</p>
+</div>
+<h2 id="extension-members">Extension members</h2>
+<p>C# 14 adds new syntax to define <em>extension members</em>. The new syntax enables you to declare <em>extension properties</em> in addition to extension methods. You can also declare extension members that extend the type, rather than an instance of the type. In other words, these new extension members can appear as static members of the type you extend. These extensions can include user defined operators implemented as static extension methods. The following code example shows an example of the different kinds of extension members you can declare:</p>
+<pre><code class="lang-csharp">public static class Enumerable
+{
+    // Extension block
+    extension&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source) // extension members for IEnumerable&lt;TSource&gt;
+    {
+        // Extension property:
+        public bool IsEmpty =&gt; !source.Any();
+
+        // Extension method:
+        public IEnumerable&lt;TSource&gt; Where(Func&lt;TSource, bool&gt; predicate) { ... }
+    }
+
+    // extension block, with a receiver type only
+    extension&lt;TSource&gt;(IEnumerable&lt;TSource&gt;) // static extension members for IEnumerable&lt;Source&gt;
+    {
+        // static extension method:
+        public static IEnumerable&lt;TSource&gt; Combine(IEnumerable&lt;TSource&gt; first, IEnumerable&lt;TSource&gt; second) { ... }
+
+        // static extension property:
+        public static IEnumerable&lt;TSource&gt; Identity =&gt; Enumerable.Empty&lt;TSource&gt;();
+
+        // static user defined operator:
+        public static IEnumerable&lt;TSource&gt; operator + (IEnumerable&lt;TSource&gt; left, IEnumerable&lt;TSource&gt; right) =&gt; left.Concat(right);
+    }
+}
+</code></pre>
+<p>The members in the first extension block are called as though they're instance members of <code>IEnumerable&lt;TSource&gt;</code>, for example <code>sequence.IsEmpty</code>. The members in the second extension block are called as though they're static members of <code>IEnumerable&lt;TSource&gt;</code>, for example <code>IEnumerable&lt;int&gt;.Identity</code>.</p>
+<p>You can learn more details by reading the article on <a href="../programming-guide/classes-and-structs/extension-methods" data-linktype="relative-path">extension members</a> in the programming guide, the language reference article on the <a href="../language-reference/keywords/extension" data-linktype="relative-path"><code>extension</code> keyword</a>, and the <a href="../language-reference/proposals/csharp-14.0/extensions" data-linktype="relative-path">feature specification</a> for the new extension members feature.</p>
+<h2 id="the-field-keyword">The <code>field</code> keyword</h2>
+<p>The token <code>field</code> enables you to write a property accessor body without declaring an explicit backing field. The token <code>field</code> is replaced with a compiler synthesized backing field.</p>
+<p>For example, previously, if you wanted to ensure that a <code>string</code> property couldn't be set to <code>null</code>, you had to declare a backing field and implement both accessors:</p>
+<pre><code class="lang-csharp">private string _msg;
+public string Message
+{
+    get =&gt; _msg;
+    set =&gt; _msg = value ?? throw new ArgumentNullException(nameof(value));
+}
+</code></pre>
+<p>You can now simplify your code to:</p>
+<pre><code class="lang-csharp">public string Message
+{
+    get;
+    set =&gt; field = value ?? throw new ArgumentNullException(nameof(value));
+}
+</code></pre>
+<p>You can also simplify common patterns like lazy initialization, property change notifications, and structured string fields. The following code shows examples of each:</p>
+<p><strong>Lazy Initialization:</strong></p>
+<pre><code class="lang-csharp">public SqlConnection Connection
+{
+    get =&gt; field ??= new SqlConnection("connection-string");
+}
+public string DisplayName
+{
+    get;
+    set
+    {
+        if (field == value) return;
+        field = value;
+        OnPropertyChanged();
+    }
+}
+public string Email
+{
+    get;
+    set =&gt; field = value?.Trim()?.ToLowerInvariant() ?? string.Empty;
+}
+</code></pre>
+<p>You can declare a body for one or both accessors for a field backed property.</p>
+<p>There's a potential breaking change or confusion reading code in types that also include a symbol named <code>field</code>. You can use <code>@field</code> or <code>this.field</code> to disambiguate between the <code>field</code> keyword and the identifier, or you can rename the current <code>field</code> symbol to provide better distinction.</p>
+<h2 id="implicit-span-conversions">Implicit span conversions</h2>
+<p>C# 14 introduces first-class support for <a href="/en-us/dotnet/api/system.span-1" class="no-loc" data-linktype="absolute-path">System.Span&lt;T&gt;</a> and <a href="/en-us/dotnet/api/system.readonlyspan-1" class="no-loc" data-linktype="absolute-path">System.ReadOnlySpan&lt;T&gt;</a> in the language. This support involves new implicit conversions allowing more natural programming with these types.</p>
+<p><code>Span&lt;T&gt;</code> and <code>ReadOnlySpan&lt;T&gt;</code> are used in many key ways in C# and the runtime. Their introduction improves performance without risking safety. C# 14 recognizes the relationship and supports some conversions between <code>ReadOnlySpan&lt;T&gt;</code>, <code>Span&lt;T&gt;</code>, and <code>T[]</code>. The span types can be extension method receivers, compose with other conversions, and help with generic type inference scenarios.</p>
+<p>You can find the list of implicit span conversions in the article on <a href="../language-reference/builtin-types/built-in-types" data-linktype="relative-path">built-in types</a> in the language reference section. You can learn more details by reading the feature specification for <a href="../language-reference/proposals/csharp-14.0/first-class-span-types" data-linktype="relative-path">First class span types</a>.</p>
+<h2 id="unbound-generic-types-and-nameof">Unbound generic types and <code>nameof</code></h2>
+<p>Beginning with C# 14, the argument to <code>nameof</code> can be an unbound generic type. For example, <code>nameof(List&lt;&gt;)</code> evaluates to <code>List</code>. In earlier versions of C#, only closed generic types, such as <code>List&lt;int&gt;</code>, could be used to return the <code>List</code> name.</p>
+<h2 id="simple-lambda-parameters-with-modifiers">Simple lambda parameters with modifiers</h2>
+<p>You can add parameter modifiers, such as <code>scoped</code>, <code>ref</code>, <code>in</code>, <code>out</code>, or <code>ref readonly</code> to lambda expression parameters without specifying the parameter type:</p>
+<pre><code class="lang-csharp">delegate bool TryParse&lt;T&gt;(string text, out T result);
+// ...
+TryParse&lt;int&gt; parse1 = (text, out result) =&gt; Int32.TryParse(text, out result);
+</code></pre>
+<p>Previously, adding any modifiers was allowed only when the parameter declarations included the types for the parameters. The preceding declaration would require types on all parameters:</p>
+<pre><code class="lang-csharp">TryParse&lt;int&gt; parse2 = (string text, out int result) =&gt; Int32.TryParse(text, out result);
+</code></pre>
+<p>The <code>params</code> modifier still requires an explicitly typed parameter list.</p>
+<p>You can read more about these changes in the article on <a href="../language-reference/operators/lambda-expressions#input-parameters-of-a-lambda-expression" data-linktype="relative-path">lambda expressions</a> in the C# language reference.</p>
+<h2 id="more-partial-members">More partial members</h2>
+<p>You can now declare <a href="../programming-guide/classes-and-structs/constructors#partial-constructors" data-linktype="relative-path">instance constructors</a> and <a href="../event-pattern" data-linktype="relative-path">events</a> as <a href="../language-reference/keywords/partial-member" data-linktype="relative-path">partial members</a>.</p>
+<p>Partial constructors and partial events must include exactly one <em>defining declaration</em> and one <em>implementing declaration</em>.</p>
+<p>Only the implementing declaration of a partial constructor can include a constructor initializer: <code>this()</code> or <code>base()</code>. Only one partial type declaration can include the primary constructor syntax.</p>
+<p>The implementing declaration of a partial event must include <code>add</code> and <code>remove</code> accessors. The defining declaration declares a field-like event.</p>
+<h2 id="user-defined-compound-assignment">User defined compound assignment</h2>
+<p>You can learn more in the feature specification for <a href="../language-reference/proposals/csharp-14.0/user-defined-compound-assignment" data-linktype="relative-path">user-defined compound assignment</a>.</p>
+<h2 id="null-conditional-assignment">Null-conditional assignment</h2>
+<p>The null-conditional member access operators, <code>?.</code> and <code>?[]</code>, can now be used on the left hand side of an assignment or compound assignment.</p>
+<p>Before C# 14, you needed to null-check a variable before assigning to a property:</p>
+<pre><code class="lang-csharp">if (customer is not null)
+{
+    customer.Order = GetCurrentOrder();
+}
+</code></pre>
+<p>You can simplify the preceding code using the <code>?.</code> operator:</p>
+<pre><code class="lang-csharp">customer?.Order = GetCurrentOrder();
+</code></pre>
+<p>The right side of the <code>=</code> operator is evaluated only when the left side isn't null. If <code>customer</code> is null, the code doesn't call <code>GetCurrentOrder</code>.</p>
+<p>In addition to assignment, you can use null-conditional member access operators with compound assignment operators (<code>+=</code>, <code>-=</code>, and others). However, increment and decrement, <code>++</code> and <code>--</code>, aren't allowed.</p>
+<p>You can learn more in the language reference article on the <a href="../language-reference/operators/member-access-operators#null-conditional-operators--and-" data-linktype="relative-path">conditional member access</a> and the feature specification for <a href="../language-reference/proposals/csharp-14.0/null-conditional-assignment" data-linktype="relative-path">null-conditional assignment</a>.</p>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="../../core/whats-new/dotnet-10/overview" data-linktype="relative-path">What's new in .NET 10</a></li>
+</ul>
+
+
+</body></html>

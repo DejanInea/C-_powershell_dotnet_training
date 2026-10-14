@@ -1,0 +1,1695 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>C# Learning Guide</title>
+<style>
+@page { size:A4; margin:18mm 16mm; @bottom-center { content:"C# learning guide  |  " counter(page); font-size:9pt; color:#64748b; } }
+* { box-sizing:border-box; }
+body { font-family:Arial,sans-serif; color:#172b43; line-height:1.48; font-size:10.5pt; margin:0; }
+main { max-width:180mm; margin:0 auto; }
+h1 { color:#124968; font-size:23pt; line-height:1.18; border-top:5px solid #0e8c88; padding-top:12px; break-before:page; }
+main > h1:first-child { break-before:auto; }
+h2 { color:#165e76; font-size:15pt; margin:20px 0 7px; }
+h3 { font-size:11.5pt; }
+h1,h2,h3 { break-after:avoid; }
+p { margin:9px 0; orphans:3; widows:3; }
+li { margin:5px 0; }
+a { color:#087b87; text-decoration:none; }
+code { font-family:Consolas,'Courier New',monospace; font-size:9pt; }
+p code,li code { background:#edf4f7; padding:1px 3px; border-radius:3px; }
+pre { background:#edf4f7; border-left:3px solid #0e8c88; padding:10px 12px; margin:12px 0; white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.35; }
+pre code { font-size:8.5pt; }
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:9pt; }
+td { border:1px solid #d4e3eb; padding:6px; vertical-align:top; }
+tr:first-child { background:#e1eff3; font-weight:bold; }
+tr { break-inside:avoid; }
+@media screen { body { background:#eaf1f5; padding:30px; } main { background:white; padding:35px; box-shadow:0 3px 15px #b4c6d5; max-width:220mm; } }
+</style></head><body><main><h1>C#: from first steps to a complete project</h1>
+<p>Original learning guide | 14 October 2026 | Read, run, change, explain, practice</p>
+<p>All commands assume a PowerShell terminal at the repository root. Code is included for study; use the source files for copying and editing.</p>
+<p>12 lessons, ordered from easy to hard. Read <a href="CSharp-Learning-Guide.pdf">CSharp-Learning-Guide.pdf</a> for the complete printable course, or use the individual lesson files below.</p>
+<p>Start here if programming is new to you. These lessons teach the C# language on .NET 10, including one C# 14 feature in the final project. All examples accept arguments rather than requiring interactive input, so you can repeat and verify them easily.</p>
+<h2>Before lesson 01</h2>
+<ol>
+<li>Open a PowerShell terminal at the repository root, the folder containing LearningPack.slnx.</li>
+<li>If local scripts are blocked, run <code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</code> for this terminal. This changes only this process, not the machine policy.</li>
+<li>Run <code>. .\Initialize-Training.ps1</code> (there is a space between the first and second dots).</li>
+<li>Keep the terminal at the repository root when copying commands from lessons.</li>
+<li>For every lesson: predict the output, run it, read each statement, change one thing, complete the exercise, then check SOLUTION.md.</li>
+</ol>
+<h2>Lesson order</h2>
+<ol>
+<li><a href="#01-Hello">01-Hello: Your first program</a></li>
+<li><a href="#02-Types">02-Types: Variables, types, and numbers</a></li>
+<li><a href="#03-Decisions">03-Decisions: Input validation and decisions</a></li>
+<li><a href="#04-Loops">04-Loops: Loops and arrays</a></li>
+<li><a href="#05-Methods">05-Methods: Methods and reusable rules</a></li>
+<li><a href="#06-Collections">06-Collections: Lists, dictionaries, and null</a></li>
+<li><a href="#07-Classes">07-Classes: Classes, records, and encapsulation</a></li>
+<li><a href="#08-Interfaces">08-Interfaces: Interfaces and composition</a></li>
+<li><a href="#09-Linq">09-Linq: LINQ queries and lambdas</a></li>
+<li><a href="#10-Files">10-Files: Files, JSON, and exceptions</a></li>
+<li><a href="#11-Async">11-Async: Async, await, and cancellation</a></li>
+<li><a href="#12-Capstone">12-Capstone: A persistent study tracker and C# 14</a></li>
+</ol>
+<h2>How to know you are ready to move on</h2>
+<p>Explain the example without reading the notes. Complete the exercise without copying the solution. Make one valid change and one invalid-input experiment. Record what happened in <a href="Progress.md">Progress.md</a>. If you cannot explain a result, repeat the lesson with smaller values.</p>
+<h2>Learn Git with this track</h2>
+<p>Read <a href="../Git-Workflow.md">the Git workflow</a> and <a href="Git-Practice.md">this track&#39;s Git checkpoints</a>. Each lesson includes a branch name, verification step, staging paths, and suggested commit. The printable course guide includes the shared Git workflow too.</p>
+<h2>Official PDF references</h2>
+<p>The <a href="Official-References/README.md">Official-References index</a> lists downloaded publisher PDFs and printable copies of current Microsoft documentation, with source URLs, editions, and course mappings. Publisher PDFs retain their original content. Documentation exports are clearly labeled as local print copies, rather than Microsoft-published PDF books.</p>
+<h2>Reference documentation</h2>
+<p>The lesson guides are original teaching material. Official downloads and documentation exports are listed in Official-References/README.md. The links below provide further online study. Checked on 14 October 2026.</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/csharp/">C# guide</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14">C# 14 features</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/csharp/linq/">LINQ introduction</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/">Async programming</a></li>
+</ul>
+<h1>Course code style</h1>
+<p>Authored C# follows <a href="https://google.github.io/styleguide/csharpguide.html">Google&#39;s C# guide</a>, linked from the <a href="https://google.github.io/styleguide/">Google style-guide index</a>.</p>
+<h2>C# and .NET lessons</h2>
+<ul>
+<li>Use two spaces, same-line opening braces, and a 100-column limit.</li>
+<li>Put one statement on each line and brace control-flow bodies.</li>
+<li>Use PascalCase for types/public members, camelCase for parameters/locals, and _camelCase for private fields.</li>
+<li>Place System imports first and sort other imports alphabetically.</li>
+<li>Use block-bodied methods; reserve expression bodies for suitable properties and simple lambdas.</li>
+<li>Put each core type in its own matching source file.</li>
+<li>Use constants for fixed rules and readonly fields for stable dependencies.</li>
+</ul>
+<p>.editorconfig records formatter settings and private-field naming. Types now live in files such as StudySession.cs, StudyEntry.cs, and TaskRules.cs. Numbered folders preserve lesson order.</p>
+<p>The course still teaches modern C#: top-level programs, file-scoped namespaces, records, collection expressions, and C# 14 field-backed properties. Positional record parameters use PascalCase because they declare public properties.</p>
+<h2>PowerShell convention</h2>
+<p>Google&#39;s shell guide targets Bash, so these scripts use a documented course convention: two spaces, same-line braces, explicit blocks, and separate statements. Aim for 100 columns; long literal URLs, generated HTML here-strings, and indivisible arguments can exceed that target.</p>
+<p>Keep Verb-Noun function names, PascalCase parameters/output properties, and camelCase locals. Use full commands, structured output, help comments, validation, native exit-code checks, and splatting for long calls.</p>
+<h2>Verify before committing</h2>
+<pre><code>
+. .\Initialize-Training.ps1
+dotnet build .\LearningPack.slnx -m:1 -nr:false
+.\Check-Style.ps1
+.\Test-LearningPack.ps1
+</code></pre>
+<p>To apply the SDK formatter:</p>
+<pre><code>
+dotnet format whitespace .\LearningPack.slnx --no-restore
+dotnet format style .\LearningPack.slnx --no-restore --diagnostics IDE0011 IDE0022 IDE0061 --severity info
+</code></pre>
+<p>Review changes and run checks before regenerating course PDFs with Build-Guides.ps1. Original publisher PDFs and official documentation exports retain their source formatting.</p>
+<h1>Git practice in the CSharp course</h1>
+<p>Read <a href="../Git-Workflow.md">Git-Workflow.md</a> first and save the supplied baseline before editing. Start each exercise on a clean branch from main. Run focused checks, stage related changes, commit with a clear message, then choose either local integration or a GitHub pull request.</p>
+<h2>Track checkpoints</h2>
+<table><tbody>
+<tr><td>Lesson</td><td>Branch</td><td>Suggested commit</td><td>Extra Git skill</td></tr>
+<tr><td>01-Hello</td><td>feat/csharp-01-city</td><td>feat(csharp): accept an optional city argument</td><td>Inspect status, diff, and staging</td></tr>
+<tr><td>02-Types</td><td>feat/csharp-02-discount</td><td>feat(csharp): calculate discounted study prices</td><td>Inspect status, diff, and staging</td></tr>
+<tr><td>03-Decisions</td><td>feat/csharp-03-senior-category</td><td>feat(csharp): classify senior ages</td><td>Inspect status, diff, and staging</td></tr>
+<tr><td>04-Loops</td><td>feat/csharp-04-session-statistics</td><td>feat(csharp): count longer study sessions</td><td>Keep commits focused and review the staged snapshot</td></tr>
+<tr><td>05-Methods</td><td>feat/csharp-05-total-calculation</td><td>feat(csharp): validate total calculation inputs</td><td>Keep commits focused and review the staged snapshot</td></tr>
+<tr><td>06-Collections</td><td>feat/csharp-06-topic-totals</td><td>feat(csharp): aggregate topic minutes</td><td>Keep commits focused and review the staged snapshot</td></tr>
+<tr><td>07-Classes</td><td>feat/csharp-07-completion-time</td><td>feat(csharp): record first completion time</td><td>Push a branch and explain validation in a PR</td></tr>
+<tr><td>08-Interfaces</td><td>feat/csharp-08-memory-notifier</td><td>test(csharp): capture notifier messages in memory</td><td>Push a branch and explain validation in a PR</td></tr>
+<tr><td>09-Linq</td><td>feat/csharp-09-topic-summary</td><td>feat(csharp): summarize distinct study topics</td><td>Push a branch and explain validation in a PR</td></tr>
+<tr><td>10-Files</td><td>feat/csharp-10-missing-file</td><td>fix(csharp): handle missing study files</td><td>Review integration history and practice conflict resolution</td></tr>
+<tr><td>11-Async</td><td>feat/csharp-11-cancellation</td><td>test(csharp): verify planning cancellation</td><td>Review integration history and practice conflict resolution</td></tr>
+<tr><td>12-Capstone</td><td>feat/csharp-12-summary-command</td><td>feat(csharp): add a per-topic summary command</td><td>Review integration history and practice conflict resolution</td></tr>
+</tbody></table>
+<p>For a docs-only change, prefer a docs/ branch; for a bug fix, prefer fix/. The suggested feat/ name is a convenient starting point and can be adapted to what you actually implement. Do not describe a documentation-only experiment as a new program feature.</p>
+<h2>Practice in a separate local repository</h2>
+<pre><code>
+.\New-GitPractice.ps1 -Topic CSharp
+</code></pre>
+<p>Use the printed developer and teammate paths. Both clones and their bare remote are inside .artifacts. Follow the push, merge, and conflict examples from Git-Workflow.md there. This is separate from changing your actual course repository.</p>
+<h2>A complete checkpoint</h2>
+<ol>
+<li>Verify the change with the lesson commands and an appropriate boundary case.</li>
+<li>Inspect git diff and stage only related source or notes.</li>
+<li>Inspect git diff --cached and commit.</li>
+<li>Push your branch if you intend to publish it.</li>
+<li>Review a PR or perform a local merge, then verify the behavior on main.</li>
+<li>Record the resulting commit ID in Progress.md.</li>
+</ol>
+<p>Do not commit generated build output, demonstration data, API logs, browser profiles, or credentials. Regenerate the original course PDFs after documentation changes only when the source content is ready; inspect PDF changes by size and rendered pages rather than a text diff.</p>
+<h1>Git workflow for all three courses</h1>
+<p>Use Git while completing exercises. Git records versions locally; GitHub hosts a remote repository and adds pull requests. A branch lets you develop a change before integrating it into main. A commit stores the staged snapshot with a message. Push sends commits to a remote. Merge combines histories.</p>
+<p>This course uses short-lived branches, small commits, and reviewed merges. It is one practical workflow; team rules can differ. The optional type(scope): summary message convention is a course recommendation, not a Git requirement.</p>
+<h2>1. Inspect and set your identity</h2>
+<pre><code>
+git --version
+git status --short --branch
+git branch --show-current
+git remote -v
+git log --oneline --decorate -5
+</code></pre>
+<p>The working tree is your files on disk. The index, or staging area, holds the next proposed snapshot. HEAD identifies the current commit. origin is a conventional remote name. This repository already has origin: check its actual address instead of adding another remote. Do not run git init inside the lesson folders; all courses belong to one repository.</p>
+<p>If identity is missing, replace these placeholders with your own name and verified or GitHub noreply email:</p>
+<pre><code>
+git config --local user.name &quot;Your Real Name&quot;
+git config --local user.email &quot;your-verified-or-GitHub-noreply-email&quot;
+git config --get user.name
+git config --get user.email
+</code></pre>
+<p>Local identity settings affect only this repository. Commit identity differs from push authentication. Use Git Credential Manager or GitHub&#39;s supported authentication; keep passwords and tokens out of source files and remote URLs.</p>
+<h2>2. Commit the supplied baseline before exercises</h2>
+<p>An untracked file does not exist in Git history. If the learning pack is initially uncommitted, save its supplied state before editing lessons:</p>
+<pre><code>
+git status --short --branch
+git switch -c course/learning-pack
+git add -- .gitignore .gitattributes .editorconfig README.md STYLE.md Directory.Build.props global.json NuGet.Config LearningPack.slnx
+git add -- Initialize-Training.ps1 Test-LearningPack.ps1 Check-Style.ps1 Build-Guides.ps1
+git add -- Git-Workflow.md New-GitPractice.ps1 Official-Resources.json Download-OfficialReferences.ps1
+git add -- CSharp PowerShell DotNet10 .github
+git diff --cached --stat
+git diff --cached --check
+git commit -m &quot;chore(course): add CSharp PowerShell and .NET 10 learning pack&quot;
+</code></pre>
+<p>Review every staged path, including deletions. Confirm bin, obj, output, .tools and .artifacts are excluded. Inspect PDF sizes. Add only paths that exist in your copy.</p>
+<p>Choose ONE baseline integration path:</p>
+<ul>
+<li>Local practice: git switch main, then git merge --no-ff course/learning-pack -m &quot;Merge initial learning pack&quot;.</li>
+<li>GitHub practice: git push -u origin course/learning-pack, open a pull request to main, merge on GitHub, then fetch and fast-forward your local main.</li>
+</ul>
+<p>Do not merge locally and also squash the same change on GitHub: those are different histories. If the baseline is already committed on main, skip this section.</p>
+<h2>3. Start a focused branch</h2>
+<p>Start with a clean working tree. Commit your current work or deliberately stash it before switching.</p>
+<pre><code>
+git switch main
+git status --short
+# For GitHub practice; omit fetch/pull in local-only practice:
+git fetch origin
+git pull --ff-only origin main
+git switch -c feat/csharp-01-city
+</code></pre>
+<p>--ff-only refuses to combine divergent local and remote histories silently. If it refuses, inspect the graph and follow the synchronization section. Names such as feat/csharp-01-city, fix/powershell-09-minute-validation, and feat/dotnet10-task-summary identify one purpose. Branches are repository-wide, not restricted to the named folder. Integrate a lesson branch before starting the next unless you intentionally need a dependent branch.</p>
+<h2>4. Edit, verify, stage, and commit</h2>
+<p>For the first C# exercise, implement the optional city argument and verify both explicit and default inputs:</p>
+<pre><code>
+. .\Initialize-Training.ps1
+dotnet run --project .\CSharp\01-Hello -- Dejan Ljubljana
+dotnet run --project .\CSharp\01-Hello -- Dejan
+git diff -- CSharp/01-Hello/Program.cs
+git add -- CSharp/01-Hello/Program.cs
+git diff --cached -- CSharp/01-Hello/Program.cs
+git diff --cached --check
+git status --short
+git commit -m &quot;feat(csharp): accept an optional city argument&quot; -m &quot;Use Ljubljana when the city is omitted. Verified explicit and default inputs.&quot;
+git show --stat HEAD
+</code></pre>
+<p>diff shows unstaged edits. diff --cached shows exactly what a commit will contain. Untracked files need editor inspection and staging before they appear in the staged diff. If you edit after staging, add again for edits you want in the same snapshot. git add -p stages selected hunks from tracked files.</p>
+<p>Keep each commit focused and working. Use the lesson&#39;s verification commands. The root test script checks the supplied behavior; deliberate exercise changes may require updating its expectations.</p>
+<h2>5. Write clear messages and PR comments</h2>
+<p>Use an imperative summary describing the resulting change. A roughly 50-72-character summary is a useful readability target, not a Git limit. A body explains why a non-obvious decision was made and what relevant checks passed. Each additional -m adds another paragraph.</p>
+<table><tbody>
+<tr><td>Type</td><td>Purpose</td><td>Example</td></tr>
+<tr><td>feat</td><td>New behavior</td><td>feat(csharp): accept an optional city argument</td></tr>
+<tr><td>fix</td><td>Correct behavior</td><td>fix(powershell): reject negative study minutes</td></tr>
+<tr><td>docs</td><td>Documentation</td><td>docs(dotnet10): explain API validation responses</td></tr>
+<tr><td>refactor</td><td>Structure with preserved behavior</td><td>refactor(csharp): extract study calculations</td></tr>
+<tr><td>test</td><td>Verification</td><td>test(dotnet10): check task persistence</td></tr>
+<tr><td>chore</td><td>Maintenance</td><td>chore(course): normalize source line endings</td></tr>
+</tbody></table>
+<p>This is an optional convention. Avoid vague messages such as updates, fix stuff, or final. Source comments explain implementation details; commit messages explain a recorded change; PR comments discuss a proposed change and review. They have different purposes.</p>
+<p>For a PR, state the problem, resulting behavior, and exact validation. The supplied .github/PULL_REQUEST_TEMPLATE.md provides those fields. Example title: Accept an optional city in the greeting. Example description: The greeting accepts a second argument and defaults to Ljubljana. Verified explicit and omitted city runs.</p>
+<h2>6. Push and review a pull request</h2>
+<pre><code>
+git remote -v
+git push -u origin feat/csharp-01-city
+</code></pre>
+<p>-u records the upstream; subsequent git push uses that relationship. Push publishes commits but does not merge main. On GitHub, create a pull request with main as base and your feature branch as head. Review Files changed, fix failed checks, and respond to comments. Additional pushes to that branch update the PR.</p>
+<p>If a push is rejected, read the error: authentication, branch protection, and remote changes require different fixes. Fetch and inspect before attempting any history rewrite.</p>
+<h2>7. Merge: choose one completion path</h2>
+<table><tbody>
+<tr><td>Method</td><td>History effect</td><td>Useful context</td></tr>
+<tr><td>Fast-forward</td><td>Moves the target pointer to a descendant</td><td>Simple local exercises</td></tr>
+<tr><td>Merge commit</td><td>Records two parent histories</td><td>Preserve individual commits and integration point</td></tr>
+<tr><td>Squash merge</td><td>Creates one new combined commit</td><td>One compact reviewed feature</td></tr>
+<tr><td>Rebase then merge</td><td>Replays commits on a new base</td><td>Teams requiring linear history</td></tr>
+</tbody></table>
+<p>Use a merge commit in the local lab to see branch history. For a small GitHub PR, squash merge is a reasonable default if repository policy allows it. Review the final squash message because it becomes main&#39;s commit message.</p>
+<p>Local completion, without publishing:</p>
+<pre><code>
+git switch main
+git status --short
+git merge --no-ff feat/csharp-01-city -m &quot;Merge CSharp city argument exercise&quot;
+git log --oneline --graph --decorate -10
+git branch -d feat/csharp-01-city
+</code></pre>
+<p>Merge changes your CURRENT branch. --no-ff requests an explicit merge commit. Delete a branch only after integration. -d checks ancestry. After a GitHub squash merge, -d may refuse because the original commits were not merged by identity; keeping the branch is fine.</p>
+<p>GitHub completion: merge the PR on GitHub first, then:</p>
+<pre><code>
+git fetch origin
+git switch main
+git pull --ff-only origin main
+git log --oneline --graph --decorate -10
+git status --short
+</code></pre>
+<p>Check the completed behavior is on main before starting the next lesson. git fetch --prune removes stale remote-tracking names, not your local branches.</p>
+<p>To incorporate updated main into an active feature branch:</p>
+<pre><code>
+git switch feat/csharp-01-city
+git fetch origin
+git merge origin/main
+# Resolve conflicts if needed, verify, and finish the merge.
+git push
+</code></pre>
+<p>Rebase is another choice for a private, never-pushed branch. It changes commit IDs. This course uses merge to update published branches without rewriting their shared history.</p>
+<h2>8. Resolve conflicts and undo deliberately</h2>
+<p>A conflict means overlapping changes need your decision. Run status, open the file, find &lt;&lt;&lt;&lt;&lt;&lt;&lt;, =======, and &gt;&gt;&gt;&gt;&gt;&gt;&gt;, write the intended combined result, remove the markers, and verify it. Stage each resolved file and commit:</p>
+<pre><code>
+git status
+# Edit and run checks BEFORE staging:
+git add -- CSharp/01-Hello/Program.cs
+git diff --cached
+git commit -m &quot;merge(csharp): preserve city input and updated greeting&quot;
+</code></pre>
+<p>git merge --abort abandons the merge where possible. Start merges with a clean working tree so the pre-merge state is clear. Practice your first conflict in the isolated lab.</p>
+<table><tbody>
+<tr><td>Command</td><td>Effect</td><td>Appropriate use</td></tr>
+<tr><td>git restore --staged -- path</td><td>Unstage while keeping working edits</td><td>Wrong path staged</td></tr>
+<tr><td>git restore -- path</td><td>Discard unstaged tracked-file edits</td><td>Only after reviewing and choosing to discard</td></tr>
+<tr><td>git stash push -u -m &quot;lesson draft&quot;</td><td>Park edits and untracked files locally</td><td>Switch context temporarily</td></tr>
+<tr><td>git stash list</td><td>Show parked work</td><td>Find your draft</td></tr>
+<tr><td>git stash apply</td><td>Restore the latest stash while keeping it</td><td>Resume, inspect, then drop after verification</td></tr>
+<tr><td>git revert commit-id</td><td>Record the inverse of a normal commit</td><td>Undo shared work without rewriting history</td></tr>
+</tbody></table>
+<p>Stash is local temporary storage, not a pushed backup. Reverting a merge requires additional parent selection; the simple revert example is for a normal commit. Amend rewrites the latest commit; reserve it for appropriate private, unpushed work. Routine beginner work does not require reset --hard, clean -fd, or force pushes.</p>
+<h2>9. Practice pushing and conflicts offline</h2>
+<p>New-GitPractice.ps1 creates a fresh developer repository, bare local remote, and teammate clone under .artifacts. It copies your selected topic&#39;s first runnable lesson and configures fictional identities only inside those lab repositories. It does not change the course repository&#39;s branch or contact GitHub.</p>
+<pre><code>
+.\New-GitPractice.ps1 -Topic CSharp
+# Use the developer path printed by the script:
+Set-Location &#39;PASTE-THE-PRINTED-DEVELOPER-FOLDER&#39;
+git switch -c feat/practice-note
+Add-Content -LiteralPath PracticeNotes.txt -Value &#39;I can explain the staging area.&#39;
+git diff
+git add -- PracticeNotes.txt
+git diff --cached
+git commit -m &quot;docs(csharp): record staging practice&quot;
+git push -u origin feat/practice-note
+git switch main
+git merge --no-ff feat/practice-note -m &quot;Merge staging practice&quot;
+git push origin main
+git log --oneline --graph --all
+</code></pre>
+<p>Open another terminal in the printed teammate folder. Run git pull --ff-only origin main and inspect PracticeNotes.txt. This demonstrates the same data movement without publishing to your GitHub account.</p>
+<p>In the lab developer folder, create a deliberate conflict:</p>
+<pre><code>
+git switch main
+git switch -c feat/conflict-note
+Set-Content -LiteralPath PracticeNotes.txt -Value &#39;Feature: validate inputs before saving.&#39;
+git add -- PracticeNotes.txt
+git commit -m &quot;docs(course): describe validation&quot;
+git switch main
+Set-Content -LiteralPath PracticeNotes.txt -Value &#39;Main: verify persistence after saving.&#39;
+git add -- PracticeNotes.txt
+git commit -m &quot;docs(course): describe persistence&quot;
+git merge feat/conflict-note
+# EXPECT a conflict and nonzero exit code. Resolve the file:
+git status
+Get-Content -LiteralPath PracticeNotes.txt
+Set-Content -LiteralPath PracticeNotes.txt -Value &#39;Validate inputs before saving, then verify persistence.&#39;
+git add -- PracticeNotes.txt
+git commit -m &quot;merge(course): combine validation and persistence notes&quot;
+git log --oneline --graph --all
+</code></pre>
+<p>Both branches replaced the same text differently. Your resolution preserves both ideas. Return to the original repository root when finished.</p>
+<h2>10. Apply Git in every course</h2>
+<p>Each lesson contains a Git checkpoint with a branch name, focused verification, staging paths, and suggested message. Git-Practice.md maps your track. Use lessons 01-03 for status, branches, and staging; middle lessons for focused commits and review; final lessons for PRs, integration, and conflict practice.</p>
+<p>For a combined API/client change, one focused branch can include both DotNet10 and PowerShell files because they implement one contract. Include only related changes. Keep generated files and secrets out of history.</p>
+<h2>Official references</h2>
+<p>This is original instructional material. Further detail comes from Git&#39;s command manuals and GitHub&#39;s workflow guide:</p>
+<ul>
+<li><a href="https://git-scm.com/docs/git-status">git status</a></li>
+<li><a href="https://git-scm.com/docs/git-add">git add</a></li>
+<li><a href="https://git-scm.com/docs/git-commit">git commit</a></li>
+<li><a href="https://git-scm.com/docs/git-merge">git merge</a></li>
+<li><a href="https://git-scm.com/docs/git-push">git push</a></li>
+<li><a href="https://git-scm.com/docs/git-fetch">git fetch</a></li>
+<li><a href="https://git-scm.com/docs/git-rebase">git rebase</a></li>
+<li><a href="https://docs.github.com/en/get-started/using-github/github-flow">GitHub flow</a></li>
+</ul>
+<h1>CSharp: official reference PDFs</h1>
+<p>This folder contains <strong>5 PDFs</strong> from official source material. Files labeled Publisher PDF are the original downloaded publications. Files labeled Documentation export are locally printed copies of official Microsoft Learn articles, with source links, attribution, retrieval dates, and print formatting. They are not Microsoft-published PDF books or complete product manuals.</p>
+<h2>Read in this order</h2>
+<p>Use the course&#39;s original learning guide and runnable lessons first. Then consult the relevant current Microsoft documentation article for a deeper explanation. Read standards and architecture books when you want formal language/runtime details or further architecture study.</p>
+<p>ECMA-334&#39;s seventh edition specifies C# 7. It does not cover C# 14. Use Microsoft-CSharp14-Features.pdf for the newer language features used in the capstone.</p>
+<h2>PDF catalog</h2>
+<table><tbody>
+<tr><td>PDF</td><td>Kind</td><td>Read with course lessons</td><td>Scope / edition</td></tr>
+<tr><td><a href="Official-References/ECMA-334-CSharp-7th-Edition.pdf">ECMA-334-CSharp-7th-Edition.pdf</a></td><td>Publisher PDF</td><td>All lessons; advanced reference</td><td>C# language standard, 7th edition (December 2023), covering C# 7. Not a C# 14 specification.</td></tr>
+<tr><td><a href="Official-References/Microsoft-CSharp-Overview.pdf">Microsoft-CSharp-Overview.pdf</a></td><td>Documentation export</td><td>01-08</td><td>Current Microsoft Learn C# overview.</td></tr>
+<tr><td><a href="Official-References/Microsoft-CSharp14-Features.pdf">Microsoft-CSharp14-Features.pdf</a></td><td>Documentation export</td><td>12</td><td>Microsoft Learn C# 14 feature overview.</td></tr>
+<tr><td><a href="Official-References/Microsoft-LINQ.pdf">Microsoft-LINQ.pdf</a></td><td>Documentation export</td><td>09</td><td>Microsoft Learn introduction to LINQ queries.</td></tr>
+<tr><td><a href="Official-References/Microsoft-Async-Await.pdf">Microsoft-Async-Await.pdf</a></td><td>Documentation export</td><td>11</td><td>Microsoft Learn asynchronous programming guidance.</td></tr>
+</tbody></table>
+<h2>Sources</h2>
+<ul>
+<li>ECMA-334-CSharp-7th-Edition.pdf: <a href="https://ecma-international.org/publications-and-standards/standards/ecma-334/">official source</a> and <a href="https://ecma-international.org/wp-content/uploads/ECMA-334_7th_edition_december_2023.pdf">PDF download</a>.</li>
+<li>Microsoft-CSharp-Overview.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/overview">official source</a>.</li>
+<li>Microsoft-CSharp14-Features.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14">official source</a>.</li>
+<li>Microsoft-LINQ.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/introduction-to-linq-queries">official source</a>.</li>
+<li>Microsoft-Async-Await.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/">official source</a>.</li>
+</ul>
+<h2>Provenance and refresh</h2>
+<p>Download-Record.json records the source URL, retrieval timestamp in UTC, file size, PDF SHA-256 hash, and original HTML hash for each documentation export. The retrieval timestamp records when the copy was collected; it is not the document&#39;s publication date. Article metadata dates are preserved where supplied. The official article remains the source of truth for changes after this snapshot.</p>
+<p>From the repository root:</p>
+<pre><code>
+.\Download-OfficialReferences.ps1
+</code></pre>
+<p>This refreshes the collection using Official-Resources.json. It requires internet access and local Chrome or Edge. It downloads only the public documents and creates local print copies; it does not install software or publish anything.</p>
+<h2>Attribution</h2>
+<p>Original publisher PDFs retain their own copyright, license notices, and source formatting. Ecma standards include their copying terms. Microsoft Learn article wording and examples are retained while navigation is removed and print styling and a provenance banner are added. Credit belongs to Microsoft and the documentation contributors, including named authors credited in the source. See the <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a> and the <a href="https://github.com/dotnet/docs/blob/main/LICENSE">.NET documentation CC BY 4.0 license</a>. This course and its exports do not imply publisher endorsement.</p>
+<h1 id="01-Hello">01-Hello: Your first program</h1>
+<p>Level: Beginner | Suggested time: 30-45 minutes</p>
+<h2>Goal</h2>
+<p>Learn output and command-line arguments. Complete the setup in the track README.</p>
+<h2>Understand the idea</h2>
+<p>Console.WriteLine writes one line to the terminal. A string is text inside double quotes. A semicolon ends a statement. Top-level statements let the compiler create the entry point for you. args is an array of text arguments; Length tells you how many items it contains. Arrays count from zero, so args[0] is the first argument. The conditional expression condition ? yes : no chooses one value. A dollar sign before a string enables interpolation: the value inside braces is inserted into the text.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\01-Hello -- Dejan
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Hello, C#!
+Welcome, Dejan!
+</code></pre>
+<h2>Exercise</h2>
+<p>Add a second argument for your city. If it is missing, use Ljubljana. Print a third line: City: Ljubljana.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Check args.Length &gt; 1 before reading args[1].</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-01-city.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-01-city
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\01-Hello -- Dejan Ljubljana
+git diff -- CSharp/01-Hello/Program.cs
+git add -- CSharp/01-Hello/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): accept an optional city argument&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Explain the difference between working edits and the staged snapshot.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-01-city</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#01-Hello-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.01.Hello.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+// Top-level statements are the entry point of this application.
+Console.WriteLine(&quot;Hello, C#!&quot;);
+string name = args.Length &gt; 0 ? args[0] : &quot;Learner&quot;;
+Console.WriteLine($&quot;Welcome, {name}!&quot;);
+
+</code></pre>
+<h2 id="01-Hello-solution">01-Hello exercise solution</h2>
+<p>Add a second argument for your city. If it is missing, use Ljubljana. Print a third line: City: Ljubljana.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+string city = args.Length &gt; 1 ? args[1] : &quot;Ljubljana&quot;;
+Console.WriteLine($&quot;City: {city}&quot;);
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="02-Types">02-Types: Variables, types, and numbers</h1>
+<p>Level: Beginner | Suggested time: 30-45 minutes</p>
+<h2>Goal</h2>
+<p>Learn types, arithmetic, and formatting. Complete <a href="#01-Hello">01-Hello</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A variable has a name, a type, and a value. int stores whole numbers; decimal stores base-10 values useful for money; double stores approximate floating-point values; bool stores true or false. The m suffix makes a numeric literal a decimal. A cast such as (double)completed converts a value explicitly. Dividing two integers truncates the fractional part, so 3 / 12 gives zero; convert one operand before dividing. F2 prints two decimal places. CultureInfo.InvariantCulture makes the decimal separator predictable. var would ask the compiler to infer a type; it does not make the variable dynamically typed.</p>
+<h2>Step by step</h2>
+<p>The fixed sample values use const because they are known at compile time. A constant cannot be reassigned; an ordinary variable can. Later lessons use mutable counters and collections when values need to change.</p>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\02-Types
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+C#: 3 lessons; beginner=True
+Total: 25.00 EUR
+Progress: 25 %
+</code></pre>
+<h2>Exercise</h2>
+<p>Calculate the price after a 20% discount and print 10.00 EUR.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>A 20% discount leaves 80% of the original amount.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-02-discount.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-02-discount
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\02-Types
+git diff -- CSharp/02-Types/Program.cs
+git add -- CSharp/02-Types/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): calculate discounted study prices&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Explain the difference between working edits and the staged snapshot.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-02-discount</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#02-Types-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.02.Types.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using System.Globalization;
+
+// Use decimal for monetary examples, and invariant formatting for predictable output.
+const string course = &quot;C#&quot;;
+const int completed = 3;
+const decimal price = 12.50m;
+const bool isBeginner = true;
+const double ratio = (double)completed / 12;
+Console.WriteLine($&quot;{course}: {completed} lessons; beginner={isBeginner}&quot;);
+Console.WriteLine($&quot;Total: {(price * 2).ToString(&quot;F2&quot;, CultureInfo.InvariantCulture)} EUR&quot;);
+Console.WriteLine($&quot;Progress: {ratio.ToString(&quot;P0&quot;, CultureInfo.InvariantCulture)}&quot;);
+
+</code></pre>
+<h2 id="02-Types-solution">02-Types exercise solution</h2>
+<p>Calculate the price after a 20% discount and print 10.00 EUR.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+decimal discounted = price * 0.80m;
+Console.WriteLine($&quot;{discounted.ToString(&quot;F2&quot;, CultureInfo.InvariantCulture)} EUR&quot;);
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="03-Decisions">03-Decisions: Input validation and decisions</h1>
+<p>Level: Beginner | Suggested time: 30-45 minutes</p>
+<h2>Goal</h2>
+<p>Learn parsing, boolean logic, if, and switch. Complete <a href="#02-Types">02-Types</a> first.</p>
+<h2>Understand the idea</h2>
+<p>Text from a terminal is not automatically a number. int.TryParse attempts a conversion and returns a Boolean success value. out int age creates a variable for the parsed result. The ! operator negates a Boolean. || means or and short-circuits: later conditions are evaluated only when needed. An if block executes only when its condition is true. return exits the top-level program early. A switch expression selects a result based on patterns. The underscore is the fallback pattern. Validating values before using them keeps incorrect input away from the rest of the program.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\03-Decisions -- 18
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Age 18: adult
+</code></pre>
+<h2>Exercise</h2>
+<p>Add a senior category for ages 65 and above. Check ages 12, 13, 17, 18, 64, 65, -1 and abc.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Place the &gt;= 65 pattern before the fallback.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-03-senior-category.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-03-senior-category
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\03-Decisions
+git diff -- CSharp/03-Decisions/Program.cs
+git add -- CSharp/03-Decisions/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): classify senior ages&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Explain the difference between working edits and the staged snapshot.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-03-senior-category</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#03-Decisions-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.03.Decisions.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+// Accept input as an argument so this lesson also runs without a prompt.
+string input = args.Length &gt; 0 ? args[0] : &quot;18&quot;;
+if (!int.TryParse(input, out int age) || age &lt; 0 || age &gt; 130) {
+  Console.WriteLine(&quot;Enter a whole-number age between 0 and 130.&quot;);
+  return;
+}
+string category = age switch {
+  &lt; 13 =&gt; &quot;child&quot;,
+  &lt; 18 =&gt; &quot;teenager&quot;,
+  _ =&gt; &quot;adult&quot;
+};
+Console.WriteLine($&quot;Age {age}: {category}&quot;);
+
+</code></pre>
+<h2 id="03-Decisions-solution">03-Decisions exercise solution</h2>
+<p>Add a senior category for ages 65 and above. Check ages 12, 13, 17, 18, 64, 65, -1 and abc.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+string category = age switch {
+  &lt; 13 =&gt; &quot;child&quot;,
+  &lt; 18 =&gt; &quot;teenager&quot;,
+  &gt;= 65 =&gt; &quot;senior&quot;,
+  _ =&gt; &quot;adult&quot;
+};
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="04-Loops">04-Loops: Loops and arrays</h1>
+<p>Level: Intermediate | Suggested time: 45-60 minutes</p>
+<h2>Goal</h2>
+<p>Learn repeated work and zero-based indexing. Complete <a href="#03-Decisions">03-Decisions</a> first.</p>
+<h2>Understand the idea</h2>
+<p>An array groups values of one type. The square-bracket collection expression creates the array. A for loop has initialization, a condition, and an update. index starts at zero; index &lt; Length keeps access inside the array. index++ increases the counter by one. total += value is shorthand for adding a value and assigning the result. A while loop tests its condition before each iteration. Its body must eventually change the condition, or it can run forever. A foreach loop is useful when you need each value but not its index. Reading beyond the array&#39;s last index throws an exception.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\04-Loops
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Session 1: 15 minutes
+Session 2: 20 minutes
+Session 3: 25 minutes
+Total: 60 minutes
+Practice rounds left: 2
+Practice rounds left: 1
+</code></pre>
+<h2>Exercise</h2>
+<p>Print the average session length and count sessions of at least 20 minutes using foreach.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Use a separate counter and convert the total to double before division.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-04-session-statistics.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-04-session-statistics
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\04-Loops
+git diff -- CSharp/04-Loops/Program.cs
+git add -- CSharp/04-Loops/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): count longer study sessions&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Keep this commit limited to one exercise; explain the rule and the verification in its message body.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-04-session-statistics</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#04-Loops-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.04.Loops.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+int[] minutes = [15, 20, 25];
+int total = 0;
+for (int index = 0; index &lt; minutes.Length; index++) {
+  Console.WriteLine($&quot;Session {index + 1}: {minutes[index]} minutes&quot;);
+  total += minutes[index];
+}
+Console.WriteLine($&quot;Total: {total} minutes&quot;);
+int remaining = 2;
+while (remaining &gt; 0) {
+  Console.WriteLine($&quot;Practice rounds left: {remaining}&quot;);
+  remaining--;
+}
+
+</code></pre>
+<h2 id="04-Loops-solution">04-Loops exercise solution</h2>
+<p>Print the average session length and count sessions of at least 20 minutes using foreach.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+int longSessions = 0;
+foreach (int duration in minutes) {
+  if (duration &gt;= 20) {
+    longSessions++;
+  }
+}
+
+Console.WriteLine($&quot;Average: {(double)total / minutes.Length}&quot;);
+Console.WriteLine($&quot;Long sessions: {longSessions}&quot;);
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="05-Methods">05-Methods: Methods and reusable rules</h1>
+<p>Level: Intermediate | Suggested time: 45-60 minutes</p>
+<h2>Goal</h2>
+<p>Learn parameters, return values, scope, and pure functions. Complete <a href="#04-Loops">04-Loops</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A method packages a reusable operation. Its signature names the return type, method, and parameters. Parameters are local to the method. return sends a result back to the caller. These examples use block-bodied methods under the Google style convention; C# also supports expression-bodied methods, which you may see in official documentation. static local functions do not capture surrounding variables. &amp;&amp; means and. A pure function calculates a result from its inputs without changing external state, making it easy to test. Keep calculation separate from Console.WriteLine so callers can display, store, or compare the returned result.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\05-Methods
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+10 + 5 = 15
+20% of 50 = 10
+Valid duration: True
+</code></pre>
+<h2>Exercise</h2>
+<p>Write CalculateTotal(price, quantity). Reject negative prices and quantities below one. Verify 5 times 3 equals 15.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Use ArgumentOutOfRangeException for invalid parameters.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-05-total-calculation.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-05-total-calculation
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\05-Methods
+git diff -- CSharp/05-Methods/Program.cs
+git add -- CSharp/05-Methods/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): validate total calculation inputs&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Keep this commit limited to one exercise; explain the rule and the verification in its message body.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-05-total-calculation</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#05-Methods-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.05.Methods.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+Console.WriteLine($&quot;10 + 5 = {Add(10, 5)}&quot;);
+Console.WriteLine($&quot;20% of 50 = {Percentage(50m, 20m)}&quot;);
+Console.WriteLine($&quot;Valid duration: {IsValidDuration(30)}&quot;);
+
+// Parameters are inputs; the return type describes the output.
+static int Add(int left, int right) {
+  return left + right;
+}
+
+static decimal Percentage(decimal value, decimal percent) {
+  return value * percent / 100m;
+}
+
+static bool IsValidDuration(int minutes) {
+  return minutes &gt; 0 &amp;&amp; minutes &lt;= 180;
+}
+
+</code></pre>
+<h2 id="05-Methods-solution">05-Methods exercise solution</h2>
+<p>Write CalculateTotal(price, quantity). Reject negative prices and quantities below one. Verify 5 times 3 equals 15.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+static decimal CalculateTotal(decimal price, int quantity) {
+  if (price &lt; 0) {
+    throw new ArgumentOutOfRangeException(nameof(price));
+  }
+
+  if (quantity &lt; 1) {
+    throw new ArgumentOutOfRangeException(nameof(quantity));
+  }
+
+  return price * quantity;
+}
+// Call from the top-level section: Console.WriteLine(CalculateTotal(5m, 3));
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="06-Collections">06-Collections: Lists, dictionaries, and null</h1>
+<p>Level: Intermediate | Suggested time: 45-60 minutes</p>
+<h2>Goal</h2>
+<p>Learn choosing collections and handling missing values. Complete <a href="#05-Methods">05-Methods</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A List&lt;T&gt; can grow, unlike a fixed-size array. T is a type parameter; List&lt;string&gt; holds strings. A Dictionary&lt;TKey,TValue&gt; maps unique keys to values. Reading a missing key through the indexer throws; TryGetValue safely checks for it. Dictionary keys are case-sensitive for strings by default; you can provide StringComparer.OrdinalIgnoreCase if that fits your rule. A string? can contain text or null. The null-coalescing operator ?? supplies a fallback. Nullable reference analysis warns about possible null misuse at compile time, but validation is still needed for external data.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\06-Collections
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+C#
+PowerShell
+.NET 10
+C#: 45 minutes
+Note: No note yet
+</code></pre>
+<h2>Exercise</h2>
+<p>Add .NET 10 with 60 minutes. Print a total of 135 minutes, using a loop over dictionary values.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Values exposes the stored values; Sum is introduced later.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-06-topic-totals.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-06-topic-totals
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\06-Collections
+git diff -- CSharp/06-Collections/Program.cs
+git add -- CSharp/06-Collections/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): aggregate topic minutes&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Keep this commit limited to one exercise; explain the rule and the verification in its message body.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-06-topic-totals</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#06-Collections-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.06.Collections.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+var topics = new List&lt;string&gt; { &quot;C#&quot;, &quot;PowerShell&quot; };
+topics.Add(&quot;.NET 10&quot;);
+foreach (string topic in topics) {
+  Console.WriteLine(topic);
+}
+
+var minutesByTopic = new Dictionary&lt;string, int&gt; {
+  [&quot;C#&quot;] = 45,
+  [&quot;PowerShell&quot;] = 30
+};
+if (minutesByTopic.TryGetValue(&quot;C#&quot;, out int minutes)) {
+  Console.WriteLine($&quot;C#: {minutes} minutes&quot;);
+}
+
+string? optionalNote = null;
+Console.WriteLine($&quot;Note: {optionalNote ?? &quot;No note yet&quot;}&quot;);
+
+</code></pre>
+<h2 id="06-Collections-solution">06-Collections exercise solution</h2>
+<p>Add .NET 10 with 60 minutes. Print a total of 135 minutes, using a loop over dictionary values.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+minutesByTopic[&quot;.NET 10&quot;] = 60;
+int total = 0;
+foreach (int value in minutesByTopic.Values) {
+  total += value;
+}
+
+Console.WriteLine($&quot;Total: {total} minutes&quot;);
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="07-Classes">07-Classes: Classes, records, and encapsulation</h1>
+<p>Level: Intermediate | Suggested time: 45-60 minutes</p>
+<h2>Goal</h2>
+<p>Learn objects, constructors, properties, and records. Complete <a href="#06-Collections">06-Collections</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A class defines a type; new creates an instance. A constructor initializes it and can enforce rules before the object exists. Properties expose data. A get-only property is initialized by the constructor. A private set lets the class change a property while preventing callers from setting it directly. Complete describes why the state changes. sealed prevents inheritance when it is unnecessary. A record is useful for data values and provides value-based equality. Class instances ordinarily compare by identity. Program.cs contains top-level statements; each core type lives in its own named file under the Google style convention.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs, StudySession.cs, and SessionSummary.cs. Read the comments before running them.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\07-Classes
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+C#: 30 minutes; complete=True
+Summary: C# / 30
+</code></pre>
+<h2>Exercise</h2>
+<p>Add a CompletedAt property and set it when Complete is called. Preserve the first completion time if Complete is called again.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Use a nullable DateTimeOffset and ??=.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-07-completion-time.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-07-completion-time
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\07-Classes
+git diff -- CSharp/07-Classes/Program.cs CSharp/07-Classes/StudySession.cs
+git add -- CSharp/07-Classes/Program.cs CSharp/07-Classes/StudySession.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): record first completion time&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Keep this commit limited to one exercise; explain the rule and the verification in its message body.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-07-completion-time</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#07-Classes-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.07.Classes.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+var session = new StudySession(&quot;C#&quot;, 30);
+session.Complete();
+Console.WriteLine($&quot;{session.Topic}: {session.Minutes} minutes; complete={session.IsComplete}&quot;);
+var summary = new SessionSummary(session.Topic, session.Minutes);
+Console.WriteLine($&quot;Summary: {summary.Topic} / {summary.Minutes}&quot;);
+
+</code></pre>
+<h3>SessionSummary.cs</h3>
+<pre><code>
+public sealed record SessionSummary(string Topic, int Minutes);
+
+</code></pre>
+<h3>StudySession.cs</h3>
+<pre><code>
+public sealed class StudySession {
+  public string Topic {
+    get;
+  }
+  public int Minutes {
+    get;
+  }
+  public bool IsComplete {
+    get; private set;
+  }
+
+  public StudySession(string topic, int minutes) {
+    if (string.IsNullOrWhiteSpace(topic)) {
+      throw new ArgumentException(&quot;Topic is required.&quot;, nameof(topic));
+    }
+
+    if (minutes &lt;= 0) {
+      throw new ArgumentOutOfRangeException(nameof(minutes));
+    }
+
+    Topic = topic;
+    Minutes = minutes;
+  }
+
+  public void Complete() {
+    IsComplete = true;
+  }
+}
+
+</code></pre>
+<h2 id="07-Classes-solution">07-Classes exercise solution</h2>
+<p>Add a CompletedAt property and set it when Complete is called. Preserve the first completion time if Complete is called again.</p>
+<h3>Suggested change</h3>
+<p>Add the property in StudySession.cs and replace that file&#39;s existing Complete method.</p>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+public DateTimeOffset? CompletedAt { get; private set; }
+
+public void Complete() {
+  CompletedAt ??= DateTimeOffset.UtcNow;
+  IsComplete = true;
+}
+// Replace the existing Complete method inside StudySession.
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="08-Interfaces">08-Interfaces: Interfaces and composition</h1>
+<p>Level: Advanced within this course | Suggested time: 60-90 minutes</p>
+<h2>Goal</h2>
+<p>Learn contracts, polymorphism, and dependency injection. Complete <a href="#07-Classes">07-Classes</a> first.</p>
+<h2>Understand the idea</h2>
+<p>An interface describes operations without choosing a specific implementation. ConsoleNotifier implements INotifier. A variable typed INotifier can refer to any implementation of that contract. StudyTracker receives its dependency through its constructor rather than constructing one internally. This is dependency injection; it works without a framework. The primary constructor syntax places the constructor parameters on the class declaration. Composition joins small objects to provide behavior. Replacing the notifier can change output without rewriting the tracker. This is a useful foundation for testing and for the .NET dependency injection lesson.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs, INotifier.cs, ConsoleNotifier.cs, and StudyTracker.cs. Read their comments.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\08-Interfaces
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Completed: Interfaces
+</code></pre>
+<h2>Exercise</h2>
+<p>Create a MemoryNotifier that stores messages in a List&lt;string&gt;. Call Finish twice and verify that it captured two messages.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Expose a read-only view or list property for inspection.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-08-memory-notifier.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-08-memory-notifier
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\08-Interfaces
+git diff -- CSharp/08-Interfaces/Program.cs
+git add -- CSharp/08-Interfaces/Program.cs CSharp/08-Interfaces/MemoryNotifier.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;test(csharp): capture notifier messages in memory&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Review the branch&#39;s history and include validation evidence in its pull request.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-08-memory-notifier</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#08-Interfaces-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>ConsoleNotifier.cs</h3>
+<pre><code>
+public sealed class ConsoleNotifier : INotifier {
+  public void Send(string message) {
+    Console.WriteLine(message);
+  }
+}
+
+</code></pre>
+<h3>CSharp.08.Interfaces.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>INotifier.cs</h3>
+<pre><code>
+public interface INotifier {
+  void Send(string message);
+}
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+INotifier notifier = new ConsoleNotifier();
+var tracker = new StudyTracker(notifier);
+tracker.Finish(&quot;Interfaces&quot;);
+
+</code></pre>
+<h3>StudyTracker.cs</h3>
+<pre><code>
+public sealed class StudyTracker(INotifier notifier) {
+  public void Finish(string topic) {
+    notifier.Send($&quot;Completed: {topic}&quot;);
+  }
+}
+
+</code></pre>
+<h2 id="08-Interfaces-solution">08-Interfaces exercise solution</h2>
+<p>Create a MemoryNotifier that stores messages in a List&lt;string&gt;. Call Finish twice and verify that it captured two messages.</p>
+<h3>Suggested change</h3>
+<p>Create MemoryNotifier.cs in this lesson folder:</p>
+<pre><code>
+public sealed class MemoryNotifier : INotifier {
+  public List&lt;string&gt; Messages { get; } = [];
+
+  public void Send(string message) {
+    Messages.Add(message);
+  }
+}
+</code></pre>
+<p>Replace the top-level statements in Program.cs with:</p>
+<pre><code>
+var memory = new MemoryNotifier();
+var tracker = new StudyTracker(memory);
+tracker.Finish(&quot;C#&quot;);
+tracker.Finish(&quot;PowerShell&quot;);
+Console.WriteLine(memory.Messages.Count);
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="09-Linq">09-Linq: LINQ queries and lambdas</h1>
+<p>Level: Advanced within this course | Suggested time: 60-90 minutes</p>
+<h2>Goal</h2>
+<p>Learn filtering, projection, aggregation, and deferred execution. Complete <a href="#08-Interfaces">08-Interfaces</a> first.</p>
+<h2>Understand the idea</h2>
+<p>LINQ applies query operations to sequences. A lambda such as s =&gt; s.Minutes &gt;= 30 is a small function used as a predicate. Where filters; Select transforms; OrderBy sorts; Sum aggregates; GroupBy partitions by a key. Many sequence operators are deferred: they run when the result is enumerated. ToList evaluates the query and stores a snapshot. If the source changes before enumeration, a deferred query can observe the change. Keep predicates free of side effects. LINQ over an in-memory list differs from database LINQ, where a provider may translate expressions into SQL.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs and Session.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\09-Linq
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+C#: 45
+C#: 30
+Total: 110
+.NET 10 total: 15
+C# total: 75
+PowerShell total: 20
+</code></pre>
+<h2>Exercise</h2>
+<p>Find the average session length and create a list of distinct topic names. Expect 27.5 minutes and three topics.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Use Average, Select, and Distinct; format numbers invariantly if necessary.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-09-topic-summary.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-09-topic-summary
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\09-Linq
+git diff -- CSharp/09-Linq/Program.cs
+git add -- CSharp/09-Linq/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): summarize distinct study topics&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Review the branch&#39;s history and include validation evidence in its pull request.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-09-topic-summary</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#09-Linq-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.09.Linq.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+var sessions = new List&lt;Session&gt;
+{
+    new(&quot;C#&quot;, 30), new(&quot;PowerShell&quot;, 20), new(&quot;C#&quot;, 45), new(&quot;.NET 10&quot;, 15)
+};
+var longer = sessions.Where(s =&gt; s.Minutes &gt;= 30).OrderByDescending(s =&gt; s.Minutes).ToList();
+foreach (var session in longer) {
+  Console.WriteLine($&quot;{session.Topic}: {session.Minutes}&quot;);
+}
+
+Console.WriteLine($&quot;Total: {sessions.Sum(s =&gt; s.Minutes)}&quot;);
+foreach (var group in sessions.GroupBy(s =&gt; s.Topic).OrderBy(g =&gt; g.Key, StringComparer.Ordinal)) {
+  Console.WriteLine($&quot;{group.Key} total: {group.Sum(s =&gt; s.Minutes)}&quot;);
+}
+
+</code></pre>
+<h3>Session.cs</h3>
+<pre><code>
+public sealed record Session(string Topic, int Minutes);
+
+</code></pre>
+<h2 id="09-Linq-solution">09-Linq exercise solution</h2>
+<p>Find the average session length and create a list of distinct topic names. Expect 27.5 minutes and three topics.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+Console.WriteLine(sessions.Average(s =&gt; s.Minutes));
+var names = sessions.Select(s =&gt; s.Topic).Distinct().ToList();
+Console.WriteLine($&quot;Topics: {names.Count}&quot;);
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="10-Files">10-Files: Files, JSON, and exceptions</h1>
+<p>Level: Advanced within this course | Suggested time: 60-90 minutes</p>
+<h2>Goal</h2>
+<p>Learn serialization, paths, recoverable errors, and side effects. Complete <a href="#09-Linq">09-Linq</a> first.</p>
+<h2>Understand the idea</h2>
+<p>Serialization converts an object into a representation such as JSON. Deserialization reconstructs an object from that representation. System.Text.Json is included with .NET. Path.Combine builds platform-appropriate paths. Directory.CreateDirectory is safe when the directory already exists. Writing a file changes persistent state, so this example uses a dedicated output directory. A try block surrounds operations that can fail; catch handles specific exception types. Exceptions outside these types still surface. Do not silently ignore errors: the example writes an error and sets a nonzero exit code. Deserialized values still need validation before business use.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs and Session.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\10-Files
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Saved and loaded 2 sessions.
+</code></pre>
+<h2>Exercise</h2>
+<p>Read a separate missing file inside a try block and show a friendly message. Do not delete the sample file.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>FileNotFoundException is a more specific IOException.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-10-missing-file.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-10-missing-file
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\10-Files
+git diff -- CSharp/10-Files/Program.cs
+git add -- CSharp/10-Files/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;fix(csharp): handle missing study files&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Review the branch&#39;s history and include validation evidence in its pull request.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-10-missing-file</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#10-Files-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.10.Files.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using System.Text.Json;
+
+// Output belongs to this lesson, regardless of the terminal&#39;s current directory.
+string output = Path.GetFullPath(
+    Path.Combine(AppContext.BaseDirectory, &quot;..&quot;, &quot;..&quot;, &quot;..&quot;, &quot;output&quot;));
+Directory.CreateDirectory(output);
+string path = Path.Combine(output, &quot;sessions.json&quot;);
+var original = new List&lt;Session&gt; { new(&quot;C#&quot;, 30), new(&quot;PowerShell&quot;, 20) };
+try {
+  var options = new JsonSerializerOptions { WriteIndented = true };
+  File.WriteAllText(path, JsonSerializer.Serialize(original, options));
+  var loaded = JsonSerializer.Deserialize&lt;List&lt;Session&gt;&gt;(File.ReadAllText(path))
+      ?? throw new InvalidDataException(&quot;The JSON contained null.&quot;);
+  Console.WriteLine($&quot;Saved and loaded {loaded.Count} sessions.&quot;);
+} catch (IOException error) {
+  Console.Error.WriteLine($&quot;File error: {error.Message}&quot;);
+  Environment.ExitCode = 1;
+} catch (JsonException error) {
+  Console.Error.WriteLine($&quot;JSON error: {error.Message}&quot;);
+  Environment.ExitCode = 1;
+}
+
+</code></pre>
+<h3>Session.cs</h3>
+<pre><code>
+public sealed record Session(string Topic, int Minutes);
+
+</code></pre>
+<h2 id="10-Files-solution">10-Files exercise solution</h2>
+<p>Read a separate missing file inside a try block and show a friendly message. Do not delete the sample file.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+try {
+  File.ReadAllText(Path.Combine(output, &quot;missing.json&quot;));
+} catch (FileNotFoundException) {
+  Console.WriteLine(&quot;No saved file exists yet.&quot;);
+}
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="11-Async">11-Async: Async, await, and cancellation</h1>
+<p>Level: Advanced within this course | Suggested time: 60-90 minutes</p>
+<h2>Goal</h2>
+<p>Learn tasks, overlapping waits, cancellation, and disposal. Complete <a href="#10-Files">10-Files</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A Task represents an operation that may finish later. async enables await inside a method. await waits without synchronously blocking the calling thread. Async is mainly useful for I/O; it does not automatically make CPU-heavy work faster or create a new thread. Both operations start before WhenAll is awaited, so their delays overlap. Their log order can vary. A CancellationToken cooperatively requests cancellation; the operation must observe it. using disposes the cancellation source. Avoid .Result and .Wait when asynchronous calling code can await instead. Catch cancellation separately so a requested stop is not confused with an unexpected failure.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\11-Async
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Prepared: C#
+Prepared: PowerShell
+Planned minutes: 50
+(The first two lines may appear in either order.)
+</code></pre>
+<h2>Exercise</h2>
+<p>Change the timeout to 10 milliseconds. Predict what happens, then run it. Restore the timeout and explain the difference.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>The simulated delay is 100 milliseconds and receives the token.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-11-cancellation.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-11-cancellation
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\11-Async
+git diff -- CSharp/11-Async/Program.cs
+git add -- CSharp/11-Async/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;test(csharp): verify planning cancellation&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Review the branch&#39;s history and include validation evidence in its pull request.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-11-cancellation</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#11-Async-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.11.Async.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+try {
+  Task&lt;int&gt; first = PracticeAsync(&quot;C#&quot;, 30, cancellation.Token);
+  Task&lt;int&gt; second = PracticeAsync(&quot;PowerShell&quot;, 20, cancellation.Token);
+  int[] minutes = await Task.WhenAll(first, second);
+  Console.WriteLine($&quot;Planned minutes: {minutes.Sum()}&quot;);
+} catch (OperationCanceledException) {
+  Console.WriteLine(&quot;Practice planning was cancelled.&quot;);
+}
+static async Task&lt;int&gt; PracticeAsync(string topic, int minutes, CancellationToken token) {
+  // Simulate waiting for I/O; async does not inherently create a new thread.
+  await Task.Delay(100, token);
+  Console.WriteLine($&quot;Prepared: {topic}&quot;);
+  return minutes;
+}
+
+</code></pre>
+<h2 id="11-Async-solution">11-Async exercise solution</h2>
+<p>Change the timeout to 10 milliseconds. Predict what happens, then run it. Restore the timeout and explain the difference.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+using var cancellation = new CancellationTokenSource(TimeSpan.FromMilliseconds(10));
+// Replace the original source declaration. Expected:
+// Practice planning was cancelled.
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="12-Capstone">12-Capstone: A persistent study tracker and C# 14</h1>
+<p>Level: Advanced within this course | Suggested time: 60-90 minutes</p>
+<h2>Goal</h2>
+<p>Learn combining parsing, collections, classes, json, and modern c#. Complete <a href="#11-Async">11-Async</a> first.</p>
+<h2>Understand the idea</h2>
+<p>The capstone is a command-line program with persistent data. First it loads the log, then selects a command, applies validation, and saves only after a valid change. The field keyword in the Topic property is a C# 14 feature: the compiler supplies the storage while the accessor enforces a rule. init allows assignment during initialization. JsonConstructor tells the serializer which constructor to use. A temporary sibling file reduces the risk of truncating a good log if serialization fails. This remains a single-user teaching application: simultaneous processes can overwrite each other&#39;s updates. Production storage needs concurrency control, backups, and schema migration.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs and StudyEntry.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\CSharp\12-Capstone -- add CSharp 25
+dotnet run --project .\CSharp\12-Capstone -- list
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Added: CSharp, 25 minutes
+CSharp: 25 minutes
+Entries: 1; total: 25 minutes
+(Counts increase if you repeat add.)
+</code></pre>
+<h2>Exercise</h2>
+<p>Add a summary command that prints total minutes per topic. Verify invalid input never changes the saved file.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Group entries by Topic and sum each group inside the switch.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/csharp-12-summary-command.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/csharp-12-summary-command
+# Implement the exercise, then verify:
+dotnet run --project .\CSharp\12-Capstone -- summary
+git diff -- CSharp/12-Capstone/Program.cs
+git add -- CSharp/12-Capstone/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(csharp): add a per-topic summary command&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Review the branch&#39;s history and include validation evidence in its pull request.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/csharp-12-summary-command</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#12-Capstone-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CSharp.12.Capstone.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using System.Text.Json;
+
+string folder = Path.GetFullPath(
+    Path.Combine(AppContext.BaseDirectory, &quot;..&quot;, &quot;..&quot;, &quot;..&quot;, &quot;output&quot;));
+Directory.CreateDirectory(folder);
+string path = Path.Combine(folder, &quot;study-log.json&quot;);
+string command = args.Length == 0 ? &quot;list&quot; : args[0].ToLowerInvariant();
+try {
+  List&lt;StudyEntry&gt; entries = File.Exists(path)
+      ? JsonSerializer.Deserialize&lt;List&lt;StudyEntry&gt;&gt;(File.ReadAllText(path))
+          ?? throw new InvalidDataException(&quot;The log contained null.&quot;)
+      : [];
+  switch (command) {
+    case &quot;add&quot; when args.Length == 3:
+      if (!int.TryParse(args[2], out int minutes) || minutes &lt; 1 || minutes &gt; 180) {
+        throw new ArgumentException(&quot;Minutes must be between 1 and 180.&quot;);
+      }
+
+      var entry = new StudyEntry(args[1], minutes);
+      entries.Add(entry);
+      // Write to a temporary sibling before replacing the saved file.
+      string temp = path + &quot;.tmp&quot;;
+      var options = new JsonSerializerOptions { WriteIndented = true };
+      File.WriteAllText(temp, JsonSerializer.Serialize(entries, options));
+      File.Move(temp, path, overwrite: true);
+      Console.WriteLine($&quot;Added: {entry.Topic}, {entry.Minutes} minutes&quot;);
+      break;
+    case &quot;list&quot;:
+      foreach (var item in entries) {
+        Console.WriteLine($&quot;{item.Topic}: {item.Minutes} minutes&quot;);
+      }
+
+      Console.WriteLine($&quot;Entries: {entries.Count}; total: {entries.Sum(e =&gt; e.Minutes)} minutes&quot;);
+      break;
+    default:
+      throw new ArgumentException(&quot;Usage: list | add &lt;topic&gt; &lt;minutes&gt;&quot;);
+  }
+} catch (Exception error) when (
+    error is IOException or JsonException or ArgumentException or InvalidDataException) {
+  Console.Error.WriteLine(error.Message);
+  Environment.ExitCode = 1;
+}
+
+</code></pre>
+<h3>StudyEntry.cs</h3>
+<pre><code>
+public sealed class StudyEntry {
+  // C# 14: field refers to the compiler-created backing field.
+  public string Topic {
+    get;
+    init =&gt; field = string.IsNullOrWhiteSpace(value)
+        ? throw new ArgumentException(&quot;Topic is required.&quot;)
+        : value.Trim();
+  }
+  public int Minutes {
+    get; init;
+  }
+
+  [System.Text.Json.Serialization.JsonConstructor]
+  public StudyEntry(string topic, int minutes) {
+    if (minutes is &lt; 1 or &gt; 180) {
+      throw new ArgumentOutOfRangeException(nameof(minutes));
+    }
+
+    Topic = topic;
+    Minutes = minutes;
+  }
+}
+
+</code></pre>
+<h2 id="12-Capstone-solution">12-Capstone exercise solution</h2>
+<p>Add a summary command that prints total minutes per topic. Verify invalid input never changes the saved file.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+  case &quot;summary&quot;:
+    foreach (var group in entries.GroupBy(e =&gt; e.Topic).OrderBy(g =&gt; g.Key)) {
+      Console.WriteLine($&quot;{group.Key}: {group.Sum(e =&gt; e.Minutes)} minutes&quot;);
+    }
+
+    break;
+// Insert before default in the existing switch.
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+</main></body></html>

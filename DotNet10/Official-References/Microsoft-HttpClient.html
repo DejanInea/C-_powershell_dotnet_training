@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines"><title>Microsoft Learn HttpClient guidelines.</title>
+<style>
+@page { size:A4; margin:18mm 15mm; @bottom-center { content:"Microsoft documentation print copy | " counter(page); font:9pt Arial; color:#64748b; } }
+body { font:10.5pt/1.5 Arial,sans-serif; color:#172b43; margin:0; }
+h1 { font-size:24pt; color:#124968; } h2 { font-size:16pt; color:#165e76; } h3 { font-size:12pt; }
+h1,h2,h3 { break-after:avoid; } p { orphans:3; widows:3; }
+pre { background:#edf4f7; padding:10px; border-left:3px solid #0e8c88; white-space:pre-wrap; overflow-wrap:anywhere; font:8.5pt/1.35 Consolas,monospace; }
+code { font-family:Consolas,monospace; overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; font-size:9pt; }
+td,th { border:1px solid #ccdbe5; padding:5px; } tr { break-inside:avoid; }
+img,svg { max-width:100%; height:auto; } a { color:#087b87; overflow-wrap:anywhere; }
+.provenance { border-top:4px solid #0e8c88; padding:10px 0; font-size:9pt; }
+.note,.TIP,.NOTE,.IMPORTANT,.WARNING { background:#eff5f7; padding:8px; }
+button,.display-none-print { display:none; } details { display:block; }
+
+</style></head><body>
+<div class="provenance"><strong>Print copy of official Microsoft Learn documentation</strong>
+<p>Source: <a href="https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines">https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines</a><br>Exported: 2026-10-14. Source metadata date: 2025-10-22T00:00:00Z.</p>
+<p>Microsoft and documentation contributors. Article wording and code for the requested version are retained; web navigation is removed and print formatting is added. This locally generated PDF is not a Microsoft-published PDF book or a complete product manual. Source-page attribution and notices apply.</p>
+<p>Documentation license and terms: <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a>; .NET documentation: <a href="https://github.com/dotnet/docs/blob/main/LICENSE">CC BY 4.0 license</a>. Check the source for specific attribution or exceptions.</p>
+</div>
+<h1 id="guidelines-for-using-httpclient">Guidelines for using HttpClient</h1>
+<p>The <a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">System.Net.Http.HttpClient</a> class sends HTTP requests and receives HTTP responses from a resource identified by a URI. An <a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">HttpClient</a> instance is a collection of settings that's applied to all requests executed by that instance, and each instance uses its own connection pool, which isolates its requests from others. Starting in .NET Core 2.1, the <a href="/en-us/dotnet/api/system.net.http.socketshttphandler" class="no-loc" data-linktype="absolute-path">SocketsHttpHandler</a> class provides the implementation, making behavior consistent across all platforms.</p>
+<h2 id="dns-behavior">DNS behavior</h2>
+<p><a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">HttpClient</a> only resolves DNS entries when a connection is created. It doesn't track any time to live (TTL) durations specified by the DNS server. If DNS entries change regularly, which can happen in some scenarios, the client won't respect those updates. To solve this issue, limit the lifetime of the connection by setting the <a href="/en-us/dotnet/api/system.net.http.socketshttphandler.pooledconnectionlifetime#system-net-http-socketshttphandler-pooledconnectionlifetime" class="no-loc" data-linktype="absolute-path">PooledConnectionLifetime</a> property, so that DNS lookup is repeated when the connection is replaced. Consider this example:</p>
+<pre><code class="lang-csharp">var handler = new SocketsHttpHandler
+{
+    PooledConnectionLifetime = TimeSpan.FromMinutes(15) // Recreate every 15 minutes
+};
+var sharedClient = new HttpClient(handler);
+</code></pre>
+<p>The preceding <code>HttpClient</code> is configured to reuse connections for 15 minutes. After the timespan specified by <a href="/en-us/dotnet/api/system.net.http.socketshttphandler.pooledconnectionlifetime#system-net-http-socketshttphandler-pooledconnectionlifetime" class="no-loc" data-linktype="absolute-path">PooledConnectionLifetime</a> has elapsed and the connection has completed its last associated request (if any), the connection is closed. If there are any requests waiting in the queue, a new connection is created as needed.</p>
+<p>The 15-minute interval was chosen arbitrarily for illustration purposes. You should choose the value based on the expected frequency of DNS or other network changes.</p>
+<h2 id="pooled-connections">Pooled connections</h2>
+<p>The connection pool for an <a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">HttpClient</a> is linked to the underlying <a href="/en-us/dotnet/api/system.net.http.socketshttphandler" class="no-loc" data-linktype="absolute-path">SocketsHttpHandler</a>. Disposing an <a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">HttpClient</a> disposes the pool only when the client owns and disposes the underlying handler. If a client uses a handler that it doesn't own, disposing the client doesn't affect the handler or its connections. <a href="/en-us/dotnet/api/system.net.http.ihttpclientfactory" class="no-loc" data-linktype="absolute-path">IHttpClientFactory</a> creates clients with handlers that it manages, so it can reuse handlers and their connection pools. Sending another request to the same server using a different handler requires a new connection. As a result, there's a performance penalty for unnecessary connection creation. Moreover, TCP ports aren't released immediately after connection closure. (For more information on that, see TCP <code>TIME-WAIT</code> in <a href="https://www.rfc-editor.org/rfc/rfc9293.html#section-3.3.2" data-linktype="external">RFC 9293</a>.) If the rate of requests is high, the operating system limit of available ports might be exhausted. To avoid port exhaustion problems, <a href="#recommended-use" data-linktype="self-bookmark">reuse</a> <a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">HttpClient</a> instances for as many HTTP requests as possible.</p>
+<h2 id="recommended-use">Recommended use</h2>
+<p>To summarize recommended <code>HttpClient</code> use in terms of lifetime management, you should use either <em>long-lived</em> clients and set <code>PooledConnectionLifetime</code> (.NET Core and .NET 5+) or <em>short-lived</em> clients created by <code>IHttpClientFactory</code>.</p>
+<ul>
+<li><p>In .NET Core and .NET 5+:</p>
+<ul>
+<li>Use a <code>static</code> or <em>singleton</em> <a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">HttpClient</a> instance with <a href="/en-us/dotnet/api/system.net.http.socketshttphandler.pooledconnectionlifetime#system-net-http-socketshttphandler-pooledconnectionlifetime" class="no-loc" data-linktype="absolute-path">PooledConnectionLifetime</a> set to the desired interval, such as 2 minutes, depending on expected DNS changes. This solves both the port exhaustion and DNS changes problems without adding the overhead of <a href="/en-us/dotnet/api/system.net.http.ihttpclientfactory" class="no-loc" data-linktype="absolute-path">IHttpClientFactory</a>. If you need to be able to mock your handler, you can register it separately.</li>
+</ul>
+<div class="TIP">
+<p>Tip</p>
+<p>If you only use a limited number of <a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">HttpClient</a> instances, that's also an acceptable strategy. What matters is that they're not created and disposed with each request, as they each contain a connection pool. Using more than one instance is necessary for scenarios with multiple proxies or to separate cookie containers without completely disabling cookie handling.</p>
+</div>
+<ul>
+<li><p>Using <a href="/en-us/dotnet/api/system.net.http.ihttpclientfactory" class="no-loc" data-linktype="absolute-path">IHttpClientFactory</a>, you can have multiple, differently configured clients for different use cases. However, be aware that the factory-created clients are intended to be short-lived, and once the client is created, the factory no longer has control over it.</p>
+<p>The factory pools <a href="/en-us/dotnet/api/system.net.http.httpmessagehandler" class="no-loc" data-linktype="absolute-path">HttpMessageHandler</a> instances, and, if its lifetime hasn't expired, a handler can be reused from the pool when the factory creates a new <a href="/en-us/dotnet/api/system.net.http.httpclient" class="no-loc" data-linktype="absolute-path">HttpClient</a> instance. This reuse avoids any socket exhaustion issues.</p>
+<p>If you desire the configurability that <a href="/en-us/dotnet/api/system.net.http.ihttpclientfactory" class="no-loc" data-linktype="absolute-path">IHttpClientFactory</a> provides, we recommend using the <a href="../../../core/extensions/httpclient-factory#typed-clients" data-linktype="relative-path">typed-client approach</a>.</p>
+</li>
+</ul>
+</li>
+<li><p>In .NET Framework, use <a href="/en-us/dotnet/api/system.net.http.ihttpclientfactory" class="no-loc" data-linktype="absolute-path">IHttpClientFactory</a> to manage your <code>HttpClient</code> instances. If you don't use the factory and instead create a new client instance for each request yourself, you can exhaust available ports.</p>
+<div class="WARNING">
+<p>Warning</p>
+<p>If your app requires cookies, it's recommended to avoid using <a href="/en-us/dotnet/api/system.net.http.ihttpclientfactory" class="no-loc" data-linktype="absolute-path">IHttpClientFactory</a>. Pooling the <a href="/en-us/dotnet/api/system.net.http.httpmessagehandler" class="no-loc" data-linktype="absolute-path">HttpMessageHandler</a> instances results in sharing of <a href="/en-us/dotnet/api/system.net.cookiecontainer" class="no-loc" data-linktype="absolute-path">CookieContainer</a> objects. Unanticipated <a href="/en-us/dotnet/api/system.net.cookiecontainer" class="no-loc" data-linktype="absolute-path">CookieContainer</a> sharing might leak cookies between unrelated parts of the application. Moreover, when <a href="/en-us/dotnet/api/microsoft.extensions.http.httpclientfactoryoptions.handlerlifetime#microsoft-extensions-http-httpclientfactoryoptions-handlerlifetime" class="no-loc" data-linktype="absolute-path">HandlerLifetime</a> expires, the handler is recycled, meaning that all cookies stored in its <a href="/en-us/dotnet/api/system.net.cookiecontainer" class="no-loc" data-linktype="absolute-path">CookieContainer</a> are lost.</p>
+</div>
+</li>
+</ul>
+<p>For more information about managing <code>HttpClient</code> lifetime with <code>IHttpClientFactory</code>, see <a href="../../../core/extensions/httpclient-factory#httpclient-lifetime-management" data-linktype="relative-path"><code>IHttpClientFactory</code> guidelines</a>.</p>
+<h2 id="resilience-with-static-clients">Resilience with static clients</h2>
+<p>It's possible to configure a <code>static</code> or <em>singleton</em> client to use any number of resilience pipelines using the following pattern:</p>
+<pre><code class="lang-csharp">using Microsoft.Extensions.Http.Resilience;
+using Polly;
+
+class MyClass
+{
+    static HttpClient? s_httpClient;
+
+    MyClass()
+    {
+        var retryPipeline = new ResiliencePipelineBuilder&lt;HttpResponseMessage&gt;()
+            .AddRetry(new HttpRetryStrategyOptions
+            {
+                BackoffType = DelayBackoffType.Exponential,
+                MaxRetryAttempts = 3
+            })
+            .Build();
+
+        var socketHandler = new SocketsHttpHandler
+        {
+            PooledConnectionLifetime = TimeSpan.FromMinutes(15)
+        };
+        var resilienceHandler = new ResilienceHandler(retryPipeline)
+        {
+            InnerHandler = socketHandler,
+        };
+
+        s_httpClient = new HttpClient(resilienceHandler);
+    }
+}
+</code></pre>
+<p>The preceding code:</p>
+<ul>
+<li>Relies on <a href="https://www.nuget.org/packages/Microsoft.Extensions.Http.Resilience" data-linktype="external">Microsoft.Extensions.Http.Resilience</a> NuGet package.</li>
+<li>Specifies a transient HTTP error handler, configured with retry pipeline that with each attempt will exponentially backoff delay intervals.</li>
+<li>Defines a pooled connection lifetime of fifteen minutes for the <code>socketHandler</code>.</li>
+<li>Passes the <code>socketHandler</code> to the <code>resilienceHandler</code> with the retry logic.</li>
+<li>Instantiates a shared <code>HttpClient</code> given the <code>resilienceHandler</code>.</li>
+</ul>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="http-overview" data-linktype="relative-path">HTTP support in .NET</a></li>
+<li><a href="../../../core/extensions/httpclient-factory" data-linktype="relative-path">HTTP client factory with .NET</a></li>
+<li><a href="httpclient" data-linktype="relative-path">Make HTTP requests with the HttpClient</a></li>
+<li><a href="../../../architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests" data-linktype="relative-path">Use IHttpClientFactory to implement resilient HTTP requests</a></li>
+</ul>
+
+
+</body></html>

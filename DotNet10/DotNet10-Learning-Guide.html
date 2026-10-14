@@ -1,0 +1,1664 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>.NET 10 Learning Guide</title>
+<style>
+@page { size:A4; margin:18mm 16mm; @bottom-center { content:".NET 10 learning guide  |  " counter(page); font-size:9pt; color:#64748b; } }
+* { box-sizing:border-box; }
+body { font-family:Arial,sans-serif; color:#172b43; line-height:1.48; font-size:10.5pt; margin:0; }
+main { max-width:180mm; margin:0 auto; }
+h1 { color:#124968; font-size:23pt; line-height:1.18; border-top:5px solid #0e8c88; padding-top:12px; break-before:page; }
+main > h1:first-child { break-before:auto; }
+h2 { color:#165e76; font-size:15pt; margin:20px 0 7px; }
+h3 { font-size:11.5pt; }
+h1,h2,h3 { break-after:avoid; }
+p { margin:9px 0; orphans:3; widows:3; }
+li { margin:5px 0; }
+a { color:#087b87; text-decoration:none; }
+code { font-family:Consolas,'Courier New',monospace; font-size:9pt; }
+p code,li code { background:#edf4f7; padding:1px 3px; border-radius:3px; }
+pre { background:#edf4f7; border-left:3px solid #0e8c88; padding:10px 12px; margin:12px 0; white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.35; }
+pre code { font-size:8.5pt; }
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:9pt; }
+td { border:1px solid #d4e3eb; padding:6px; vertical-align:top; }
+tr:first-child { background:#e1eff3; font-weight:bold; }
+tr { break-inside:avoid; }
+@media screen { body { background:#eaf1f5; padding:30px; } main { background:white; padding:35px; box-shadow:0 3px 15px #b4c6d5; max-width:220mm; } }
+</style></head><body><main><h1>.NET 10: from first steps to a complete project</h1>
+<p>Original learning guide | 14 October 2026 | Read, run, change, explain, practice</p>
+<p>All commands assume a PowerShell terminal at the repository root. Code is included for study; use the source files for copying and editing.</p>
+<p>10 lessons, ordered from easy to hard. Read <a href="DotNet10-Learning-Guide.pdf">DotNet10-Learning-Guide.pdf</a> for the complete printable course, or use the individual lesson files below.</p>
+<p>Use this track after C# lessons 01 through 08 and PowerShell lessons 01 through 06. .NET is a platform rather than a separate programming language. This track teaches projects, libraries, configuration, dependency injection, APIs, clients, testing, and publishing. The projects target net10.0 and use installed SDK/shared-framework components without third-party packages.</p>
+<h2>Before lesson 01</h2>
+<ol>
+<li>Open a PowerShell terminal at the repository root, the folder containing LearningPack.slnx.</li>
+<li>If local scripts are blocked, run <code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</code> for this terminal. This changes only this process, not the machine policy.</li>
+<li>Run <code>. .\Initialize-Training.ps1</code> (there is a space between the first and second dots).</li>
+<li>Keep the terminal at the repository root when copying commands from lessons.</li>
+<li>For every lesson: predict the output, run it, read each statement, change one thing, complete the exercise, then check SOLUTION.md.</li>
+</ol>
+<h2>Lesson order</h2>
+<ol>
+<li><a href="#01-Sdk">01-Sdk: The SDK, runtime, and command line</a></li>
+<li><a href="#02-Library">02-Library: A library and project references</a></li>
+<li><a href="#03-Configuration">03-Configuration: JSON settings and environment variables</a></li>
+<li><a href="#04-DependencyInjection">04-DependencyInjection: Dependency injection and logging</a></li>
+<li><a href="#05-MinimalApi">05-MinimalApi: Your first HTTP API</a></li>
+<li><a href="#06-Validation">06-Validation: Validate request bodies and status codes</a></li>
+<li><a href="#07-HttpClient">07-HttpClient: Call an API from C#</a></li>
+<li><a href="#08-Testing">08-Testing: Executable checks and failure cases</a></li>
+<li><a href="#09-Publishing">09-Publishing: Release builds and framework-dependent publishing</a></li>
+<li><a href="#10-Capstone">10-Capstone: A persistent task API</a></li>
+</ol>
+<h2>How to know you are ready to move on</h2>
+<p>Explain the example without reading the notes. Complete the exercise without copying the solution. Make one valid change and one invalid-input experiment. Record what happened in <a href="Progress.md">Progress.md</a>. If you cannot explain a result, repeat the lesson with smaller values.</p>
+<h2>Learn Git with this track</h2>
+<p>Read <a href="../Git-Workflow.md">the Git workflow</a> and <a href="Git-Practice.md">this track&#39;s Git checkpoints</a>. Each lesson includes a branch name, verification step, staging paths, and suggested commit. The printable course guide includes the shared Git workflow too.</p>
+<h2>Official PDF references</h2>
+<p>The <a href="Official-References/README.md">Official-References index</a> lists downloaded publisher PDFs and printable copies of current Microsoft documentation, with source URLs, editions, and course mappings. Publisher PDFs retain their original content. Documentation exports are clearly labeled as local print copies, rather than Microsoft-published PDF books.</p>
+<h2>Reference documentation</h2>
+<p>The lesson guides are original teaching material. Official downloads and documentation exports are listed in Official-References/README.md. The links below provide further online study. Checked on 14 October 2026.</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview">.NET 10 overview</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/core/install/windows">Install .NET on Windows</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/core/tools/">.NET CLI</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/core/sdk/file-based-apps">File-based applications</a></li>
+<li><a href="https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-10.0">ASP.NET Core minimal APIs</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection">Dependency injection</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/core/deploying/">Publishing</a></li>
+</ul>
+<h1>Course code style</h1>
+<p>Authored C# follows <a href="https://google.github.io/styleguide/csharpguide.html">Google&#39;s C# guide</a>, linked from the <a href="https://google.github.io/styleguide/">Google style-guide index</a>.</p>
+<h2>C# and .NET lessons</h2>
+<ul>
+<li>Use two spaces, same-line opening braces, and a 100-column limit.</li>
+<li>Put one statement on each line and brace control-flow bodies.</li>
+<li>Use PascalCase for types/public members, camelCase for parameters/locals, and _camelCase for private fields.</li>
+<li>Place System imports first and sort other imports alphabetically.</li>
+<li>Use block-bodied methods; reserve expression bodies for suitable properties and simple lambdas.</li>
+<li>Put each core type in its own matching source file.</li>
+<li>Use constants for fixed rules and readonly fields for stable dependencies.</li>
+</ul>
+<p>.editorconfig records formatter settings and private-field naming. Types now live in files such as StudySession.cs, StudyEntry.cs, and TaskRules.cs. Numbered folders preserve lesson order.</p>
+<p>The course still teaches modern C#: top-level programs, file-scoped namespaces, records, collection expressions, and C# 14 field-backed properties. Positional record parameters use PascalCase because they declare public properties.</p>
+<h2>PowerShell convention</h2>
+<p>Google&#39;s shell guide targets Bash, so these scripts use a documented course convention: two spaces, same-line braces, explicit blocks, and separate statements. Aim for 100 columns; long literal URLs, generated HTML here-strings, and indivisible arguments can exceed that target.</p>
+<p>Keep Verb-Noun function names, PascalCase parameters/output properties, and camelCase locals. Use full commands, structured output, help comments, validation, native exit-code checks, and splatting for long calls.</p>
+<h2>Verify before committing</h2>
+<pre><code>
+. .\Initialize-Training.ps1
+dotnet build .\LearningPack.slnx -m:1 -nr:false
+.\Check-Style.ps1
+.\Test-LearningPack.ps1
+</code></pre>
+<p>To apply the SDK formatter:</p>
+<pre><code>
+dotnet format whitespace .\LearningPack.slnx --no-restore
+dotnet format style .\LearningPack.slnx --no-restore --diagnostics IDE0011 IDE0022 IDE0061 --severity info
+</code></pre>
+<p>Review changes and run checks before regenerating course PDFs with Build-Guides.ps1. Original publisher PDFs and official documentation exports retain their source formatting.</p>
+<h1>Git practice in the DotNet10 course</h1>
+<p>Read <a href="../Git-Workflow.md">Git-Workflow.md</a> first and save the supplied baseline before editing. Start each exercise on a clean branch from main. Run focused checks, stage related changes, commit with a clear message, then choose either local integration or a GitHub pull request.</p>
+<h2>Track checkpoints</h2>
+<table><tbody>
+<tr><td>Lesson</td><td>Branch</td><td>Suggested commit</td><td>Extra Git skill</td></tr>
+<tr><td>01-Sdk</td><td>feat/dotnet10-01-sdk-notes</td><td>docs(dotnet10): explain project SDK settings</td><td>Inspect status, diff, and staging</td></tr>
+<tr><td>02-Library</td><td>feat/dotnet10-02-remaining-minutes</td><td>feat(dotnet10): add a remaining minutes calculation</td><td>Inspect status, diff, and staging</td></tr>
+<tr><td>03-Configuration</td><td>feat/dotnet10-03-environment-override</td><td>test(dotnet10): verify the daily target override</td><td>Inspect status, diff, and staging</td></tr>
+<tr><td>04-DependencyInjection</td><td>feat/dotnet10-04-service-lifetimes</td><td>test(dotnet10): compare service lifetimes</td><td>Keep commits focused and review the staged snapshot</td></tr>
+<tr><td>05-MinimalApi</td><td>feat/dotnet10-05-minutes-route</td><td>feat(dotnet10): add a minutes conversion endpoint</td><td>Keep commits focused and review the staged snapshot</td></tr>
+<tr><td>06-Validation</td><td>feat/dotnet10-06-invalid-input</td><td>test(dotnet10): verify invalid session requests</td><td>Keep commits focused and review the staged snapshot</td></tr>
+<tr><td>07-HttpClient</td><td>feat/dotnet10-07-connection-failure</td><td>test(dotnet10): document client failure behavior</td><td>Push a branch and explain validation in a PR</td></tr>
+<tr><td>08-Testing</td><td>feat/dotnet10-08-boundary-cases</td><td>test(dotnet10): check study budget boundaries</td><td>Push a branch and explain validation in a PR</td></tr>
+<tr><td>09-Publishing</td><td>feat/dotnet10-09-publish-notes</td><td>docs(dotnet10): explain published runtime files</td><td>Push a branch and explain validation in a PR</td></tr>
+<tr><td>10-Capstone</td><td>feat/dotnet10-10-task-summary</td><td>feat(dotnet10): add task summary counts</td><td>Review integration history and practice conflict resolution</td></tr>
+</tbody></table>
+<p>For a docs-only change, prefer a docs/ branch; for a bug fix, prefer fix/. The suggested feat/ name is a convenient starting point and can be adapted to what you actually implement. Do not describe a documentation-only experiment as a new program feature.</p>
+<h2>Practice in a separate local repository</h2>
+<pre><code>
+.\New-GitPractice.ps1 -Topic DotNet10
+</code></pre>
+<p>Use the printed developer and teammate paths. Both clones and their bare remote are inside .artifacts. Follow the push, merge, and conflict examples from Git-Workflow.md there. This is separate from changing your actual course repository.</p>
+<h2>A complete checkpoint</h2>
+<ol>
+<li>Verify the change with the lesson commands and an appropriate boundary case.</li>
+<li>Inspect git diff and stage only related source or notes.</li>
+<li>Inspect git diff --cached and commit.</li>
+<li>Push your branch if you intend to publish it.</li>
+<li>Review a PR or perform a local merge, then verify the behavior on main.</li>
+<li>Record the resulting commit ID in Progress.md.</li>
+</ol>
+<p>Do not commit generated build output, demonstration data, API logs, browser profiles, or credentials. Regenerate the original course PDFs after documentation changes only when the source content is ready; inspect PDF changes by size and rendered pages rather than a text diff.</p>
+<h1>Git workflow for all three courses</h1>
+<p>Use Git while completing exercises. Git records versions locally; GitHub hosts a remote repository and adds pull requests. A branch lets you develop a change before integrating it into main. A commit stores the staged snapshot with a message. Push sends commits to a remote. Merge combines histories.</p>
+<p>This course uses short-lived branches, small commits, and reviewed merges. It is one practical workflow; team rules can differ. The optional type(scope): summary message convention is a course recommendation, not a Git requirement.</p>
+<h2>1. Inspect and set your identity</h2>
+<pre><code>
+git --version
+git status --short --branch
+git branch --show-current
+git remote -v
+git log --oneline --decorate -5
+</code></pre>
+<p>The working tree is your files on disk. The index, or staging area, holds the next proposed snapshot. HEAD identifies the current commit. origin is a conventional remote name. This repository already has origin: check its actual address instead of adding another remote. Do not run git init inside the lesson folders; all courses belong to one repository.</p>
+<p>If identity is missing, replace these placeholders with your own name and verified or GitHub noreply email:</p>
+<pre><code>
+git config --local user.name &quot;Your Real Name&quot;
+git config --local user.email &quot;your-verified-or-GitHub-noreply-email&quot;
+git config --get user.name
+git config --get user.email
+</code></pre>
+<p>Local identity settings affect only this repository. Commit identity differs from push authentication. Use Git Credential Manager or GitHub&#39;s supported authentication; keep passwords and tokens out of source files and remote URLs.</p>
+<h2>2. Commit the supplied baseline before exercises</h2>
+<p>An untracked file does not exist in Git history. If the learning pack is initially uncommitted, save its supplied state before editing lessons:</p>
+<pre><code>
+git status --short --branch
+git switch -c course/learning-pack
+git add -- .gitignore .gitattributes .editorconfig README.md STYLE.md Directory.Build.props global.json NuGet.Config LearningPack.slnx
+git add -- Initialize-Training.ps1 Test-LearningPack.ps1 Check-Style.ps1 Build-Guides.ps1
+git add -- Git-Workflow.md New-GitPractice.ps1 Official-Resources.json Download-OfficialReferences.ps1
+git add -- CSharp PowerShell DotNet10 .github
+git diff --cached --stat
+git diff --cached --check
+git commit -m &quot;chore(course): add CSharp PowerShell and .NET 10 learning pack&quot;
+</code></pre>
+<p>Review every staged path, including deletions. Confirm bin, obj, output, .tools and .artifacts are excluded. Inspect PDF sizes. Add only paths that exist in your copy.</p>
+<p>Choose ONE baseline integration path:</p>
+<ul>
+<li>Local practice: git switch main, then git merge --no-ff course/learning-pack -m &quot;Merge initial learning pack&quot;.</li>
+<li>GitHub practice: git push -u origin course/learning-pack, open a pull request to main, merge on GitHub, then fetch and fast-forward your local main.</li>
+</ul>
+<p>Do not merge locally and also squash the same change on GitHub: those are different histories. If the baseline is already committed on main, skip this section.</p>
+<h2>3. Start a focused branch</h2>
+<p>Start with a clean working tree. Commit your current work or deliberately stash it before switching.</p>
+<pre><code>
+git switch main
+git status --short
+# For GitHub practice; omit fetch/pull in local-only practice:
+git fetch origin
+git pull --ff-only origin main
+git switch -c feat/csharp-01-city
+</code></pre>
+<p>--ff-only refuses to combine divergent local and remote histories silently. If it refuses, inspect the graph and follow the synchronization section. Names such as feat/csharp-01-city, fix/powershell-09-minute-validation, and feat/dotnet10-task-summary identify one purpose. Branches are repository-wide, not restricted to the named folder. Integrate a lesson branch before starting the next unless you intentionally need a dependent branch.</p>
+<h2>4. Edit, verify, stage, and commit</h2>
+<p>For the first C# exercise, implement the optional city argument and verify both explicit and default inputs:</p>
+<pre><code>
+. .\Initialize-Training.ps1
+dotnet run --project .\CSharp\01-Hello -- Dejan Ljubljana
+dotnet run --project .\CSharp\01-Hello -- Dejan
+git diff -- CSharp/01-Hello/Program.cs
+git add -- CSharp/01-Hello/Program.cs
+git diff --cached -- CSharp/01-Hello/Program.cs
+git diff --cached --check
+git status --short
+git commit -m &quot;feat(csharp): accept an optional city argument&quot; -m &quot;Use Ljubljana when the city is omitted. Verified explicit and default inputs.&quot;
+git show --stat HEAD
+</code></pre>
+<p>diff shows unstaged edits. diff --cached shows exactly what a commit will contain. Untracked files need editor inspection and staging before they appear in the staged diff. If you edit after staging, add again for edits you want in the same snapshot. git add -p stages selected hunks from tracked files.</p>
+<p>Keep each commit focused and working. Use the lesson&#39;s verification commands. The root test script checks the supplied behavior; deliberate exercise changes may require updating its expectations.</p>
+<h2>5. Write clear messages and PR comments</h2>
+<p>Use an imperative summary describing the resulting change. A roughly 50-72-character summary is a useful readability target, not a Git limit. A body explains why a non-obvious decision was made and what relevant checks passed. Each additional -m adds another paragraph.</p>
+<table><tbody>
+<tr><td>Type</td><td>Purpose</td><td>Example</td></tr>
+<tr><td>feat</td><td>New behavior</td><td>feat(csharp): accept an optional city argument</td></tr>
+<tr><td>fix</td><td>Correct behavior</td><td>fix(powershell): reject negative study minutes</td></tr>
+<tr><td>docs</td><td>Documentation</td><td>docs(dotnet10): explain API validation responses</td></tr>
+<tr><td>refactor</td><td>Structure with preserved behavior</td><td>refactor(csharp): extract study calculations</td></tr>
+<tr><td>test</td><td>Verification</td><td>test(dotnet10): check task persistence</td></tr>
+<tr><td>chore</td><td>Maintenance</td><td>chore(course): normalize source line endings</td></tr>
+</tbody></table>
+<p>This is an optional convention. Avoid vague messages such as updates, fix stuff, or final. Source comments explain implementation details; commit messages explain a recorded change; PR comments discuss a proposed change and review. They have different purposes.</p>
+<p>For a PR, state the problem, resulting behavior, and exact validation. The supplied .github/PULL_REQUEST_TEMPLATE.md provides those fields. Example title: Accept an optional city in the greeting. Example description: The greeting accepts a second argument and defaults to Ljubljana. Verified explicit and omitted city runs.</p>
+<h2>6. Push and review a pull request</h2>
+<pre><code>
+git remote -v
+git push -u origin feat/csharp-01-city
+</code></pre>
+<p>-u records the upstream; subsequent git push uses that relationship. Push publishes commits but does not merge main. On GitHub, create a pull request with main as base and your feature branch as head. Review Files changed, fix failed checks, and respond to comments. Additional pushes to that branch update the PR.</p>
+<p>If a push is rejected, read the error: authentication, branch protection, and remote changes require different fixes. Fetch and inspect before attempting any history rewrite.</p>
+<h2>7. Merge: choose one completion path</h2>
+<table><tbody>
+<tr><td>Method</td><td>History effect</td><td>Useful context</td></tr>
+<tr><td>Fast-forward</td><td>Moves the target pointer to a descendant</td><td>Simple local exercises</td></tr>
+<tr><td>Merge commit</td><td>Records two parent histories</td><td>Preserve individual commits and integration point</td></tr>
+<tr><td>Squash merge</td><td>Creates one new combined commit</td><td>One compact reviewed feature</td></tr>
+<tr><td>Rebase then merge</td><td>Replays commits on a new base</td><td>Teams requiring linear history</td></tr>
+</tbody></table>
+<p>Use a merge commit in the local lab to see branch history. For a small GitHub PR, squash merge is a reasonable default if repository policy allows it. Review the final squash message because it becomes main&#39;s commit message.</p>
+<p>Local completion, without publishing:</p>
+<pre><code>
+git switch main
+git status --short
+git merge --no-ff feat/csharp-01-city -m &quot;Merge CSharp city argument exercise&quot;
+git log --oneline --graph --decorate -10
+git branch -d feat/csharp-01-city
+</code></pre>
+<p>Merge changes your CURRENT branch. --no-ff requests an explicit merge commit. Delete a branch only after integration. -d checks ancestry. After a GitHub squash merge, -d may refuse because the original commits were not merged by identity; keeping the branch is fine.</p>
+<p>GitHub completion: merge the PR on GitHub first, then:</p>
+<pre><code>
+git fetch origin
+git switch main
+git pull --ff-only origin main
+git log --oneline --graph --decorate -10
+git status --short
+</code></pre>
+<p>Check the completed behavior is on main before starting the next lesson. git fetch --prune removes stale remote-tracking names, not your local branches.</p>
+<p>To incorporate updated main into an active feature branch:</p>
+<pre><code>
+git switch feat/csharp-01-city
+git fetch origin
+git merge origin/main
+# Resolve conflicts if needed, verify, and finish the merge.
+git push
+</code></pre>
+<p>Rebase is another choice for a private, never-pushed branch. It changes commit IDs. This course uses merge to update published branches without rewriting their shared history.</p>
+<h2>8. Resolve conflicts and undo deliberately</h2>
+<p>A conflict means overlapping changes need your decision. Run status, open the file, find &lt;&lt;&lt;&lt;&lt;&lt;&lt;, =======, and &gt;&gt;&gt;&gt;&gt;&gt;&gt;, write the intended combined result, remove the markers, and verify it. Stage each resolved file and commit:</p>
+<pre><code>
+git status
+# Edit and run checks BEFORE staging:
+git add -- CSharp/01-Hello/Program.cs
+git diff --cached
+git commit -m &quot;merge(csharp): preserve city input and updated greeting&quot;
+</code></pre>
+<p>git merge --abort abandons the merge where possible. Start merges with a clean working tree so the pre-merge state is clear. Practice your first conflict in the isolated lab.</p>
+<table><tbody>
+<tr><td>Command</td><td>Effect</td><td>Appropriate use</td></tr>
+<tr><td>git restore --staged -- path</td><td>Unstage while keeping working edits</td><td>Wrong path staged</td></tr>
+<tr><td>git restore -- path</td><td>Discard unstaged tracked-file edits</td><td>Only after reviewing and choosing to discard</td></tr>
+<tr><td>git stash push -u -m &quot;lesson draft&quot;</td><td>Park edits and untracked files locally</td><td>Switch context temporarily</td></tr>
+<tr><td>git stash list</td><td>Show parked work</td><td>Find your draft</td></tr>
+<tr><td>git stash apply</td><td>Restore the latest stash while keeping it</td><td>Resume, inspect, then drop after verification</td></tr>
+<tr><td>git revert commit-id</td><td>Record the inverse of a normal commit</td><td>Undo shared work without rewriting history</td></tr>
+</tbody></table>
+<p>Stash is local temporary storage, not a pushed backup. Reverting a merge requires additional parent selection; the simple revert example is for a normal commit. Amend rewrites the latest commit; reserve it for appropriate private, unpushed work. Routine beginner work does not require reset --hard, clean -fd, or force pushes.</p>
+<h2>9. Practice pushing and conflicts offline</h2>
+<p>New-GitPractice.ps1 creates a fresh developer repository, bare local remote, and teammate clone under .artifacts. It copies your selected topic&#39;s first runnable lesson and configures fictional identities only inside those lab repositories. It does not change the course repository&#39;s branch or contact GitHub.</p>
+<pre><code>
+.\New-GitPractice.ps1 -Topic CSharp
+# Use the developer path printed by the script:
+Set-Location &#39;PASTE-THE-PRINTED-DEVELOPER-FOLDER&#39;
+git switch -c feat/practice-note
+Add-Content -LiteralPath PracticeNotes.txt -Value &#39;I can explain the staging area.&#39;
+git diff
+git add -- PracticeNotes.txt
+git diff --cached
+git commit -m &quot;docs(csharp): record staging practice&quot;
+git push -u origin feat/practice-note
+git switch main
+git merge --no-ff feat/practice-note -m &quot;Merge staging practice&quot;
+git push origin main
+git log --oneline --graph --all
+</code></pre>
+<p>Open another terminal in the printed teammate folder. Run git pull --ff-only origin main and inspect PracticeNotes.txt. This demonstrates the same data movement without publishing to your GitHub account.</p>
+<p>In the lab developer folder, create a deliberate conflict:</p>
+<pre><code>
+git switch main
+git switch -c feat/conflict-note
+Set-Content -LiteralPath PracticeNotes.txt -Value &#39;Feature: validate inputs before saving.&#39;
+git add -- PracticeNotes.txt
+git commit -m &quot;docs(course): describe validation&quot;
+git switch main
+Set-Content -LiteralPath PracticeNotes.txt -Value &#39;Main: verify persistence after saving.&#39;
+git add -- PracticeNotes.txt
+git commit -m &quot;docs(course): describe persistence&quot;
+git merge feat/conflict-note
+# EXPECT a conflict and nonzero exit code. Resolve the file:
+git status
+Get-Content -LiteralPath PracticeNotes.txt
+Set-Content -LiteralPath PracticeNotes.txt -Value &#39;Validate inputs before saving, then verify persistence.&#39;
+git add -- PracticeNotes.txt
+git commit -m &quot;merge(course): combine validation and persistence notes&quot;
+git log --oneline --graph --all
+</code></pre>
+<p>Both branches replaced the same text differently. Your resolution preserves both ideas. Return to the original repository root when finished.</p>
+<h2>10. Apply Git in every course</h2>
+<p>Each lesson contains a Git checkpoint with a branch name, focused verification, staging paths, and suggested message. Git-Practice.md maps your track. Use lessons 01-03 for status, branches, and staging; middle lessons for focused commits and review; final lessons for PRs, integration, and conflict practice.</p>
+<p>For a combined API/client change, one focused branch can include both DotNet10 and PowerShell files because they implement one contract. Include only related changes. Keep generated files and secrets out of history.</p>
+<h2>Official references</h2>
+<p>This is original instructional material. Further detail comes from Git&#39;s command manuals and GitHub&#39;s workflow guide:</p>
+<ul>
+<li><a href="https://git-scm.com/docs/git-status">git status</a></li>
+<li><a href="https://git-scm.com/docs/git-add">git add</a></li>
+<li><a href="https://git-scm.com/docs/git-commit">git commit</a></li>
+<li><a href="https://git-scm.com/docs/git-merge">git merge</a></li>
+<li><a href="https://git-scm.com/docs/git-push">git push</a></li>
+<li><a href="https://git-scm.com/docs/git-fetch">git fetch</a></li>
+<li><a href="https://git-scm.com/docs/git-rebase">git rebase</a></li>
+<li><a href="https://docs.github.com/en/get-started/using-github/github-flow">GitHub flow</a></li>
+</ul>
+<h1>DotNet10: official reference PDFs</h1>
+<p>This folder contains <strong>10 PDFs</strong> from official source material. Files labeled Publisher PDF are the original downloaded publications. Files labeled Documentation export are locally printed copies of official Microsoft Learn articles, with source links, attribution, retrieval dates, and print formatting. They are not Microsoft-published PDF books or complete product manuals.</p>
+<h2>Read in this order</h2>
+<p>Use the course&#39;s original learning guide and runnable lessons first. Then consult the relevant current Microsoft documentation article for a deeper explanation. Read standards and architecture books when you want formal language/runtime details or further architecture study.</p>
+<p>ECMA-335&#39;s sixth edition is a 2012 runtime standard, not the .NET 10 library catalog. The Microsoft architecture ebook covers an earlier generation of ASP.NET Core; use the .NET 10 overview and ASP.NET Core 10 tutorial for current APIs.</p>
+<h2>PDF catalog</h2>
+<table><tbody>
+<tr><td>PDF</td><td>Kind</td><td>Read with course lessons</td><td>Scope / edition</td></tr>
+<tr><td><a href="Official-References/ECMA-335-CLI-6th-Edition.pdf">ECMA-335-CLI-6th-Edition.pdf</a></td><td>Publisher PDF</td><td>01-02; advanced reference</td><td>Common Language Infrastructure standard, 6th edition (June 2012). Runtime concepts and library profiles; not the .NET 10 API reference.</td></tr>
+<tr><td><a href="Official-References/Microsoft-ASPNetCore-Architecture-Ebook.pdf">Microsoft-ASPNetCore-Architecture-Ebook.pdf</a></td><td>Publisher PDF</td><td>After 10; architecture</td><td>Microsoft&#39;s published ASP.NET Core/Azure architecture ebook. Earlier-generation guidance; consult current ASP.NET Core 10 documentation for API details.</td></tr>
+<tr><td><a href="Official-References/Microsoft-DotNet10-Overview.pdf">Microsoft-DotNet10-Overview.pdf</a></td><td>Documentation export</td><td>01 and 10</td><td>Microsoft Learn .NET 10 overview.</td></tr>
+<tr><td><a href="Official-References/Microsoft-DotNet-CLI.pdf">Microsoft-DotNet-CLI.pdf</a></td><td>Documentation export</td><td>01-02 and 09</td><td>Microsoft Learn .NET command-line interface.</td></tr>
+<tr><td><a href="Official-References/Microsoft-SystemTextJson.pdf">Microsoft-SystemTextJson.pdf</a></td><td>Documentation export</td><td>03 and 10; CSharp 10-12</td><td>Microsoft Learn System.Text.Json overview.</td></tr>
+<tr><td><a href="Official-References/Microsoft-Dependency-Injection.pdf">Microsoft-Dependency-Injection.pdf</a></td><td>Documentation export</td><td>04</td><td>Microsoft Learn dependency injection overview.</td></tr>
+<tr><td><a href="Official-References/Microsoft-Configuration.pdf">Microsoft-Configuration.pdf</a></td><td>Documentation export</td><td>03-04</td><td>Microsoft Learn configuration in .NET.</td></tr>
+<tr><td><a href="Official-References/Microsoft-Logging.pdf">Microsoft-Logging.pdf</a></td><td>Documentation export</td><td>04-10</td><td>Microsoft Learn logging in .NET.</td></tr>
+<tr><td><a href="Official-References/Microsoft-HttpClient.pdf">Microsoft-HttpClient.pdf</a></td><td>Documentation export</td><td>07</td><td>Microsoft Learn HttpClient guidelines.</td></tr>
+<tr><td><a href="Official-References/Microsoft-ASPNetCore10-MinimalAPI.pdf">Microsoft-ASPNetCore10-MinimalAPI.pdf</a></td><td>Documentation export</td><td>05-06 and 10</td><td>Microsoft Learn minimal API tutorial explicitly pinned to ASP.NET Core 10.</td></tr>
+</tbody></table>
+<h2>Sources</h2>
+<ul>
+<li>ECMA-335-CLI-6th-Edition.pdf: <a href="https://ecma-international.org/publications-and-standards/standards/ecma-335/">official source</a> and <a href="https://ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf">PDF download</a>.</li>
+<li>Microsoft-ASPNetCore-Architecture-Ebook.pdf: <a href="https://dotnet.microsoft.com/en-us/learn/dotnet/architecture-guides">official source</a> and <a href="https://raw.githubusercontent.com/dotnet-architecture/eBooks/main/current/architecting-modern-web-apps-azure/Architecting-Modern-Web-Applications-with-ASP.NET-Core-and-Azure.pdf">PDF download</a>.</li>
+<li>Microsoft-DotNet10-Overview.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10/overview">official source</a>.</li>
+<li>Microsoft-DotNet-CLI.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/core/tools/">official source</a>.</li>
+<li>Microsoft-SystemTextJson.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview">official source</a>.</li>
+<li>Microsoft-Dependency-Injection.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection/overview">official source</a>.</li>
+<li>Microsoft-Configuration.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration">official source</a>.</li>
+<li>Microsoft-Logging.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/core/extensions/logging">official source</a>.</li>
+<li>Microsoft-HttpClient.pdf: <a href="https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines">official source</a>.</li>
+<li>Microsoft-ASPNetCore10-MinimalAPI.pdf: <a href="https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-10.0">official source</a>.</li>
+</ul>
+<h2>Provenance and refresh</h2>
+<p>Download-Record.json records the source URL, retrieval timestamp in UTC, file size, PDF SHA-256 hash, and original HTML hash for each documentation export. The retrieval timestamp records when the copy was collected; it is not the document&#39;s publication date. Article metadata dates are preserved where supplied. The official article remains the source of truth for changes after this snapshot.</p>
+<p>From the repository root:</p>
+<pre><code>
+.\Download-OfficialReferences.ps1
+</code></pre>
+<p>This refreshes the collection using Official-Resources.json. It requires internet access and local Chrome or Edge. It downloads only the public documents and creates local print copies; it does not install software or publish anything.</p>
+<h2>Attribution</h2>
+<p>Original publisher PDFs retain their own copyright, license notices, and source formatting. Ecma standards include their copying terms. Microsoft Learn article wording and examples are retained while navigation is removed and print styling and a provenance banner are added. Credit belongs to Microsoft and the documentation contributors, including named authors credited in the source. See the <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a> and the <a href="https://github.com/dotnet/docs/blob/main/LICENSE">.NET documentation CC BY 4.0 license</a>. This course and its exports do not imply publisher endorsement.</p>
+<h1 id="01-Sdk">01-Sdk: The SDK, runtime, and command line</h1>
+<p>Level: Beginner | Suggested time: 30-45 minutes</p>
+<h2>Goal</h2>
+<p>Learn understanding the platform and project lifecycle. Complete the setup in the track README.</p>
+<h2>Understand the idea</h2>
+<p>C# is a language. .NET is a platform containing a runtime and libraries. The SDK includes tools to create, build, and publish applications. A runtime installation alone cannot compile your code. A .csproj is an XML project definition. TargetFramework net10.0 selects .NET 10; the SDK supplies the matching C# compiler. dotnet restore resolves dependencies, build compiles, and run starts an application. Build output is placed in bin; intermediate files appear in obj. This course disables external package sources because its projects only use the installed SDK and shared frameworks. .NET 10 also supports file-based C# apps, demonstrated in Hello.cs.</p>
+<h2>Step by step</h2>
+<p>Hello.cs uses .NET 10 file-based property directives to disable Native AOT and self-contained output. This keeps the example runnable with the installed SDK and runtime, without downloading additional compiler or runtime packs.</p>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet --info
+dotnet build .\DotNet10\01-Sdk
+dotnet run --project .\DotNet10\01-Sdk
+dotnet run --file .\DotNet10\01-Sdk\Hello.cs
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+The project prints .NET major version: 10 and the SDK/runtime explanation. The file-based app prints Hello from a .NET 10 file-based app!
+</code></pre>
+<h2>Exercise</h2>
+<p>Inspect the csproj and identify TargetFramework, Nullable, and ImplicitUsings. Create a separate scratch console project under this lesson&#39;s output folder.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Set DOTNET_CLI_HOME locally if the SDK cannot access its user cache.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-01-sdk-notes.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-01-sdk-notes
+# Implement the exercise, then verify:
+dotnet run --project .\DotNet10\01-Sdk
+git diff -- DotNet10/01-Sdk/README.md DotNet10/01-Sdk/Program.cs
+git add -- DotNet10/01-Sdk/README.md DotNet10/01-Sdk/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;docs(dotnet10): explain project SDK settings&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Explain the difference between working edits and the staged snapshot.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-01-sdk-notes</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#01-Sdk-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>DotNet10.01.Sdk.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemGroup&gt;&lt;Compile Remove=&quot;Hello.cs&quot; /&gt;&lt;Compile Remove=&quot;output/**/*.cs&quot; /&gt;&lt;/ItemGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Hello.cs</h3>
+<pre><code>
+#:property PublishAot=false
+#:property SelfContained=false
+Console.WriteLine(&quot;Hello from a .NET 10 file-based app!&quot;);
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+Console.WriteLine($&quot;.NET major version: {Environment.Version.Major}&quot;);
+Console.WriteLine(&quot;The SDK builds applications; the runtime executes them.&quot;);
+
+</code></pre>
+<h2 id="01-Sdk-solution">01-Sdk exercise solution</h2>
+<p>Inspect the csproj and identify TargetFramework, Nullable, and ImplicitUsings. Create a separate scratch console project under this lesson&#39;s output folder.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+New-Item -ItemType Directory -Path .\DotNet10\01-Sdk\output -Force | Out-Null
+$env:DOTNET_CLI_HOME = Join-Path (Get-Location).Path &#39;.tools\dotnet-home&#39;
+dotnet new console --framework net10.0 --output .\DotNet10\01-Sdk\output\Scratch
+dotnet run --project .\DotNet10\01-Sdk\output\Scratch
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="02-Library">02-Library: A library and project references</h1>
+<p>Level: Beginner | Suggested time: 30-45 minutes</p>
+<h2>Goal</h2>
+<p>Learn reusable assemblies and solution organization. Complete <a href="#01-Sdk">01-Sdk</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A class library compiles reusable code without an executable entry point. A console app can reference it through ProjectReference. The compiler checks the dependency and builds it in the correct order. A namespace groups related types and helps avoid naming conflicts. public exposes library types to consumers. A solution groups projects for editor navigation and one-command builds; it does not replace project references. The Library folder contains StudyBudget, while App contains the executable. Keep business rules in the library and terminal-specific presentation in the app. You can test a library without running a terminal interface.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open App/Program.cs and Library/StudyBudget.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\DotNet10\02-Library\App
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+3 sessions x 25 minutes = 75 minutes
+Goal reached: True
+</code></pre>
+<h2>Exercise</h2>
+<p>Add RemainingMinutes(completed, goal), never returning a negative result. Reject negative inputs. Use it from App.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Use Math.Max after validating both inputs.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-02-remaining-minutes.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-02-remaining-minutes
+# Implement the exercise, then verify:
+dotnet run --project .\DotNet10\02-Library\App
+git diff -- DotNet10/02-Library/README.md DotNet10/02-Library/Library/StudyBudget.cs DotNet10/02-Library/App/Program.cs
+git add -- DotNet10/02-Library/README.md DotNet10/02-Library/Library/StudyBudget.cs DotNet10/02-Library/App/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(dotnet10): add a remaining minutes calculation&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Explain the difference between working edits and the staged snapshot.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-02-remaining-minutes</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#02-Library-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>App/DotNet10.02.App.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemGroup&gt;&lt;ProjectReference Include=&quot;../Library/StudyMath.csproj&quot; /&gt;&lt;/ItemGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>App/Program.cs</h3>
+<pre><code>
+using StudyMath;
+Console.WriteLine($&quot;3 sessions x 25 minutes = {StudyBudget.TotalMinutes(3, 25)} minutes&quot;);
+Console.WriteLine($&quot;Goal reached: {StudyBudget.HasReachedGoal(75, 60)}&quot;);
+
+</code></pre>
+<h3>Library/StudyBudget.cs</h3>
+<pre><code>
+namespace StudyMath;
+
+public static class StudyBudget {
+  public static int TotalMinutes(int sessions, int minutesPerSession) {
+    if (sessions &lt; 0) {
+      throw new ArgumentOutOfRangeException(nameof(sessions));
+    }
+
+    if (minutesPerSession &lt; 0) {
+      throw new ArgumentOutOfRangeException(nameof(minutesPerSession));
+    }
+
+    return checked(sessions * minutesPerSession);
+  }
+  public static bool HasReachedGoal(int completed, int target) {
+    if (completed &lt; 0) {
+      throw new ArgumentOutOfRangeException(nameof(completed));
+    }
+
+    if (target &lt; 0) {
+      throw new ArgumentOutOfRangeException(nameof(target));
+    }
+
+    return completed &gt;= target;
+  }
+}
+
+</code></pre>
+<h3>Library/StudyMath.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h2 id="02-Library-solution">02-Library exercise solution</h2>
+<p>Add RemainingMinutes(completed, goal), never returning a negative result. Reject negative inputs. Use it from App.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+public static int RemainingMinutes(int completed, int goal) {
+  if (completed &lt; 0) {
+    throw new ArgumentOutOfRangeException(nameof(completed));
+  }
+
+  if (goal &lt; 0) {
+    throw new ArgumentOutOfRangeException(nameof(goal));
+  }
+
+  return Math.Max(0, goal - completed);
+}
+// Add inside StudyBudget; call it from App&#39;s Program.cs.
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="03-Configuration">03-Configuration: JSON settings and environment variables</h1>
+<p>Level: Beginner | Suggested time: 30-45 minutes</p>
+<h2>Goal</h2>
+<p>Learn configuration as data and explicit precedence. Complete <a href="#02-Library">02-Library</a> first.</p>
+<h2>Understand the idea</h2>
+<p>Configuration changes behavior without editing business logic. The project copies settings.json into the build output directory, where the application can locate it relative to AppContext.BaseDirectory. This lesson loads a JSON default and then applies one environment-variable override. It implements that precedence explicitly; a later ASP.NET Core application uses the framework configuration system instead. Environment variables are text, so parse and validate them. Keep credentials out of repository configuration files. A malformed JSON file or invalid override stops this program with a clear exception instead of silently changing the target. Relative paths from the terminal are less reliable than application-relative paths.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs and StudySettings.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\DotNet10\03-Configuration
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Course: .NET 10; daily target: 30 minutes
+</code></pre>
+<h2>Exercise</h2>
+<p>Run with a daily target of 45 using an environment variable. Restore its previous value afterward.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Environment changes here affect the current terminal and its child processes.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-03-environment-override.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-03-environment-override
+# Implement the exercise, then verify:
+dotnet run --project .\DotNet10\03-Configuration
+git diff -- DotNet10/03-Configuration/README.md DotNet10/03-Configuration/Program.cs
+git add -- DotNet10/03-Configuration/README.md DotNet10/03-Configuration/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;test(dotnet10): verify the daily target override&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Explain the difference between working edits and the staged snapshot.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-03-environment-override</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#03-Configuration-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>DotNet10.03.Configuration.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemGroup&gt;&lt;None Update=&quot;settings.json&quot; CopyToOutputDirectory=&quot;PreserveNewest&quot; /&gt;&lt;/ItemGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using System.Text.Json;
+string path = Path.Combine(AppContext.BaseDirectory, &quot;settings.json&quot;);
+var settings = JsonSerializer.Deserialize&lt;StudySettings&gt;(File.ReadAllText(path))
+    ?? throw new InvalidDataException(&quot;Settings cannot be null.&quot;);
+string? overrideValue = Environment.GetEnvironmentVariable(&quot;TRAINING_DAILY_MINUTES&quot;);
+int dailyMinutes = settings.DailyMinutes;
+if (overrideValue is not null &amp;&amp; !int.TryParse(overrideValue, out dailyMinutes)) {
+  throw new InvalidDataException(&quot;TRAINING_DAILY_MINUTES must be a whole number.&quot;);
+}
+
+if (dailyMinutes is &lt; 1 or &gt; 180) {
+  throw new InvalidDataException(&quot;DailyMinutes must be between 1 and 180.&quot;);
+}
+
+Console.WriteLine($&quot;Course: {settings.Course}; daily target: {dailyMinutes} minutes&quot;);
+
+</code></pre>
+<h3>settings.json</h3>
+<pre><code>
+{
+  &quot;Course&quot;: &quot;.NET 10&quot;,
+  &quot;DailyMinutes&quot;: 30
+}
+
+</code></pre>
+<h3>StudySettings.cs</h3>
+<pre><code>
+public sealed record StudySettings(string Course, int DailyMinutes);
+
+</code></pre>
+<h2 id="03-Configuration-solution">03-Configuration exercise solution</h2>
+<p>Run with a daily target of 45 using an environment variable. Restore its previous value afterward.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+$previousTarget = $env:TRAINING_DAILY_MINUTES
+try {
+  $env:TRAINING_DAILY_MINUTES = &#39;45&#39;
+  dotnet run --project .\DotNet10\03-Configuration
+} finally {
+  $env:TRAINING_DAILY_MINUTES = $previousTarget
+}
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="04-DependencyInjection">04-DependencyInjection: Dependency injection and logging</h1>
+<p>Level: Intermediate | Suggested time: 45-60 minutes</p>
+<h2>Goal</h2>
+<p>Learn containers, service lifetimes, disposal, and structured logs. Complete <a href="#03-Configuration">03-Configuration</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A dependency injection container stores registrations and constructs objects with their dependencies. AddSingleton registers one instance for the provider lifetime. AddTransient creates a new instance when resolved. AddScoped creates one instance per scope, commonly an HTTP request. Do not inject a scoped service directly into a singleton; their lifetimes conflict. GetRequiredService fails clearly if a service is not registered. Disposing the provider disposes services it owns. ILogger uses message templates: {Target} names a structured value. This console app references Microsoft.AspNetCore.App to use the installed shared-framework assemblies without NuGet downloads. Logging is diagnostic output; business methods still return data.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs and IGoalService.cs, GoalService.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\DotNet10\04-DependencyInjection
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Remaining: 40 minutes, plus an information log about the target. Log ordering can vary.
+</code></pre>
+<h2>Exercise</h2>
+<p>Resolve IGoalService twice and check ReferenceEquals. Change its registration to AddTransient and repeat.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>The container lifetime controls instance identity.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-04-service-lifetimes.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-04-service-lifetimes
+# Implement the exercise, then verify:
+dotnet run --project .\DotNet10\04-DependencyInjection
+git diff -- DotNet10/04-DependencyInjection/README.md DotNet10/04-DependencyInjection/Program.cs
+git add -- DotNet10/04-DependencyInjection/README.md DotNet10/04-DependencyInjection/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;test(dotnet10): compare service lifetimes&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Keep this commit limited to one exercise; explain the rule and the verification in its message body.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-04-service-lifetimes</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#04-DependencyInjection-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>DotNet10.04.DependencyInjection.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemGroup&gt;&lt;FrameworkReference Include=&quot;Microsoft.AspNetCore.App&quot; /&gt;&lt;/ItemGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>GoalService.cs</h3>
+<pre><code>
+using Microsoft.Extensions.Logging;
+
+public sealed class GoalService : IGoalService {
+  private readonly ILogger&lt;GoalService&gt; _logger;
+
+  public GoalService(ILogger&lt;GoalService&gt; logger) {
+    _logger = logger;
+  }
+
+  public int Remaining(int completed, int target) {
+    if (completed &lt; 0 || target &lt; 0) {
+      throw new ArgumentOutOfRangeException(nameof(completed));
+    }
+    _logger.LogInformation(&quot;Calculating remaining minutes for target {Target}&quot;, target);
+    return Math.Max(0, target - completed);
+  }
+}
+
+</code></pre>
+<h3>IGoalService.cs</h3>
+<pre><code>
+public interface IGoalService {
+  int Remaining(int completed, int target);
+}
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+var services = new ServiceCollection();
+services.AddLogging(builder =&gt; builder.AddSimpleConsole(options =&gt; options.SingleLine = true));
+services.AddSingleton&lt;IGoalService, GoalService&gt;();
+using ServiceProvider provider = services.BuildServiceProvider();
+var goal = provider.GetRequiredService&lt;IGoalService&gt;();
+Console.WriteLine($&quot;Remaining: {goal.Remaining(20, 60)} minutes&quot;);
+
+</code></pre>
+<h2 id="04-DependencyInjection-solution">04-DependencyInjection exercise solution</h2>
+<p>Resolve IGoalService twice and check ReferenceEquals. Change its registration to AddTransient and repeat.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+var first = provider.GetRequiredService&lt;IGoalService&gt;();
+var second = provider.GetRequiredService&lt;IGoalService&gt;();
+Console.WriteLine(ReferenceEquals(first, second));
+// Singleton: True. After changing to AddTransient: False.
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="05-MinimalApi">05-MinimalApi: Your first HTTP API</h1>
+<p>Level: Intermediate | Suggested time: 45-60 minutes</p>
+<h2>Goal</h2>
+<p>Learn http routes, responses, json, and a server process. Complete <a href="#04-DependencyInjection">04-DependencyInjection</a> first.</p>
+<h2>Understand the idea</h2>
+<p>An API lets another program request behavior through a contract. ASP.NET Core hosts the HTTP server. A route matches a path and HTTP method. MapGet registers a handler for GET. A path parameter such as {name} is bound to a handler parameter. Results.Ok returns status 200 and serializes an object as JSON. The server keeps running until you press Ctrl+C. Start it in one terminal and send requests from another. The run command binds only to the local machine using a loopback address. A port can be used by only one listening process; choose a different port if it is already occupied.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. If the example is a server, leave it running and use a second terminal for requests; stop it with Ctrl+C afterward.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\DotNet10\05-MinimalApi -- --urls http://127.0.0.1:5081
+# In a second terminal:
+Invoke-RestMethod http://127.0.0.1:5081/health
+Invoke-RestMethod http://127.0.0.1:5081/hello/Dejan
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Health returns status=ok. Hello returns message=Hello, Dejan! The server prints startup logs.
+</code></pre>
+<h2>Exercise</h2>
+<p>Add GET /minutes/{count:int} returning hours. Return 400 for a negative count.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. Restart the server after editing its code.</p>
+<h2>Hint</h2>
+<p>An int route constraint limits which paths match; a value rule still needs validation.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-05-minutes-route.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-05-minutes-route
+# Implement the exercise, then verify:
+# Run this lesson&#39;s README server/client checks in the required terminals.
+git diff -- DotNet10/05-MinimalApi/README.md DotNet10/05-MinimalApi/Program.cs
+git add -- DotNet10/05-MinimalApi/README.md DotNet10/05-MinimalApi/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(dotnet10): add a minutes conversion endpoint&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Keep this commit limited to one exercise; explain the rule and the verification in its message body.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-05-minutes-route</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#05-MinimalApi-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>DotNet10.05.MinimalApi.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+var builder = WebApplication.CreateBuilder(args);
+// Keep local learning logs in the terminal rather than the Windows Event Log.
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+var app = builder.Build();
+app.MapGet(&quot;/health&quot;, () =&gt; Results.Ok(new { Status = &quot;ok&quot; }));
+app.MapGet(&quot;/hello/{name}&quot;, (string name) =&gt; Results.Ok(new { Message = $&quot;Hello, {name}!&quot; }));
+app.Run();
+
+</code></pre>
+<h2 id="05-MinimalApi-solution">05-MinimalApi exercise solution</h2>
+<p>Add GET /minutes/{count:int} returning hours. Return 400 for a negative count.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+app.MapGet(&quot;/minutes/{count:int}&quot;, (int count) =&gt;
+    count &lt; 0
+        ? Results.BadRequest(new { Error = &quot;Count cannot be negative.&quot; })
+        : Results.Ok(new { Hours = count / 60.0 }));
+// Insert before app.Run().
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="06-Validation">06-Validation: Validate request bodies and status codes</h1>
+<p>Level: Intermediate | Suggested time: 45-60 minutes</p>
+<h2>Goal</h2>
+<p>Learn body binding, validation responses, and api design. Complete <a href="#05-MinimalApi">05-MinimalApi</a> first.</p>
+<h2>Understand the idea</h2>
+<p>ASP.NET Core binds a complex request parameter from a JSON body. A nullable property honestly models missing or null input. Binding checks representation, such as whether a number is valid JSON, while domain validation checks meaning. This example explicitly validates fields inside the handler rather than depending on implicit validation conventions. ValidationProblem returns a structured 400 response. The valid request returns 200 because this endpoint only validates and echoes data; it does not persist a resource. The capstone uses 201 for a created task and 404 for a missing ID. Clients should inspect status codes and handle failures.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs and CreateSession.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. If the example is a server, leave it running and use a second terminal for requests; stop it with Ctrl+C afterward.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\DotNet10\06-Validation -- --urls http://127.0.0.1:5082
+# Second terminal:
+$body = @{
+  topic = &#39;CSharp&#39;
+  minutes = 30
+} | ConvertTo-Json
+Invoke-RestMethod http://127.0.0.1:5082/sessions -Method Post -ContentType application/json -Body $body
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+A valid request returns topic=CSharp and minutes=30. Blank topics or minutes=0 return HTTP 400.
+</code></pre>
+<h2>Exercise</h2>
+<p>Make two requests: one valid and one with minutes=0. Catch the expected client exception for the invalid request.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. Restart the server after editing its code.</p>
+<h2>Hint</h2>
+<p>Invoke-RestMethod throws for a failing HTTP status.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-06-invalid-input.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-06-invalid-input
+# Implement the exercise, then verify:
+# Run this lesson&#39;s README server/client checks in the required terminals.
+git diff -- DotNet10/06-Validation/README.md DotNet10/06-Validation/Program.cs
+git add -- DotNet10/06-Validation/README.md DotNet10/06-Validation/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;test(dotnet10): verify invalid session requests&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Keep this commit limited to one exercise; explain the rule and the verification in its message body.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-06-invalid-input</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#06-Validation-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CreateSession.cs</h3>
+<pre><code>
+public sealed record CreateSession(string? Topic, int Minutes);
+
+</code></pre>
+<h3>DotNet10.06.Validation.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+var builder = WebApplication.CreateBuilder(args);
+// Keep local learning logs in the terminal rather than the Windows Event Log.
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+var app = builder.Build();
+app.MapPost(&quot;/sessions&quot;, ValidateSession);
+app.Run();
+
+static IResult ValidateSession(CreateSession request) {
+  if (string.IsNullOrWhiteSpace(request.Topic) || request.Topic.Length &gt; 100) {
+    return Results.ValidationProblem(new Dictionary&lt;string, string[]&gt; {
+      [&quot;topic&quot;] = [&quot;Use 1 to 100 nonblank characters.&quot;]
+    });
+  }
+
+  if (request.Minutes is &lt; 1 or &gt; 180) {
+    return Results.ValidationProblem(new Dictionary&lt;string, string[]&gt; {
+      [&quot;minutes&quot;] = [&quot;Use a value from 1 to 180.&quot;]
+    });
+  }
+
+  return Results.Ok(new {
+    Topic = request.Topic.Trim(),
+    Minutes = request.Minutes
+  });
+}
+
+</code></pre>
+<h2 id="06-Validation-solution">06-Validation exercise solution</h2>
+<p>Make two requests: one valid and one with minutes=0. Catch the expected client exception for the invalid request.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+try {
+  $body = @{
+    topic = &#39;CSharp&#39;
+    minutes = 0
+  } | ConvertTo-Json
+  $request = @{
+    Uri = &#39;http://127.0.0.1:5082/sessions&#39;
+    Method = &#39;Post&#39;
+    ContentType = &#39;application/json&#39;
+    Body = $body
+  }
+  Invoke-RestMethod @request
+} catch {
+  Write-Output &quot;Expected validation failure: $($_.Exception.Message)&quot;
+}
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="07-HttpClient">07-HttpClient: Call an API from C#</h1>
+<p>Level: Intermediate | Suggested time: 45-60 minutes</p>
+<h2>Goal</h2>
+<p>Learn http clients, timeouts, deserialization, and failure handling. Complete <a href="#06-Validation">06-Validation</a> first.</p>
+<h2>Understand the idea</h2>
+<p>HttpClient sends requests. GetFromJsonAsync combines a GET request, successful-status checking, and JSON deserialization. A BaseAddress provides the server origin; the relative path selects an endpoint. A timeout limits how long a request can wait, and a cancellation token lets a caller stop it. The response type describes the JSON fields you expect. A successful HTTP response can still contain null or incompatible data, so consider both transport and content errors. This short console application owns one HttpClient for its lifetime. Long-running services should reuse clients or use IHttpClientFactory rather than construct and dispose one per request.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs and HealthResponse.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. If the example is a server, leave it running and use a second terminal for requests; stop it with Ctrl+C afterward.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+# Start lesson 05 in a separate terminal first.
+dotnet run --project .\DotNet10\07-HttpClient -- http://127.0.0.1:5081
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Server status: ok. If the server is stopped, the client reports an error and exits with code 1.
+</code></pre>
+<h2>Exercise</h2>
+<p>Stop the server, run the client, and inspect LASTEXITCODE. Restart the server and verify success.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Check the process exit code immediately after dotnet.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-07-connection-failure.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-07-connection-failure
+# Implement the exercise, then verify:
+# Run this lesson&#39;s README server/client checks in the required terminals.
+git diff -- DotNet10/07-HttpClient/README.md DotNet10/07-HttpClient/Program.cs
+git add -- DotNet10/07-HttpClient/README.md DotNet10/07-HttpClient/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;test(dotnet10): document client failure behavior&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Keep this commit limited to one exercise; explain the rule and the verification in its message body.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-07-connection-failure</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#07-HttpClient-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>DotNet10.07.HttpClient.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>HealthResponse.cs</h3>
+<pre><code>
+public sealed record HealthResponse(string Status);
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using System.Net.Http.Json;
+using System.Text.Json;
+
+string baseUrl = args.Length &gt; 0 ? args[0] : &quot;http://127.0.0.1:5081&quot;;
+using var http = new HttpClient {
+  BaseAddress = new Uri(baseUrl),
+  Timeout = TimeSpan.FromSeconds(5)
+};
+using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+try {
+  var response = await http.GetFromJsonAsync&lt;HealthResponse&gt;(&quot;/health&quot;, cancellation.Token)
+      ?? throw new InvalidDataException(&quot;The server returned null.&quot;);
+  Console.WriteLine($&quot;Server status: {response.Status}&quot;);
+} catch (Exception error) when (
+    error is HttpRequestException or OperationCanceledException or JsonException
+        or InvalidDataException) {
+  Console.Error.WriteLine($&quot;Request failed: {error.Message}&quot;);
+  Environment.ExitCode = 1;
+}
+
+</code></pre>
+<h2 id="07-HttpClient-solution">07-HttpClient exercise solution</h2>
+<p>Stop the server, run the client, and inspect LASTEXITCODE. Restart the server and verify success.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+dotnet run --project .\DotNet10\07-HttpClient -- http://127.0.0.1:5081
+Write-Output &quot;Exit code: $LASTEXITCODE&quot;
+## First try with the server stopped, then with it running.
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="08-Testing">08-Testing: Executable checks and failure cases</h1>
+<p>Level: Advanced within this course | Suggested time: 60-90 minutes</p>
+<h2>Goal</h2>
+<p>Learn assertions, boundaries, persistence checks, and test runners. Complete <a href="#07-HttpClient">07-HttpClient</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A useful test exercises a contract rather than repeating its implementation. Equal compares actual and expected values. Throws verifies rejected inputs. Check catches failures to let the rest of the suite run, and the program returns a nonzero code when any check fails. Boundary cases include zero, negative values, limits, and overflow. Persistence checks construct a new repository after writing so an in-memory result cannot conceal a storage failure. The test uses a uniquely named temporary directory and cleans up only that directory. This is a package-free executable test harness, run with dotnet run rather than dotnet test. Professional teams often use xUnit, NUnit, or MSTest and add richer tooling.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\DotNet10\08-Testing
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Each contract prints PASS, followed by Failures: 0. A failing check prints FAIL and returns exit code 1.
+</code></pre>
+<h2>Exercise</h2>
+<p>Introduce a deliberate bug in StudyBudget, run the tests, confirm failure, then restore the correct rule.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>Remove the negative-input guard temporarily and check which test catches it.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-08-boundary-cases.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-08-boundary-cases
+# Implement the exercise, then verify:
+dotnet run --project .\DotNet10\08-Testing
+git diff -- DotNet10/08-Testing/README.md DotNet10/08-Testing/Program.cs
+git add -- DotNet10/08-Testing/README.md DotNet10/08-Testing/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;test(dotnet10): check study budget boundaries&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Review the branch&#39;s history and include validation evidence in its pull request.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-08-boundary-cases</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#08-Testing-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>DotNet10.08.Testing.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemGroup&gt;
+    &lt;ProjectReference Include=&quot;../02-Library/Library/StudyMath.csproj&quot; /&gt;
+    &lt;ProjectReference Include=&quot;../10-Capstone/DotNet10.10.Capstone.csproj&quot; /&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using LearningTasks;
+using StudyMath;
+
+int failures = 0;
+Check(&quot;budget multiplies&quot;, () =&gt; Equal(75, StudyBudget.TotalMinutes(3, 25)));
+Check(&quot;goal boundary&quot;, () =&gt; Equal(true, StudyBudget.HasReachedGoal(60, 60)));
+Check(&quot;negative sessions rejected&quot;,
+    () =&gt; Throws&lt;ArgumentOutOfRangeException&gt;(() =&gt; StudyBudget.TotalMinutes(-1, 25)));
+Check(&quot;overflow rejected&quot;,
+    () =&gt; Throws&lt;OverflowException&gt;(() =&gt; StudyBudget.TotalMinutes(int.MaxValue, 2)));
+Check(&quot;blank task rejected&quot;, () =&gt; Equal(false, TaskRules.IsValidTitle(&quot;   &quot;)));
+Check(&quot;long task rejected&quot;, () =&gt; Equal(false, TaskRules.IsValidTitle(new string(&#39;a&#39;, 201))));
+Check(&quot;valid task accepted&quot;, () =&gt; Equal(true, TaskRules.IsValidTitle(&quot;Learn C#&quot;)));
+
+string directory = Path.Combine(Path.GetTempPath(), &quot;LearningPack-&quot; + Guid.NewGuid().ToString(&quot;N&quot;));
+Directory.CreateDirectory(directory);
+try {
+  string path = Path.Combine(directory, &quot;tasks.json&quot;);
+  var repository = new TaskRepository(path);
+  var created = repository.Add(&quot;Learn C#&quot;);
+  Check(&quot;task starts incomplete&quot;, () =&gt; Equal(false, created.IsComplete));
+  Check(&quot;completion persists&quot;, () =&gt; {
+    repository.Complete(created.Id);
+    var reloaded = new TaskRepository(path);
+    Equal(true, reloaded.GetAll().Single().IsComplete);
+  });
+  Check(&quot;missing id returns null&quot;, () =&gt; Equal&lt;StudyTask?&gt;(null, repository.Complete(999)));
+  Check(&quot;deletion persists&quot;, () =&gt; {
+    Equal(true, repository.Delete(created.Id));
+    Equal(0, new TaskRepository(path).GetAll().Count);
+  });
+  Check(&quot;IDs are never reused&quot;, () =&gt; Equal(2, repository.Add(&quot;Second task&quot;).Id));
+  Check(&quot;corrupt storage fails visibly&quot;, () =&gt; {
+    File.WriteAllText(path, &quot;{ invalid json&quot;);
+    Throws&lt;System.Text.Json.JsonException&gt;(() =&gt; { _ = new TaskRepository(path); });
+  });
+} finally {
+  // This process created this unique directory and deletes only its own test data.
+  Directory.Delete(directory, recursive: true);
+}
+Console.WriteLine($&quot;Failures: {failures}&quot;);
+return failures == 0 ? 0 : 1;
+
+void Check(string name, Action action) {
+  try {
+    action();
+    Console.WriteLine($&quot;PASS: {name}&quot;);
+  } catch (Exception error) {
+    failures++;
+    Console.Error.WriteLine($&quot;FAIL: {name}: {error.Message}&quot;);
+  }
+}
+static void Equal&lt;T&gt;(T expected, T actual) {
+  if (!EqualityComparer&lt;T&gt;.Default.Equals(expected, actual)) {
+    throw new InvalidOperationException($&quot;Expected {expected}, got {actual}.&quot;);
+  }
+}
+static void Throws&lt;T&gt;(Action action) where T : Exception {
+  try {
+    action();
+  } catch (T) {
+    return;
+  }
+  throw new InvalidOperationException($&quot;Expected {typeof(T).Name}.&quot;);
+}
+
+</code></pre>
+<h2 id="08-Testing-solution">08-Testing exercise solution</h2>
+<p>Introduce a deliberate bug in StudyBudget, run the tests, confirm failure, then restore the correct rule.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+## From the repository root:
+dotnet run --project .\DotNet10\08-Testing
+$testExit = $LASTEXITCODE
+Write-Output &quot;Test exit: $testExit&quot;
+## Restore the library before moving on. A successful run exits 0.
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="09-Publishing">09-Publishing: Release builds and framework-dependent publishing</h1>
+<p>Level: Advanced within this course | Suggested time: 60-90 minutes</p>
+<h2>Goal</h2>
+<p>Learn build configurations, deployment output, and runtime requirements. Complete <a href="#08-Testing">08-Testing</a> first.</p>
+<h2>Understand the idea</h2>
+<p>A Debug build favors development. A Release build enables optimizations intended for deployment. dotnet publish prepares application files for distribution. Framework-dependent publishing expects the target machine to have a compatible runtime installed. Running the DLL through dotnet makes that dependency explicit. A self-contained publish includes a runtime for a selected runtime identifier, such as win-x64, and usually requires downloading runtime packs. Native AOT is another deployment option with restrictions and toolchain requirements. This course publishes the small lesson 01 console app without a runtime download. Publishing locally creates files; it does not deploy to a server or expose an application on the internet.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Publish.ps1 in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. Explain any difference before changing the code.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+.\DotNet10\09-Publishing\Publish.ps1
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+Release/publish build output, followed by .NET major version: 10 and the SDK/runtime explanation.
+</code></pre>
+<h2>Exercise</h2>
+<p>Compare bin/Debug and the published output. Locate the DLL, runtimeconfig.json, and deps.json and explain each role.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. </p>
+<h2>Hint</h2>
+<p>runtimeconfig names the framework; deps describes dependencies.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-09-publish-notes.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-09-publish-notes
+# Implement the exercise, then verify:
+.\DotNet10\09-Publishing\Publish.ps1
+git diff -- DotNet10/09-Publishing/README.md DotNet10/09-Publishing/Publish.ps1
+git add -- DotNet10/09-Publishing/README.md DotNet10/09-Publishing/Publish.ps1
+git diff --cached
+git diff --cached --check
+git commit -m &quot;docs(dotnet10): explain published runtime files&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Review the branch&#39;s history and include validation evidence in its pull request.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-09-publish-notes</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#09-Publishing-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>Publish.ps1</h3>
+<pre><code>
+[CmdletBinding()]
+param()
+Set-StrictMode -Version Latest
+$ErrorActionPreference = &#39;Stop&#39;
+$project = Join-Path $PSScriptRoot &#39;..\01-Sdk\DotNet10.01.Sdk.csproj&#39;
+$destination = Join-Path $PSScriptRoot &#39;output\published&#39;
+&amp; dotnet publish $project -c Release --self-contained false -o $destination -m:1 -nr:false
+if ($LASTEXITCODE -ne 0) {
+  throw &quot;Publish failed: $LASTEXITCODE&quot;
+}
+&amp; dotnet (Join-Path $destination &#39;DotNet10.01.Sdk.dll&#39;)
+if ($LASTEXITCODE -ne 0) {
+  throw &quot;Published app failed: $LASTEXITCODE&quot;
+}
+
+</code></pre>
+<h2 id="09-Publishing-solution">09-Publishing exercise solution</h2>
+<p>Compare bin/Debug and the published output. Locate the DLL, runtimeconfig.json, and deps.json and explain each role.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+Get-ChildItem .\DotNet10\09-Publishing\output\published
+Get-Content .\DotNet10\09-Publishing\output\published\DotNet10.01.Sdk.runtimeconfig.json
+Get-Content .\DotNet10\09-Publishing\output\published\DotNet10.01.Sdk.deps.json
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+<h1 id="10-Capstone">10-Capstone: A persistent task API</h1>
+<p>Level: Advanced within this course | Suggested time: 60-90 minutes</p>
+<h2>Goal</h2>
+<p>Learn routes, validated contracts, persistent state, and concurrency. Complete <a href="#09-Publishing">09-Publishing</a> first.</p>
+<h2>Understand the idea</h2>
+<p>This project combines a minimal API, dependency injection, domain rules, immutable records, and a JSON repository. Endpoints coordinate requests; TaskRules defines title validity; TaskRepository owns storage. It uses a lock to serialize changes within one server process, writes a candidate state to a temporary sibling file, replaces the saved file, and only then updates in-memory state. IDs use a persisted counter and are not reused after deletion. Invalid storage stops startup visibly. Returned records and arrays prevent callers from mutating repository internals. This is a local, single-process teaching server. Multiple server processes sharing its file need stronger storage coordination; real public services also need authentication, a database, monitoring, and deployment configuration.</p>
+<h2>Step by step</h2>
+<ol>
+<li>Open Program.cs and TaskRepository.cs, TaskRules.cs, StudyTask.cs, StoredTasks.cs, CreateTask.cs in this lesson. Read the comments before running it.</li>
+<li>Predict the main output on paper. Identify the inputs, the operation, and the result.</li>
+<li>Run the commands below from the repository root. A comment beginning with # tells you which terminal to use.</li>
+<li>Compare the output with the expected result. If the example is a server, leave it running and use a second terminal for requests; stop it with Ctrl+C afterward.</li>
+<li>Change one value and run again. Explain which lines caused the output to change.</li>
+<li>Attempt the exercise before opening SOLUTION.md. Keep your first attempt so you can compare it.</li>
+</ol>
+<h2>Run</h2>
+<pre><code>
+dotnet run --project .\DotNet10\10-Capstone -- --urls http://127.0.0.1:5080
+# In a second terminal:
+.\PowerShell\10-Capstone\Demo.ps1 -Action Add -Title &#39;Learn .NET 10&#39;
+.\PowerShell\10-Capstone\Demo.ps1 -Action List
+</code></pre>
+<h2>Expected result</h2>
+<pre><code>
+POST creates a task with HTTP 201; list returns an array. Completion returns 200, deletion 204, missing IDs 404, and invalid titles 400. Restarting with the same data path keeps tasks.
+</code></pre>
+<h2>Exercise</h2>
+<p>Add an endpoint that returns total and completed task counts. Extend the root API smoke checks to verify it.</p>
+<p>Work in this lesson&#39;s source file. For multiple experiments, copy the example into this lesson&#39;s output directory rather than changing later lessons. Rebuild after C# edits. Restart the server after editing its code.</p>
+<h2>Hint</h2>
+<p>Use a repository snapshot and count matching records.</p>
+<h2>Git checkpoint</h2>
+<p>Read <a href="../../Git-Workflow.md">the shared Git workflow</a> first. Save the supplied baseline and finish the previous branch before starting. Use this branch for the exercise: feat/dotnet10-10-task-summary.</p>
+<pre><code>
+git switch main
+git status --short
+# If using GitHub: git fetch origin; git pull --ff-only origin main
+git switch -c feat/dotnet10-10-task-summary
+# Implement the exercise, then verify:
+# Run this lesson&#39;s README server/client checks in the required terminals.
+git diff -- DotNet10/10-Capstone/README.md DotNet10/10-Capstone/Program.cs
+git add -- DotNet10/10-Capstone/README.md DotNet10/10-Capstone/Program.cs
+git diff --cached
+git diff --cached --check
+git commit -m &quot;feat(dotnet10): add task summary counts&quot;
+</code></pre>
+<p>Stage only files you actually changed, and adapt the message to the change you made. If the exercise is just an experiment, record its result in a short lesson note and commit that note with a docs or test message instead. Review the branch&#39;s history and include validation evidence in its pull request.</p>
+<p>For GitHub practice, publish deliberately with <code>git push -u origin feat/dotnet10-10-task-summary</code>, then open and review a PR to main. For local practice, switch to main and merge this branch using the shared guide. Choose one completion path. Record the resulting commit ID in Progress.md.</p>
+<h2>Explain it yourself</h2>
+<ul>
+<li>What data enters this example, and what data leaves it?</li>
+<li>Which line implements the main rule?</li>
+<li>What would happen if a value were missing or invalid?</li>
+<li>Where would you place the rule if another caller needed it?</li>
+</ul>
+<p>See <a href="#10-Capstone-solution">SOLUTION.md</a> after your attempt. The solution is a suggested modification to the working example, not a separate runnable project.</p>
+<h2>Complete example source</h2>
+<h3>CreateTask.cs</h3>
+<pre><code>
+public sealed record CreateTask(string? Title);
+
+</code></pre>
+<h3>DotNet10.10.Capstone.csproj</h3>
+<pre><code>
+&lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;TreatWarningsAsErrors&gt;true&lt;/TreatWarningsAsErrors&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+
+</code></pre>
+<h3>Program.cs</h3>
+<pre><code>
+using LearningTasks;
+
+var builder = WebApplication.CreateBuilder(args);
+// Keep local learning logs in the terminal rather than the Windows Event Log.
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+string dataPath = builder.Configuration[&quot;TrainingDataPath&quot;]
+    ?? Path.Combine(AppContext.BaseDirectory, &quot;output&quot;, &quot;tasks.json&quot;);
+builder.Services.AddSingleton(new TaskRepository(dataPath));
+var app = builder.Build();
+
+app.MapGet(&quot;/health&quot;, () =&gt; Results.Ok(new { Status = &quot;ok&quot; }));
+app.MapGet(&quot;/tasks&quot;, (TaskRepository repository) =&gt; Results.Ok(repository.GetAll()));
+app.MapGet(&quot;/tasks/{id:int}&quot;, (int id, TaskRepository repository) =&gt;
+    repository.GetAll().FirstOrDefault(task =&gt; task.Id == id) is { } task
+        ? Results.Ok(task) : Results.NotFound());
+app.MapPost(&quot;/tasks&quot;, CreateStudyTask);
+app.MapPut(&quot;/tasks/{id:int}/complete&quot;, (int id, TaskRepository repository) =&gt;
+    repository.Complete(id) is { } task ? Results.Ok(task) : Results.NotFound());
+app.MapDelete(&quot;/tasks/{id:int}&quot;, (int id, TaskRepository repository) =&gt;
+    repository.Delete(id) ? Results.NoContent() : Results.NotFound());
+app.Run();
+
+static IResult CreateStudyTask(CreateTask request, TaskRepository repository) {
+  if (!TaskRules.IsValidTitle(request.Title)) {
+    return Results.ValidationProblem(new Dictionary&lt;string, string[]&gt; {
+      [&quot;title&quot;] = [&quot;Use 1 to 200 nonblank characters.&quot;]
+    });
+  }
+
+  var task = repository.Add(request.Title!);
+  return Results.Created($&quot;/tasks/{task.Id}&quot;, task);
+}
+
+</code></pre>
+<h3>StoredTasks.cs</h3>
+<pre><code>
+namespace LearningTasks;
+
+public sealed record StoredTasks(int NextId, List&lt;StudyTask&gt; Tasks);
+
+</code></pre>
+<h3>StudyTask.cs</h3>
+<pre><code>
+namespace LearningTasks;
+
+public sealed record StudyTask(int Id, string Title, bool IsComplete);
+
+</code></pre>
+<h3>TaskRepository.cs</h3>
+<pre><code>
+using System.Text.Json;
+
+namespace LearningTasks;
+
+public sealed class TaskRepository {
+  private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+  private readonly object _gate = new();
+  private readonly string _path;
+  private List&lt;StudyTask&gt; _tasks;
+  private int _nextId;
+
+  public TaskRepository(string path) {
+    _path = Path.GetFullPath(path);
+    if (File.Exists(_path)) {
+      var stored = JsonSerializer.Deserialize&lt;StoredTasks&gt;(File.ReadAllText(_path))
+          ?? throw new InvalidDataException(&quot;Task storage cannot be null.&quot;);
+      if (stored.Tasks is null || stored.NextId &lt; 1
+          || stored.Tasks.Any(task =&gt; task is null || task.Id &lt; 1
+              || !TaskRules.IsValidTitle(task.Title))
+          || stored.Tasks.Select(task =&gt; task.Id).Distinct().Count() != stored.Tasks.Count
+          || stored.Tasks.Any(task =&gt; task.Id &gt;= stored.NextId)) {
+        throw new InvalidDataException(&quot;Task storage is invalid.&quot;);
+      }
+      _tasks = stored.Tasks;
+      _nextId = stored.NextId;
+    } else {
+      _tasks = [];
+      _nextId = 1;
+    }
+  }
+
+  public IReadOnlyList&lt;StudyTask&gt; GetAll() {
+    lock (_gate) {
+      return _tasks.ToArray();
+    }
+  }
+
+  public StudyTask Add(string title) {
+    if (!TaskRules.IsValidTitle(title)) {
+      throw new ArgumentException(&quot;Invalid title.&quot;, nameof(title));
+    }
+    lock (_gate) {
+      int followingId = checked(_nextId + 1);
+      var task = new StudyTask(_nextId, title.Trim(), false);
+      List&lt;StudyTask&gt; candidate = [.. _tasks, task];
+      Save(candidate, followingId);
+      _tasks = candidate;
+      _nextId = followingId;
+      return task;
+    }
+  }
+
+  public StudyTask? Complete(int id) {
+    lock (_gate) {
+      int index = _tasks.FindIndex(task =&gt; task.Id == id);
+      if (index &lt; 0) {
+        return null;
+      }
+      var updated = _tasks[index] with {
+        IsComplete = true
+      };
+      var candidate = _tasks.ToList();
+      candidate[index] = updated;
+      Save(candidate, _nextId);
+      _tasks = candidate;
+      return updated;
+    }
+  }
+
+  public bool Delete(int id) {
+    lock (_gate) {
+      var candidate = _tasks.Where(task =&gt; task.Id != id).ToList();
+      if (candidate.Count == _tasks.Count) {
+        return false;
+      }
+      Save(candidate, _nextId);
+      _tasks = candidate;
+      return true;
+    }
+  }
+
+  private void Save(List&lt;StudyTask&gt; candidate, int followingId) {
+    Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
+    string temp = _path + &quot;.tmp&quot;;
+    var snapshot = new StoredTasks(followingId, candidate);
+    File.WriteAllText(temp, JsonSerializer.Serialize(snapshot, _jsonOptions));
+    File.Move(temp, _path, overwrite: true);
+  }
+}
+
+</code></pre>
+<h3>TaskRules.cs</h3>
+<pre><code>
+namespace LearningTasks;
+
+public static class TaskRules {
+  private const int _maxTitleLength = 200;
+
+  public static bool IsValidTitle(string? title) {
+    return !string.IsNullOrWhiteSpace(title) &amp;&amp; title.Length &lt;= _maxTitleLength;
+  }
+}
+
+</code></pre>
+<h2 id="10-Capstone-solution">10-Capstone exercise solution</h2>
+<p>Add an endpoint that returns total and completed task counts. Extend the root API smoke checks to verify it.</p>
+<h3>Suggested change</h3>
+<p>Apply this snippet in the location described by the lesson or the comments. If it replaces a method or variable declaration, remove the original definition first.</p>
+<pre><code>
+app.MapGet(&quot;/tasks/summary&quot;, (TaskRepository repository) =&gt; {
+  var tasks = repository.GetAll();
+  return Results.Ok(new { Total = tasks.Count, Completed = tasks.Count(t =&gt; t.IsComplete) });
+});
+// Insert before app.Run(). The literal summary route does not match {id:int}.
+</code></pre>
+<h3>Verify</h3>
+<p>Run the lesson again using its README commands. Check the exercise&#39;s stated result and one boundary or invalid case. An error for invalid input can be the correct result; explain why before continuing.</p>
+<p>Write one sentence in Progress.md describing why the change works.</p>
+</main></body></html>

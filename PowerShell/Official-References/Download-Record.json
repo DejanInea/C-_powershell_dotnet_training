@@ -1,0 +1,57 @@
+[
+    {
+        "File":  "PowerShell/Official-References/Microsoft-Monad-Manifesto.pdf",
+        "Kind":  "Publisher PDF",
+        "Source":  "https://raw.githubusercontent.com/MicrosoftDocs/PowerShell-Docs/main/assets/MonadManifesto.pdf",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6",
+        "SourceMetadataDate":  null,
+        "RetrievedAtUtc":  "2026-10-14T12:33:13.1854690Z",
+        "Bytes":  379401,
+        "Sha256":  "B16605109E6C8394C7C68D346FD3D1062B61A07CF31982B42087EDBBE2D30574",
+        "SourceHtmlSha256":  null
+    },
+    {
+        "File":  "PowerShell/Official-References/Microsoft-PowerShell-Overview.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7.6",
+        "SourceMetadataDate":  "2026-08-12T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:14.3757520Z",
+        "Bytes":  110508,
+        "Sha256":  "5B5B5847660209F32D9E9001B5397CAB375C30FFC747009F397318F1BB76BAF7",
+        "SourceHtmlSha256":  "A89D6ABE24586382367F82F73322DB818DA32EB2DD2BA15F2585BF1929741ADE"
+    },
+    {
+        "File":  "PowerShell/Official-References/Microsoft-PowerShell-Pipelines.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pipelines?view=powershell-7.6",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pipelines?view=powershell-7.6",
+        "SourceMetadataDate":  "2025-12-28T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:15.7474935Z",
+        "Bytes":  203144,
+        "Sha256":  "EDE4291A6ABB6506663B6EABB57BE2C5391B8D5DAD1D23F6126F952F640FAA7F",
+        "SourceHtmlSha256":  "A367B46E42743FA7598BF034E802B290BB3A1BBD6B940A092C3DE05B9BF23BC9"
+    },
+    {
+        "File":  "PowerShell/Official-References/Microsoft-PowerShell-Advanced-Functions.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced?view=powershell-7.6",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced?view=powershell-7.6",
+        "SourceMetadataDate":  "2025-03-25T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:16.9376099Z",
+        "Bytes":  98100,
+        "Sha256":  "1D0F34D7DE611971FE0C46D4684FD535B9A43997DC49DAC4C25983D6671A556D",
+        "SourceHtmlSha256":  "0BD193FD27ED2FDF76160F8338C2F229817709A8159F4F6120B1E9962F4CC1B4"
+    },
+    {
+        "File":  "PowerShell/Official-References/Microsoft-PowerShell-Modules.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7.6",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7.6",
+        "SourceMetadataDate":  "2024-10-09T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:18.2022660Z",
+        "Bytes":  168918,
+        "Sha256":  "A44AB03CBCA172CC1A1B16930220E15FB565F2E6CF0EEDA5EA18886B8D878AAC",
+        "SourceHtmlSha256":  "481429745FAE9B4E87EB690DCE6A4C039E9957D2AF15CF0DEC14D18DD7CD7B0B"
+    }
+]

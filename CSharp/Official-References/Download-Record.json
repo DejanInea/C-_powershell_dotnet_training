@@ -1,0 +1,57 @@
+[
+    {
+        "File":  "CSharp/Official-References/ECMA-334-CSharp-7th-Edition.pdf",
+        "Kind":  "Publisher PDF",
+        "Source":  "https://ecma-international.org/wp-content/uploads/ECMA-334_7th_edition_december_2023.pdf",
+        "PublisherPage":  "https://ecma-international.org/publications-and-standards/standards/ecma-334/",
+        "SourceMetadataDate":  null,
+        "RetrievedAtUtc":  "2026-10-14T12:33:06.7894829Z",
+        "Bytes":  7604288,
+        "Sha256":  "7797C1D995DD7791683CB4F2DFD758CC1BFD22150B5234487FFFE43E9B3E3AB0",
+        "SourceHtmlSha256":  null
+    },
+    {
+        "File":  "CSharp/Official-References/Microsoft-CSharp-Overview.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/overview",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/overview",
+        "SourceMetadataDate":  "2026-02-06T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:08.4055585Z",
+        "Bytes":  194656,
+        "Sha256":  "ED858748DD9884B6E3925DE754A5B43CD3FB2BF95CA1D273EF7A430C17DCD04D",
+        "SourceHtmlSha256":  "C2153F00055CD357DF17CA71E00913F0B98505BF8769295008124DA2681E9728"
+    },
+    {
+        "File":  "CSharp/Official-References/Microsoft-CSharp14-Features.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14",
+        "SourceMetadataDate":  "2025-11-18T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:09.8387769Z",
+        "Bytes":  164914,
+        "Sha256":  "0325D84A43E5DE8299D86EAD3A00BCA47AA98B020DF825A05BC7EA8B96BEC9A5",
+        "SourceHtmlSha256":  "F08D8F9F1E4153874DBFC9B4F97BAEC51A1F708665E53BD91096AEF0F7C8C434"
+    },
+    {
+        "File":  "CSharp/Official-References/Microsoft-LINQ.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/introduction-to-linq-queries",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/introduction-to-linq-queries",
+        "SourceMetadataDate":  "2024-04-22T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:11.1865770Z",
+        "Bytes":  280848,
+        "Sha256":  "2FA2D049F54539B3B0D87C00345BEEB0A3EE015317A0E43F4CD7C37F61475C46",
+        "SourceHtmlSha256":  "B0EAB7D176387ED654B25A5597BEFD2360992BF696497D8A2D13EF1E755DCFBF"
+    },
+    {
+        "File":  "CSharp/Official-References/Microsoft-Async-Await.pdf",
+        "Kind":  "Documentation export",
+        "Source":  "https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/",
+        "PublisherPage":  "https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/",
+        "SourceMetadataDate":  "2025-03-10T00:00:00Z",
+        "RetrievedAtUtc":  "2026-10-14T12:33:12.7185795Z",
+        "Bytes":  261828,
+        "Sha256":  "8D8D4DC4537C2B24ABFBCA8A9D39EB2DA0BA514A4165BD23899BD75FF685F0D4",
+        "SourceHtmlSha256":  "4CF36CB380F1969DABF7106D1CE146B0C9CCAF5C32B35ACC8951D056A0670C05"
+    }
+]

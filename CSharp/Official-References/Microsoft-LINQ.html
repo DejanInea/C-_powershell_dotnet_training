@@ -1,0 +1,524 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/introduction-to-linq-queries"><title>Microsoft Learn introduction to LINQ queries.</title>
+<style>
+@page { size:A4; margin:18mm 15mm; @bottom-center { content:"Microsoft documentation print copy | " counter(page); font:9pt Arial; color:#64748b; } }
+body { font:10.5pt/1.5 Arial,sans-serif; color:#172b43; margin:0; }
+h1 { font-size:24pt; color:#124968; } h2 { font-size:16pt; color:#165e76; } h3 { font-size:12pt; }
+h1,h2,h3 { break-after:avoid; } p { orphans:3; widows:3; }
+pre { background:#edf4f7; padding:10px; border-left:3px solid #0e8c88; white-space:pre-wrap; overflow-wrap:anywhere; font:8.5pt/1.35 Consolas,monospace; }
+code { font-family:Consolas,monospace; overflow-wrap:anywhere; } table { width:100%; border-collapse:collapse; font-size:9pt; }
+td,th { border:1px solid #ccdbe5; padding:5px; } tr { break-inside:avoid; }
+img,svg { max-width:100%; height:auto; } a { color:#087b87; overflow-wrap:anywhere; }
+.provenance { border-top:4px solid #0e8c88; padding:10px 0; font-size:9pt; }
+.note,.TIP,.NOTE,.IMPORTANT,.WARNING { background:#eff5f7; padding:8px; }
+button,.display-none-print { display:none; } details { display:block; }
+
+</style></head><body>
+<div class="provenance"><strong>Print copy of official Microsoft Learn documentation</strong>
+<p>Source: <a href="https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/introduction-to-linq-queries">https://learn.microsoft.com/en-us/dotnet/csharp/linq/get-started/introduction-to-linq-queries</a><br>Exported: 2026-10-14. Source metadata date: 2024-04-22T00:00:00Z.</p>
+<p>Microsoft and documentation contributors. Article wording and code for the requested version are retained; web navigation is removed and print formatting is added. This locally generated PDF is not a Microsoft-published PDF book or a complete product manual. Source-page attribution and notices apply.</p>
+<p>Documentation license and terms: <a href="https://learn.microsoft.com/en-us/legal/termsofuse">Microsoft Learn terms</a>; .NET documentation: <a href="https://github.com/dotnet/docs/blob/main/LICENSE">CC BY 4.0 license</a>. Check the source for specific attribution or exceptions.</p>
+</div>
+<h1 id="introduction-to-linq-queries-in-c">Introduction to LINQ Queries in C#</h1>
+<p>A <em>query</em> is an expression that retrieves data from a data source. Different data sources have different native query languages, for example SQL for relational databases and XQuery for XML. Developers must learn a new query language for each type of data source or data format that they must support. LINQ simplifies this situation by offering a consistent C# language model for kinds of data sources and formats. In a LINQ query, you always work with C# objects. You use the same basic coding patterns to query and transform data in XML documents, SQL databases, .NET collections, and any other format when a LINQ provider is available.</p>
+<h2 id="three-parts-of-a-query-operation">Three Parts of a Query Operation</h2>
+<p>All LINQ query operations consist of three distinct actions:</p>
+<ol>
+<li>Obtain the data source.</li>
+<li>Create the query.</li>
+<li>Execute the query.</li>
+</ol>
+<p>The following example shows how the three parts of a query operation are expressed in source code. The example uses an integer array as a data source for convenience; however, the same concepts apply to other data sources also. This example is referred to throughout the rest of this article.</p>
+<pre><code class="lang-csharp">// The Three Parts of a LINQ Query:
+// 1. Data source.
+int[] numbers = [ 0, 1, 2, 3, 4, 5, 6 ];
+
+// 2. Query creation.
+// numQuery is an IEnumerable&lt;int&gt;
+var numQuery = from num in numbers
+               where (num % 2) == 0
+               select num;
+
+// 3. Query execution.
+foreach (int num in numQuery)
+{
+    Console.Write("{0,1} ", num);
+}
+</code></pre>
+<p>The following illustration shows the complete query operation. In LINQ, the execution of the query is distinct from the query itself. In other words, you don't retrieve any data by creating a query variable.</p>
+<p><img src="media/introduction-to-linq-queries/linq-query-complete-operation.png" alt="Diagram of the complete LINQ query operation." data-linktype="relative-path"></p>
+<h2 id="the-data-source">The Data Source</h2>
+<p>The data source in the preceding example is an array, which supports the generic <a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a> interface. This fact means it can be queried with LINQ. A query is executed in a <code>foreach</code> statement, and <code>foreach</code> requires <a href="/en-us/dotnet/api/system.collections.ienumerable" class="no-loc" data-linktype="absolute-path">IEnumerable</a> or <a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a>. Types that support <a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a> or a derived interface such as the generic <a href="/en-us/dotnet/api/system.linq.iqueryable-1" class="no-loc" data-linktype="absolute-path">IQueryable&lt;T&gt;</a> are called <em>queryable types</em>.</p>
+<p>A queryable type requires no modification or special treatment to serve as a LINQ data source. If the source data isn't already in memory as a queryable type, the LINQ provider must represent it as such. For example, LINQ to XML loads an XML document into a queryable <a href="/en-us/dotnet/api/system.xml.linq.xelement" class="no-loc" data-linktype="absolute-path">XElement</a> type:</p>
+<pre><code class="lang-csharp">// Create a data source from an XML document.
+// using System.Xml.Linq;
+XElement contacts = XElement.Load(@"c:\myContactList.xml");
+</code></pre>
+<p>With <a href="/en-us/ef/core/" data-linktype="absolute-path">EntityFramework</a>, you create an object-relational mapping between C# classes and your database schema. You write your queries against the objects, and at run-time EntityFramework handles the communication with the database. In the following example, <code>Customers</code> represents a specific table in the database, and the type of the query result, <a href="/en-us/dotnet/api/system.linq.iqueryable-1" class="no-loc" data-linktype="absolute-path">IQueryable&lt;T&gt;</a>, derives from <a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a>.</p>
+<pre><code class="lang-csharp">Northwnd db = new Northwnd(@"c:\northwnd.mdf");
+
+// Query for customers in London.
+IQueryable&lt;Customer&gt; custQuery =
+    from cust in db.Customers
+    where cust.City == "London"
+    select cust;
+</code></pre>
+<p>For more information about how to create specific types of data sources, see the documentation for the various LINQ providers. However, the basic rule is simple: a LINQ data source is any object that supports the generic <a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a> interface, or an interface that inherits from it, typically <a href="/en-us/dotnet/api/system.linq.iqueryable-1" class="no-loc" data-linktype="absolute-path">IQueryable&lt;T&gt;</a>.</p>
+<div class="NOTE">
+<p>Note</p>
+<p>Types such as <a href="/en-us/dotnet/api/system.collections.arraylist" class="no-loc" data-linktype="absolute-path">ArrayList</a> that support the non-generic <a href="/en-us/dotnet/api/system.collections.ienumerable" class="no-loc" data-linktype="absolute-path">IEnumerable</a> interface can also be used as a LINQ data source. For more information, see <a href="../how-to-query-collections" data-linktype="relative-path">How to query an ArrayList with LINQ (C#)</a>.</p>
+</div>
+<h2 id="the-query">The Query</h2>
+<p>The query specifies what information to retrieve from the data source or sources. Optionally, a query also specifies how that information should be sorted, grouped, and shaped before being returned. A query is stored in a query variable and initialized with a query expression. You use <a href="../../language-reference/keywords/query-keywords" data-linktype="relative-path">C# query syntax</a> to write queries.</p>
+<p>The query in the previous example returns all the even numbers from the integer array. The query expression contains three clauses: <code>from</code>, <code>where</code>, and <code>select</code>. (If you're familiar with SQL, you noticed that the ordering of the clauses is reversed from the order in SQL.) The <code>from</code> clause specifies the data source, the <code>where</code> clause applies the filter, and the <code>select</code> clause specifies the type of the returned elements. All the query clauses are discussed in detail in this section. For now, the important point is that in LINQ, the query variable itself takes no action and returns no data. It just stores the information that is required to produce the results when the query is executed at some later point. For more information about how queries are constructed, see <a href="../standard-query-operators/" data-linktype="relative-path">Standard Query Operators Overview (C#)</a>.</p>
+<div class="NOTE">
+<p>Note</p>
+<p>Queries can also be expressed by using method syntax. For more information, see <a href="write-linq-queries" data-linktype="relative-path">Query Syntax and Method Syntax in LINQ</a>.</p>
+</div>
+<h2 id="classification-of-standard-query-operators-by-manner-of-execution">Classification of standard query operators by manner of execution</h2>
+<p>The LINQ to Objects implementations of the standard query operator methods execute in one of two main ways: <em>immediate</em> or <em>deferred</em>. The query operators that use deferred execution can be additionally divided into two categories: <em>streaming</em> and <em>nonstreaming</em>.</p>
+<h3 id="immediate">Immediate</h3>
+<p>Immediate execution means that the data source is read and the operation is performed once. All the standard query operators that return a scalar result execute immediately. Examples of such queries are <code>Count</code>, <code>Max</code>, <code>Average</code>, and <code>First</code>. These methods execute without an explicit <code>foreach</code> statement because the query itself must use <code>foreach</code> in order to return a result. These queries return a single value, not an <code>IEnumerable</code> collection. You can force <em>any</em> query to execute immediately using the <a href="/en-us/dotnet/api/system.linq.enumerable.tolist" class="no-loc" data-linktype="absolute-path">Enumerable.ToList</a> or <a href="/en-us/dotnet/api/system.linq.enumerable.toarray" class="no-loc" data-linktype="absolute-path">Enumerable.ToArray</a> methods. Immediate execution provides reuse of query results, not query declaration. The results are retrieved once, then stored for future use. The following query returns a count of the even numbers in the source array:</p>
+<pre><code class="lang-csharp">var evenNumQuery = from num in numbers
+                   where (num % 2) == 0
+                   select num;
+
+int evenNumCount = evenNumQuery.Count();
+</code></pre>
+<p>To force immediate execution of any query and cache its results, you can call the <a href="/en-us/dotnet/api/system.linq.enumerable.tolist" class="no-loc" data-linktype="absolute-path">ToList</a> or <a href="/en-us/dotnet/api/system.linq.enumerable.toarray" class="no-loc" data-linktype="absolute-path">ToArray</a> methods.</p>
+<pre><code class="lang-csharp">List&lt;int&gt; numQuery2 = (from num in numbers
+                       where (num % 2) == 0
+                       select num).ToList();
+
+// or like this:
+// numQuery3 is still an int[]
+
+var numQuery3 = (from num in numbers
+                 where (num % 2) == 0
+                 select num).ToArray();
+</code></pre>
+<p>You can also force execution by putting the <code>foreach</code> loop immediately after the query expression. However, by calling <code>ToList</code> or <code>ToArray</code> you also cache all the data in a single collection object.</p>
+<h3 id="deferred">Deferred</h3>
+<p>Deferred execution means that the operation isn't performed at the point in the code where the query is declared. The operation is performed only when the query variable is enumerated, for example by using a <code>foreach</code> statement. The results of executing the query depend on the contents of the data source when the query is executed rather than when the query is defined. If the query variable is enumerated multiple times, the results might differ every time. Almost all the standard query operators whose return type is <a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a> or <a href="/en-us/dotnet/api/system.linq.iorderedenumerable-1" class="no-loc" data-linktype="absolute-path">IOrderedEnumerable&lt;TElement&gt;</a> execute in a deferred manner. Deferred execution provides the facility of query reuse since the query fetches the updated data from the data source each time query results are iterated. The following code shows an example of deferred execution:</p>
+<pre><code class="lang-csharp">foreach (int num in numQuery)
+{
+    Console.Write("{0,1} ", num);
+}
+</code></pre>
+<p>The <code>foreach</code> statement is also where the query results are retrieved. For example, in the previous query, the iteration variable <code>num</code> holds each value (one at a time) in the returned sequence.</p>
+<p>Because the query variable itself never holds the query results, you can execute it repeatedly to retrieve updated data. For example, a separate application might update a database continually. In <em>your</em> application, you could create one query that retrieves the latest data, and you could execute it at intervals to retrieve updated results.</p>
+<p>Query operators that use deferred execution can be additionally classified as streaming or nonstreaming.</p>
+<h3 id="streaming">Streaming</h3>
+<p>Streaming operators don't have to read all the source data before they yield elements. At the time of execution, a streaming operator performs its operation on each source element as it is read and yields the element if appropriate. A streaming operator continues to read source elements until a result element can be produced. This means that more than one source element might be read to produce one result element.</p>
+<h3 id="nonstreaming">Nonstreaming</h3>
+<p>Nonstreaming operators must read all the source data before they can yield a result element. Operations such as sorting or grouping fall into this category. At the time of execution, nonstreaming query operators read all the source data, put it into a data structure, perform the operation, and yield the resulting elements.</p>
+<h2 id="classification-table">Classification table</h2>
+<p>The following table classifies each standard query operator method according to its method of execution.</p>
+<div class="NOTE">
+<p>Note</p>
+<p>If an operator is marked in two columns, two input sequences are involved in the operation, and each sequence is evaluated differently. In these cases, it is always the first sequence in the parameter list that is evaluated in a deferred, streaming manner.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Standard query operator</th>
+<th>Return type</th>
+<th>Immediate execution</th>
+<th>Deferred streaming execution</th>
+<th>Deferred nonstreaming execution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.aggregate" class="no-loc" data-linktype="absolute-path">Aggregate</a></td>
+<td><code>TSource</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.all" class="no-loc" data-linktype="absolute-path">All</a></td>
+<td><a href="/en-us/dotnet/api/system.boolean" class="no-loc" data-linktype="absolute-path">Boolean</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.any" class="no-loc" data-linktype="absolute-path">Any</a></td>
+<td><a href="/en-us/dotnet/api/system.boolean" class="no-loc" data-linktype="absolute-path">Boolean</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.asenumerable" class="no-loc" data-linktype="absolute-path">AsEnumerable</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.average" class="no-loc" data-linktype="absolute-path">Average</a></td>
+<td>Single numeric value</td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.cast" class="no-loc" data-linktype="absolute-path">Cast</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.concat" class="no-loc" data-linktype="absolute-path">Concat</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.contains" class="no-loc" data-linktype="absolute-path">Contains</a></td>
+<td><a href="/en-us/dotnet/api/system.boolean" class="no-loc" data-linktype="absolute-path">Boolean</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.count" class="no-loc" data-linktype="absolute-path">Count</a></td>
+<td><a href="/en-us/dotnet/api/system.int32" class="no-loc" data-linktype="absolute-path">Int32</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.defaultifempty" class="no-loc" data-linktype="absolute-path">DefaultIfEmpty</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.distinct" class="no-loc" data-linktype="absolute-path">Distinct</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.elementat" class="no-loc" data-linktype="absolute-path">ElementAt</a></td>
+<td><code>TSource</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.elementatordefault" class="no-loc" data-linktype="absolute-path">ElementAtOrDefault</a></td>
+<td><code>TSource?</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.empty" class="no-loc" data-linktype="absolute-path">Empty</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.except" class="no-loc" data-linktype="absolute-path">Except</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.first" class="no-loc" data-linktype="absolute-path">First</a></td>
+<td><code>TSource</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.firstordefault" class="no-loc" data-linktype="absolute-path">FirstOrDefault</a></td>
+<td><code>TSource?</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.groupby" class="no-loc" data-linktype="absolute-path">GroupBy</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.groupjoin" class="no-loc" data-linktype="absolute-path">GroupJoin</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.intersect" class="no-loc" data-linktype="absolute-path">Intersect</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.join" class="no-loc" data-linktype="absolute-path">Join</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.last" class="no-loc" data-linktype="absolute-path">Last</a></td>
+<td><code>TSource</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.lastordefault" class="no-loc" data-linktype="absolute-path">LastOrDefault</a></td>
+<td><code>TSource?</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.longcount" class="no-loc" data-linktype="absolute-path">LongCount</a></td>
+<td><a href="/en-us/dotnet/api/system.int64" class="no-loc" data-linktype="absolute-path">Int64</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.max" class="no-loc" data-linktype="absolute-path">Max</a></td>
+<td>Single numeric value, <code>TSource</code>, or <code>TResult?</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.min" class="no-loc" data-linktype="absolute-path">Min</a></td>
+<td>Single numeric value, <code>TSource</code>, or <code>TResult?</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.oftype" class="no-loc" data-linktype="absolute-path">OfType</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.orderby" class="no-loc" data-linktype="absolute-path">OrderBy</a></td>
+<td><a href="/en-us/dotnet/api/system.linq.iorderedenumerable-1" class="no-loc" data-linktype="absolute-path">IOrderedEnumerable&lt;TElement&gt;</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.orderbydescending" class="no-loc" data-linktype="absolute-path">OrderByDescending</a></td>
+<td><a href="/en-us/dotnet/api/system.linq.iorderedenumerable-1" class="no-loc" data-linktype="absolute-path">IOrderedEnumerable&lt;TElement&gt;</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.range" class="no-loc" data-linktype="absolute-path">Range</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.repeat" class="no-loc" data-linktype="absolute-path">Repeat</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.reverse" class="no-loc" data-linktype="absolute-path">Reverse</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.select" class="no-loc" data-linktype="absolute-path">Select</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.selectmany" class="no-loc" data-linktype="absolute-path">SelectMany</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.sequenceequal" class="no-loc" data-linktype="absolute-path">SequenceEqual</a></td>
+<td><a href="/en-us/dotnet/api/system.boolean" class="no-loc" data-linktype="absolute-path">Boolean</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.single" class="no-loc" data-linktype="absolute-path">Single</a></td>
+<td><code>TSource</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.singleordefault" class="no-loc" data-linktype="absolute-path">SingleOrDefault</a></td>
+<td><code>TSource?</code></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.skip" class="no-loc" data-linktype="absolute-path">Skip</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.skipwhile" class="no-loc" data-linktype="absolute-path">SkipWhile</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.sum" class="no-loc" data-linktype="absolute-path">Sum</a></td>
+<td>Single numeric value</td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.take" class="no-loc" data-linktype="absolute-path">Take</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.takewhile" class="no-loc" data-linktype="absolute-path">TakeWhile</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.thenby" class="no-loc" data-linktype="absolute-path">ThenBy</a></td>
+<td><a href="/en-us/dotnet/api/system.linq.iorderedenumerable-1" class="no-loc" data-linktype="absolute-path">IOrderedEnumerable&lt;TElement&gt;</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.thenbydescending" class="no-loc" data-linktype="absolute-path">ThenByDescending</a></td>
+<td><a href="/en-us/dotnet/api/system.linq.iorderedenumerable-1" class="no-loc" data-linktype="absolute-path">IOrderedEnumerable&lt;TElement&gt;</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.toarray" class="no-loc" data-linktype="absolute-path">ToArray</a></td>
+<td><code>TSource[]</code> array</td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.todictionary" class="no-loc" data-linktype="absolute-path">ToDictionary</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.dictionary-2" class="no-loc" data-linktype="absolute-path">Dictionary&lt;TKey,TValue&gt;</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.tolist" class="no-loc" data-linktype="absolute-path">ToList</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ilist-1" class="no-loc" data-linktype="absolute-path">IList&lt;T&gt;</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.tolookup" class="no-loc" data-linktype="absolute-path">ToLookup</a></td>
+<td><a href="/en-us/dotnet/api/system.linq.ilookup-2" class="no-loc" data-linktype="absolute-path">ILookup&lt;TKey,TElement&gt;</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.union" class="no-loc" data-linktype="absolute-path">Union</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="/en-us/dotnet/api/system.linq.enumerable.where" class="no-loc" data-linktype="absolute-path">Where</a></td>
+<td><a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="linq-to-objects">LINQ to objects</h2>
+<p>"LINQ to Objects" refers to the use of LINQ queries with any <a href="/en-us/dotnet/api/system.collections.ienumerable" class="no-loc" data-linktype="absolute-path">IEnumerable</a> or <a href="/en-us/dotnet/api/system.collections.generic.ienumerable-1" class="no-loc" data-linktype="absolute-path">IEnumerable&lt;T&gt;</a> collection directly. You can use LINQ to query any enumerable collections, such as <a href="/en-us/dotnet/api/system.collections.generic.list-1" class="no-loc" data-linktype="absolute-path">List&lt;T&gt;</a>, <a href="/en-us/dotnet/api/system.array" class="no-loc" data-linktype="absolute-path">Array</a>, or <a href="/en-us/dotnet/api/system.collections.generic.dictionary-2" class="no-loc" data-linktype="absolute-path">Dictionary&lt;TKey,TValue&gt;</a>. The collection can be user-defined or a type returned by a .NET API. In the LINQ approach, you write declarative code that describes what you want to retrieve. LINQ to Objects provides a great introduction to programming with LINQ.</p>
+<p>LINQ queries offer three main advantages over traditional <code>foreach</code> loops:</p>
+<ul>
+<li>They're more concise and readable, especially when filtering multiple conditions.</li>
+<li>They provide powerful filtering, ordering, and grouping capabilities with a minimum of application code.</li>
+<li>They can be ported to other data sources with little or no modification.</li>
+</ul>
+<p>The more complex the operation you want to perform on the data, the more benefit you realize using LINQ instead of traditional iteration techniques.</p>
+<h2 id="store-the-results-of-a-query-in-memory">Store the results of a query in memory</h2>
+<p>A query is basically a set of instructions for how to retrieve and organize data. Queries are executed lazily, as each subsequent item in the result is requested. When you use <code>foreach</code> to iterate the results, items are returned as accessed. To evaluate a query and store its results without executing a <code>foreach</code> loop, just call one of the following methods on the query variable:</p>
+<ul>
+<li><a href="/en-us/dotnet/api/system.linq.enumerable.tolist" class="no-loc" data-linktype="absolute-path">ToList</a></li>
+<li><a href="/en-us/dotnet/api/system.linq.enumerable.toarray" class="no-loc" data-linktype="absolute-path">ToArray</a></li>
+<li><a href="/en-us/dotnet/api/system.linq.enumerable.todictionary" class="no-loc" data-linktype="absolute-path">ToDictionary</a></li>
+<li><a href="/en-us/dotnet/api/system.linq.enumerable.tolookup" class="no-loc" data-linktype="absolute-path">ToLookup</a></li>
+</ul>
+<p>You should assign the returned collection object to a new variable when you store the query results, as shown in the following example:</p>
+<pre><code class="lang-csharp">List&lt;int&gt; numbers = [ 1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 ];
+
+IEnumerable&lt;int&gt; queryFactorsOfFour = from num in numbers
+                                      where num % 4 == 0
+                                      select num;
+
+// Store the results in a new variable
+// without executing a foreach loop.
+var factorsofFourList = queryFactorsOfFour.ToList();
+
+// Read and write from the newly created list to demonstrate that it holds data.
+Console.WriteLine(factorsofFourList[2]);
+factorsofFourList[2] = 0;
+Console.WriteLine(factorsofFourList[2]);
+</code></pre>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="walkthrough-writing-queries-linq" data-linktype="relative-path">Walkthrough: Writing Queries in C#</a></li>
+<li><a href="../../language-reference/statements/iteration-statements#the-foreach-statement" data-linktype="relative-path">foreach, in</a></li>
+<li><a href="../../language-reference/keywords/query-keywords" data-linktype="relative-path">Query Keywords (LINQ)</a></li>
+</ul>
+
+
+</body></html>

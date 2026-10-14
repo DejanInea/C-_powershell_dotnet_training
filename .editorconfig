@@ -1,0 +1,47 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.cs]
+end_of_line = lf
+max_line_length = 100
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_preserve_single_line_blocks = false
+csharp_preserve_single_line_statements = false
+dotnet_sort_system_directives_first = true
+csharp_prefer_braces = true:warning
+csharp_style_expression_bodied_methods = false:warning
+csharp_style_expression_bodied_local_functions = false:warning
+csharp_style_expression_bodied_constructors = false:warning
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
+dotnet_naming_rule.private_fields_use_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_use_underscore.style = underscore_camel_case
+dotnet_naming_rule.private_fields_use_underscore.severity = warning
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private, internal, protected, protected_internal
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+
+[*.{ps1,psm1}]
+end_of_line = crlf
+max_line_length = 100
+
+[*.md]
+end_of_line = lf
+max_line_length = off
+
+[*.{csproj,props,slnx}]
+end_of_line = lf
+
+[*.{html,json}]
+end_of_line = lf

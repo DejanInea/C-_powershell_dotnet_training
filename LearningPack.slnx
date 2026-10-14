@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/CSharp/">
+    <Project Path="CSharp/01-Hello/CSharp.01.Hello.csproj" />
+    <Project Path="CSharp/02-Types/CSharp.02.Types.csproj" />
+    <Project Path="CSharp/03-Decisions/CSharp.03.Decisions.csproj" />
+    <Project Path="CSharp/04-Loops/CSharp.04.Loops.csproj" />
+    <Project Path="CSharp/05-Methods/CSharp.05.Methods.csproj" />
+    <Project Path="CSharp/06-Collections/CSharp.06.Collections.csproj" />
+    <Project Path="CSharp/07-Classes/CSharp.07.Classes.csproj" />
+    <Project Path="CSharp/08-Interfaces/CSharp.08.Interfaces.csproj" />
+    <Project Path="CSharp/09-Linq/CSharp.09.Linq.csproj" />
+    <Project Path="CSharp/10-Files/CSharp.10.Files.csproj" />
+    <Project Path="CSharp/11-Async/CSharp.11.Async.csproj" />
+    <Project Path="CSharp/12-Capstone/CSharp.12.Capstone.csproj" />
+  </Folder>
+  <Folder Name="/DotNet10/">
+    <Project Path="DotNet10/01-Sdk/DotNet10.01.Sdk.csproj" />
+    <Project Path="DotNet10/02-Library/App/DotNet10.02.App.csproj" />
+    <Project Path="DotNet10/02-Library/Library/StudyMath.csproj" />
+    <Project Path="DotNet10/03-Configuration/DotNet10.03.Configuration.csproj" />
+    <Project Path="DotNet10/04-DependencyInjection/DotNet10.04.DependencyInjection.csproj" />
+    <Project Path="DotNet10/05-MinimalApi/DotNet10.05.MinimalApi.csproj" />
+    <Project Path="DotNet10/06-Validation/DotNet10.06.Validation.csproj" />
+    <Project Path="DotNet10/07-HttpClient/DotNet10.07.HttpClient.csproj" />
+    <Project Path="DotNet10/08-Testing/DotNet10.08.Testing.csproj" />
+    <Project Path="DotNet10/10-Capstone/DotNet10.10.Capstone.csproj" />
+  </Folder>
+</Solution>
