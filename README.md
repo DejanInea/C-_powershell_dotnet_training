@@ -1,0 +1,1 @@
+# C-_powershell_dotnet_training
