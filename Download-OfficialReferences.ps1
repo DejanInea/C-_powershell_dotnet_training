@@ -1,15 +1,24 @@
 [CmdletBinding()]
-param([switch]$DownloadOnly, [string]$BrowserPath)
+param(
+  [switch]$DownloadOnly,
+  [string]$BrowserPath,
+  [ValidateSet('CSharp', 'PowerShell', 'DotNet10', 'Git')]
+  [string[]]$Topic = @('CSharp', 'PowerShell', 'DotNet10', 'Git')
+)
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 $entries = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Official-Resources.json') -Raw | ConvertFrom-Json
+$entries = @($entries | Where-Object { $_.Topic -in $Topic })
+$needsBrowser = -not $DownloadOnly -and @(
+  $entries | Where-Object { $_.Kind -ne 'Publisher PDF' }
+).Count -gt 0
 $cache = Join-Path $PSScriptRoot '.artifacts\reference-sources'
 New-Item -ItemType Directory -Path $cache -Force | Out-Null
 if (-not (Get-Command curl.exe -ErrorAction SilentlyContinue)) {
   throw 'curl.exe is required to download references.'
 }
-if (-not $DownloadOnly -and -not $BrowserPath) {
+if ($needsBrowser -and -not $BrowserPath) {
   $x86 = [Environment]::GetEnvironmentVariable('ProgramFiles(x86)')
   $BrowserPath = @(
     (Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe'),
@@ -18,7 +27,7 @@ if (-not $DownloadOnly -and -not $BrowserPath) {
     Test-Path -LiteralPath $_
   } | Select-Object -First 1
 }
-if (-not $DownloadOnly -and -not $BrowserPath) {
+if ($needsBrowser -and -not $BrowserPath) {
   throw 'Install Chrome/Edge or provide -BrowserPath.'
 }
 
@@ -73,7 +82,7 @@ $records = New-Object 'System.Collections.Generic.List[object]'
 $failures = New-Object 'System.Collections.Generic.List[string]'
 foreach ($entry in $entries) {
   try {
-    if ($entry.Topic -notin @('CSharp','PowerShell','DotNet10') -or [System.IO.Path]::GetFileName($entry.FileName) -ne $entry.FileName) {
+    if ($entry.Topic -notin @('CSharp','PowerShell','DotNet10','Git') -or [System.IO.Path]::GetFileName($entry.FileName) -ne $entry.FileName) {
       throw 'A manifest path is outside the supported topic folders.'
     }
     $directory = Join-Path $PSScriptRoot ($entry.Topic + '\Official-References')
@@ -170,11 +179,11 @@ $article
     Write-Warning $failures[$failures.Count - 1]
   }
 }
-foreach ($topic in @('CSharp','PowerShell','DotNet10')) {
-  $directory = Join-Path $PSScriptRoot ($topic + '\Official-References')
+foreach ($topicName in @($entries.Topic | Select-Object -Unique)) {
+  $directory = Join-Path $PSScriptRoot ($topicName + '\Official-References')
   New-Item -ItemType Directory -Path $directory -Force | Out-Null
   $topicRecords = @($records | Where-Object {
-      $_.File.StartsWith($topic + '/')
+      $_.File.StartsWith($topicName + '/')
   })
   [System.IO.File]::WriteAllText((Join-Path $directory 'Download-Record.json'), (ConvertTo-Json -InputObject $topicRecords -Depth 5), $utf8)
 }

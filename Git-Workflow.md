@@ -245,6 +245,8 @@ For a combined API/client change, one focused branch can include both DotNet10 a
 
 This is original instructional material. Further detail comes from Git's command manuals and GitHub's workflow guide:
 
+For offline reading, open the [Pro Git book and GitHub cheat sheet PDFs](Git/Official-References/README.md). Start with Pro Git chapters 1-3 for setup, everyday commands, branches, and merging.
+
 - [git status](https://git-scm.com/docs/git-status)
 - [git add](https://git-scm.com/docs/git-add)
 - [git commit](https://git-scm.com/docs/git-commit)

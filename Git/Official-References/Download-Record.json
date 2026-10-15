@@ -1,0 +1,24 @@
+[
+    {
+        "File":  "Git/Official-References/Pro-Git-2nd-Edition.pdf",
+        "Kind":  "Publisher PDF",
+        "Source":  "https://github.com/progit/progit2/releases/download/2.1.450/progit.pdf",
+        "PublisherPage":  "https://git-scm.com/book/en/v2",
+        "SourceMetadataDate":  null,
+        "RetrievedAtUtc":  "2026-10-15T11:38:32.9681427Z",
+        "Bytes":  18847129,
+        "Sha256":  "403F4051CDCA2C585361D85F6E87D5DD87D8C544FC91DCED007711BABE81E8EF",
+        "SourceHtmlSha256":  null
+    },
+    {
+        "File":  "Git/Official-References/GitHub-Git-Cheat-Sheet.pdf",
+        "Kind":  "Publisher PDF",
+        "Source":  "https://training.github.com/downloads/github-git-cheat-sheet.pdf",
+        "PublisherPage":  "https://training.github.com/",
+        "SourceMetadataDate":  null,
+        "RetrievedAtUtc":  "2026-10-15T11:38:33.2714183Z",
+        "Bytes":  405266,
+        "Sha256":  "E4FE1852ADD13B66DA1B1D2B9B48CF0A510E9F1E2A6F47F301EE350A0E4B8FAF",
+        "SourceHtmlSha256":  null
+    }
+]

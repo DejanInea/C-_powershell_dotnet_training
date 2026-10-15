@@ -50,6 +50,8 @@ Use [Git-Workflow.md](Git-Workflow.md) for branches, staging, commit messages, p
 
 Each topic's Official-References folder contains original publisher PDFs and clearly attributed print exports of current Microsoft documentation. See the indexes in [CSharp](CSharp/Official-References/README.md), [PowerShell](PowerShell/Official-References/README.md), and [DotNet10](DotNet10/Official-References/README.md). Older standards and architecture books are labeled by edition; current C# 14 and .NET 10 articles are provided separately. `Download-OfficialReferences.ps1` refreshes these files from the source manifest and records SHA-256 hashes.
 
+[Git/Official-References](Git/Official-References/README.md) contains the Pro Git second-edition book linked by Git's official site and GitHub's official Git cheat sheet. Refresh just these original PDFs with `Download-OfficialReferences.ps1 -Topic Git`; this download needs no browser.
+
 ## Eight-week study plan
 
 Plan four sessions of 45-60 minutes per week. Allow extra time for advanced exercises and repeat lessons when needed.
