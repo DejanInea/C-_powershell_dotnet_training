@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="780" viewBox="0 0 1160 780" role="img" aria-labelledby="title desc">
+<title id="title">The runtime journey of adding a study task</title>
+<desc id="desc">CLI calls TaskService. Domain creates a validated task. The service loads and saves through the JSON store. The CLI reports success after saving. Invalid titles stop before IO.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#334155"/></marker></defs>
+<rect width="1160" height="780" fill="#f5f8fc"/>
+<g font-family="Segoe UI,Arial,sans-serif" fill="#172b43">
+<text x="40" y="48" font-size="28" font-weight="700">Follow one request: add "Read C#"</text>
+<text x="40" y="80" font-size="17">Runtime calls • Read from top to bottom. This is not the project-reference graph.</text>
+<g stroke="#94a3b8" stroke-dasharray="6 6" stroke-width="2">
+<path d="M130 160V650"/><path d="M410 160V650"/><path d="M700 160V650"/><path d="M1000 160V650"/>
+</g>
+<g stroke="#334155" stroke-width="2" marker-end="url(#arrow)" fill="none">
+<path d="M130 215H410"/><path d="M410 275H700"/>
+<path d="M700 335H410" stroke-dasharray="5 5"/>
+<path d="M410 395H1000"/><path d="M1000 455H410" stroke-dasharray="5 5"/>
+<path d="M410 515H1000"/><path d="M1000 575H410" stroke-dasharray="5 5"/>
+<path d="M410 635H130" stroke-dasharray="5 5"/>
+</g>
+<rect x="40" y="115" width="180" height="48" rx="9" fill="#dbeafe" stroke="#2563eb"/>
+<rect x="320" y="115" width="180" height="48" rx="9" fill="#dcfce7" stroke="#15803d"/>
+<rect x="610" y="115" width="180" height="48" rx="9" fill="#ede9fe" stroke="#7c3aed"/>
+<rect x="910" y="115" width="180" height="48" rx="9" fill="#ffedd5" stroke="#c2410c"/>
+<g font-size="19" font-weight="700" text-anchor="middle">
+<text x="130" y="146">CLI</text><text x="410" y="146">TaskService</text>
+<text x="700" y="146">StudyTask</text><text x="1000" y="146">JsonTaskStore</text>
+</g>
+<g font-size="17" text-anchor="middle">
+<text x="270" y="201">1. Add(title)</text><text x="555" y="261">2. Create and validate</text>
+<text x="555" y="321">3. Return valid task</text><text x="705" y="381">4. Load existing tasks</text>
+<text x="705" y="441">5. Return stored tasks</text><text x="705" y="501">6. Save old tasks + new task</text>
+<text x="705" y="561">7. Write succeeded</text><text x="270" y="621">8. Return new task</text>
+</g>
+<text x="40" y="698" font-size="18" font-weight="700">Blank title: stop at step 2. Write failure: step 7 never reports success.</text>
+<text x="40" y="731" font-size="16">CLI prints the result after step 8. Calls use ITaskStore; the concrete runtime object is JsonTaskStore.</text>
+</g></svg>

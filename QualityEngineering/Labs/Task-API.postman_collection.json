@@ -1,0 +1,208 @@
+{
+  "info": {
+    "name": "QE local task API - disposable practice",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Run in order on the isolated loopback target in Labs/README.md. Captures and deletes only its own created task. This sequence does not test restart persistence."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:5088",
+      "type": "string"
+    },
+    {
+      "key": "qeTaskId",
+      "value": "0",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Ready\", function () { pm.expect(pm.response.json().status).to.eql(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Create our task",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/tasks",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"QE Postman task\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.collectionVariables.set(\"qeTaskId\", \"0\");",
+              "if (pm.response.code === 201) { pm.collectionVariables.set(\"qeTaskId\", String(pm.response.json().id)); }",
+              "pm.test(\"Created task shape\", function () { const task = pm.response.json(); pm.expect(task.id).to.be.a(\"number\").above(0); pm.expect(task.title).to.eql(\"QE Postman task\"); pm.expect(task.isComplete).to.eql(false); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Reject blank title",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/tasks",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"   \"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Complete our task",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": "{{baseUrl}}/tasks/{{qeTaskId}}/complete"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Our task completed\", function () { const task = pm.response.json(); pm.expect(task.id).to.eql(Number(pm.collectionVariables.get(\"qeTaskId\"))); pm.expect(task.isComplete).to.eql(true); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Complete again",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": "{{baseUrl}}/tasks/{{qeTaskId}}/complete"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Identity unchanged\", function () { const task = pm.response.json(); pm.expect(task.id).to.eql(Number(pm.collectionVariables.get(\"qeTaskId\"))); pm.expect(task.isComplete).to.eql(true); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Read our task",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/tasks/{{qeTaskId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Correct task\", function () { pm.expect(pm.response.json().title).to.eql(\"QE Postman task\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Delete our task",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/tasks/{{qeTaskId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Deleted task absent",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/tasks/{{qeTaskId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

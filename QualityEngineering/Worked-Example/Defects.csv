@@ -1,0 +1,2 @@
+"BugId","Title","Scope","Status","Severity","Priority","Expected","Actual","Evidence","Hypothesis","NextAction"
+"TRAINING-01","Possible duplicate after timeout and retry","Fictional proposed networked client","Training example","Unassessed","Unassessed","Needs agreed logical-submission contract","Fictional: two IDs after one reported client action","None - not observed","First request may have committed before response loss","Clarify requirement; capture request/response timeline"

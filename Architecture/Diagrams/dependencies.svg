@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="760" viewBox="0 0 1080 760" role="img" aria-labelledby="title desc">
+<title id="title">StudyTasks source dependency map</title>
+<desc id="desc">CLI references Application and Infrastructure. Infrastructure references Application and Domain. Application references Domain. Domain references no other example project. Arrowheads point to dependencies.</desc>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#334155"/></marker></defs>
+<rect width="1080" height="760" fill="#f5f8fc"/>
+<g font-family="Segoe UI,Arial,sans-serif" fill="#172b43">
+<text x="45" y="48" font-size="28" font-weight="700">Who depends on whom?</text>
+<text x="45" y="79" font-size="17">Source dependencies • Arrowhead points to the project whose types are used.</text>
+<g fill="none" stroke="#334155" stroke-width="3" marker-end="url(#arrow)">
+<path d="M480 208L290 300"/><path d="M600 208L790 300"/>
+<path d="M705 352L377 352"/><path d="M250 405L465 541"/>
+<path d="M830 405L620 541"/>
+</g>
+<rect x="430" y="120" width="220" height="88" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+<text x="540" y="155" text-anchor="middle" font-size="23" font-weight="700">Cli</text>
+<text x="540" y="182" text-anchor="middle" font-size="16">Parse, present, wire</text>
+<rect x="125" y="300" width="250" height="105" rx="12" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+<text x="250" y="335" text-anchor="middle" font-size="23" font-weight="700">Application</text>
+<text x="250" y="363" text-anchor="middle" font-size="16">TaskService + ITaskStore</text>
+<text x="250" y="386" text-anchor="middle" font-size="15">Own the use-case boundary</text>
+<rect x="705" y="300" width="250" height="105" rx="12" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
+<text x="830" y="335" text-anchor="middle" font-size="23" font-weight="700">Infrastructure</text>
+<text x="830" y="363" text-anchor="middle" font-size="16">JSON / in-memory adapter</text>
+<text x="830" y="386" text-anchor="middle" font-size="15">Implement ITaskStore</text>
+<rect x="415" y="545" width="250" height="88" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+<text x="540" y="580" text-anchor="middle" font-size="23" font-weight="700">Domain</text>
+<text x="540" y="608" text-anchor="middle" font-size="16">Valid task state and rules</text>
+<text x="540" y="334" text-anchor="middle" font-size="15">implements its contract</text>
+<text x="45" y="690" font-size="17" font-weight="700">Domain knows no CLI, file format, or storage implementation.</text>
+<text x="45" y="720" font-size="16">Checks references Domain, Application, and Infrastructure. All app libraries run in one CLI process.</text>
+</g></svg>

@@ -12,6 +12,14 @@ A hands-on course with **32 lessons**, runnable code, exercises, solutions, prog
 
 C# is a programming language. PowerShell is a shell and scripting language. .NET 10 is the SDK, runtime, and library platform used by the C# projects. Each folder contains numbered lessons with source files, step-by-step instructions, expected output, exercises, and SOLUTION.md files. PDFs include complete code listings and solutions. Editable Markdown and HTML guides sit beside the PDFs.
 
+## Architecture learning folder
+
+The [Architecture track](Architecture/README.md) adds 12 companion lessons on planning and structuring code, from a first requirements brief through diagrams, dependencies, tests, release, and later changes. It includes a [tool guide](Architecture/Tools.md), visual maps, exercises and solutions, planning templates, and a separate runnable .NET 10 study-task example. Start the first four lessons alongside C#; complete classes, interfaces, and .NET libraries before the coding lessons.
+
+## Quality Engineering learning folder
+
+The [QualityEngineering track](QualityEngineering/README.md) adds 12 companion lessons on thinking like a tester throughout a project: clarify requirements, rank risks, design worst-case scenarios, explore, investigate bugs, propose solutions, retest, and report release evidence. It includes a visual Excel/LibreOffice workbook, tool guidance, diagrams, templates, a worked project, and an isolated API lab that produces reports from actual results.
+
 ## Start in five minutes
 
 Open a PowerShell terminal at the repository root. The .NET 10 SDK was already installed when this pack was prepared, along with Windows PowerShell 5.1. The core scripts work in 5.1 and 7. You can edit source files with any text editor.

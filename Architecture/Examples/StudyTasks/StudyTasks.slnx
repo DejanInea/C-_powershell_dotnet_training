@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Domain/StudyTasks.Domain.csproj" />
+  <Project Path="Application/StudyTasks.Application.csproj" />
+  <Project Path="Infrastructure/StudyTasks.Infrastructure.csproj" />
+  <Project Path="Cli/StudyTasks.Cli.csproj" />
+  <Project Path="Checks/StudyTasks.Checks.csproj" />
+</Solution>
