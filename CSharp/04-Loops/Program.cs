@@ -26,3 +26,42 @@ for (int i=0; i < sessionLengths.Length; i++) {
 
 double average = (double)sum / sessionLengths.Length;
 Console.WriteLine($"Average session length: {average} minutes");
+
+
+/* Write CalculateTotal(price, quantity). Reject negative prices and quantities below one. 
+  Verify 5 times 3 equals 15.
+  Work in this lesson's source file. For multiple experiments, copy the example into this 
+  lesson's output directory rather than changing later lessons. Rebuild after C# edits.
+
+  Use ArgumentOutOfRangeException for invalid parameters.
+*/
+
+
+double price = 5.5;
+int quantity = 3;
+try {
+  double totalPrice = Calculator.CalculateTotal(price, quantity);
+  Console.WriteLine($"Total price for {quantity} items and price {price} is {totalPrice}");
+} catch (ArgumentOutOfRangeException ex) {
+  Console.WriteLine($"Error: {ex.ParamName} - {ex.Message}");
+}
+
+// Test of the first method
+class Calculator {
+  static void sayHello() {
+    Console.WriteLine("Hello, World!");
+  }
+  public static double CalculateTotal(double price, int quantity) {
+    // Check if price is a number and not negative
+    if (price < 0) {
+      throw new ArgumentOutOfRangeException("price", "Price cannot be negative.");
+    }
+    // Chheck if quantitive is below 1
+    if (quantity < 1) {
+      throw new ArgumentOutOfRangeException("quantity", "Quantity must be at least 1.");
+    }
+    // return the total price
+    return price * quantity;
+  }
+}
+  
